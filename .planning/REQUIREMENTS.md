@@ -32,7 +32,7 @@
 | PROG-02 | Phase 2 | Pending |
 | PROG-03 | Phase 2 | Pending |
 | UI-01 | Phase 3 | Partially Complete |
-| UI-02 | Phase 3 | Pending |
+| UI-02 | Phase 3 | Complete |
 | UI-03 | Phase 3 | Pending |
 | UI-04 | Phase 3 | Pending |
-| UI-05 | Phase 3 | Partially Complete |
+| UI-05 | Phase 3 | Complete |

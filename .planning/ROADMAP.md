@@ -49,8 +49,8 @@
   4. Sidebar navigation allows seamless transitions between levels and chapters.
   5. The entire interactive experience is fully responsive and optimized for mobile-first usage.
 **Plans**: 3 plans
-- [ ] 03-01-PLAN.md — Global Aesthetics & UI Foundation
-- [ ] 03-02-PLAN.md — Grammar Cards & Interactive Content
+- [x] 03-01-PLAN.md — Global Aesthetics & UI Foundation
+- [x] 03-02-PLAN.md — Grammar Cards & Interactive Content
 - [ ] 03-03-PLAN.md — Progress & Polish
 **UI hint**: yes
 
@@ -58,6 +58,7 @@
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Live Content Integration | 1/3 | In Progress | - |
+| 1. Live Content Integration | 2/3 | In Progress | - |
 | 2. Progress & Persistence | 0/2 | Not started | - |
-| 3. Bunpo-Style UI/UX & Interactivity | 1/3 | In Progress | 2026-04-20 |
+| 3. Bunpo-Style UI/UX & Interactivity | 2/3 | In Progress | 2026-04-20 |
+
