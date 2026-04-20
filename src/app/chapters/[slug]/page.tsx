@@ -23,6 +23,9 @@ const portableTextComponents: PortableTextComponents = {
       />
     ),
   },
+  marks: {
+    japanese: ({ children }) => <span className="font-medium text-slate-900 bg-slate-100 px-1 rounded">{children}</span>,
+  },
   block: {
     normal: ({ children }) => {
       // Don't render empty blocks
