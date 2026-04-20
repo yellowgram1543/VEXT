@@ -18,10 +18,12 @@
 - AUTH-02: Secure `/chapters` and `/modules` routes so they redirect to login if unauthenticated.
 - AUTH-03: Surface the active user's session in the UI (profile icon, name).
 
-### UI/UX Polish (UI)
-- UI-01: Implement a main navigation sidebar showing JLPT levels or chapters.
-- UI-02: Add visual progress indicators (checkmarks or progress bars) to chapter lists.
-- UI-03: Responsive design for lesson content (ensuring readability on mobile).
+### Bunpo-Style UI/UX (UI)
+- UI-01: Implement a clean minimalist design following the Bunpo-style aesthetic.
+- UI-02: Create interactive lesson cards for immersive and focused learning.
+- UI-03: Implement progress visualization (progress bars, level stats) matching the Bunpo experience.
+- UI-04: Implement a main navigation sidebar showing JLPT levels or chapters.
+- UI-05: Ensure responsive design for all interactive elements (mobile-first).
 
 ## Traceability
 
@@ -34,9 +36,11 @@
 | PROG-01 | Phase 3 | Pending |
 | PROG-02 | Phase 3 | Pending |
 | PROG-03 | Phase 3 | Pending |
-| AUTH-01 | Phase 1 | Pending |
+| AUTH-01 | Phase 1 | In Progress |
 | AUTH-02 | Phase 1 | Pending |
 | AUTH-03 | Phase 1 | Pending |
 | UI-01 | Phase 4 | Pending |
 | UI-02 | Phase 4 | Pending |
 | UI-03 | Phase 4 | Pending |
+| UI-04 | Phase 4 | Pending |
+| UI-05 | Phase 4 | Pending |

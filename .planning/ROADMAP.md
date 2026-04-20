@@ -1,11 +1,14 @@
 # Project Roadmap: JLPT Learning Platform
 
+## Global Mandates
+- **Phase Completion**: STOP and SUMMARIZE after every phase completion. Do not proceed to the next phase without a summary and user confirmation.
+
 ## Summary checklist
 
 - [ ] **Phase 1: Foundation & Auth** - Set up secure access and user sessions.
 - [ ] **Phase 2: Live Content Integration** - Transition from sample data to dynamic Sanity CMS fetches.
 - [ ] **Phase 3: Progress & Persistence** - Implement database-driven user progress tracking.
-- [ ] **Phase 4: UI/UX & Polish** - Refine the interface for a cohesive and responsive learning experience.
+- [ ] **Phase 4: Bunpo-Style UI/UX & Interactivity** - Implement a clean, minimalist experience with interactive lesson cards and visualizations.
 
 ## Phase Details
 
@@ -18,7 +21,7 @@
   2. Unauthenticated users are automatically redirected to the login page when accessing protected learning routes.
   3. The active user's name and profile information are visible in the app header.
 **Plans**:
-- [ ] 01-01-PLAN.md — Fix stability issues (Prisma, Next.js 15 params) and generate client.
+- [x] 01-01-PLAN.md — Fix stability issues (Prisma, Next.js 15 params) and generate client.
 - [ ] 01-02-PLAN.md — Configure NextAuth with Prisma and implement route protection middleware.
 - [ ] 01-03-PLAN.md — Create Navbar with profile support and verify end-to-end flow.
 **UI hint**: yes
@@ -44,14 +47,16 @@
   3. Returning users see their previously completed lessons correctly marked in the interface.
 **Plans**: TBD
 
-### Phase 4: UI/UX & Polish
-**Goal**: The platform provides a professional, accessible, and intuitive interface for students.
+### Phase 4: Bunpo-Style UI/UX & Interactivity
+**Goal**: The platform provides a clean, minimalist learning experience matching the Bunpo app aesthetic.
 **Depends on**: Phase 2, Phase 3
-**Requirements**: UI-01, UI-02, UI-03
+**Requirements**: UI-01, UI-02, UI-03, UI-04, UI-05
 **Success Criteria** (what must be TRUE):
-  1. A sidebar or dashboard allows users to navigate intuitively between JLPT levels and chapters.
-  2. Completion checkmarks and progress bars provide immediate visual feedback on learning status.
-  3. The lesson interface is fully responsive and readable on mobile devices.
+  1. Interface uses a clean, minimalist design (whitespace, typography, and color palette) matching the Bunpo style.
+  2. Lessons are presented through interactive cards that the user can progress through.
+  3. Circular or linear progress bars provide clear visualization of completion percentage for chapters/levels.
+  4. Sidebar navigation allows seamless transitions between levels and chapters.
+  5. The entire interactive experience is fully responsive and optimized for mobile-first usage.
 **Plans**: TBD
 **UI hint**: yes
 
@@ -59,7 +64,7 @@
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation & Auth | 0/3 | In Progress | - |
+| 1. Foundation & Auth | 1/3 | In Progress | 2026-04-20 |
 | 2. Live Content Integration | 0/1 | Not started | - |
 | 3. Progress & Persistence | 0/1 | Not started | - |
-| 4. UI/UX & Polish | 0/1 | Not started | - |
+| 4. Bunpo-Style UI/UX & Interactivity | 0/1 | Not started | - |
