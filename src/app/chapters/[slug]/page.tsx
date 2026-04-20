@@ -1,15 +1,15 @@
 'use client'
 
 import Link from 'next/link'
-import { useState, useEffect, use } from 'react'
+import * as React from 'react'
 import { useSession } from 'next-auth/react'
 import { sampleChapters } from '@/data/sample-content'
 
 export default function ChapterPage({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = use(params)
+  const { slug } = React.use(params)
   const { data: session } = useSession()
-  const [completed, setCompleted] = useState(false)
-  const [loading, setLoading] = useState(false)
+  const [completed, setCompleted] = React.useState(false)
+  const [loading, setLoading] = React.useState(false)
 
   // In a real app, you would fetch based on the slug from Sanity
   const chapter = sampleChapters.find(c => c.slug.current === slug) || sampleChapters[0];
