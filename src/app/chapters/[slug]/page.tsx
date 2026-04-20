@@ -55,7 +55,7 @@ export default async function ChapterPage({ params }: ChapterPageProps) {
   const moduleSlug = chapter.module?.slug || 'm1' // Fallback for safety
 
   return (
-    <main className="min-h-screen bg-slate-50/50">
+    <main className="min-h-screen bg-slate-50/50 animate-fade-in">
       <nav className="border-b border-slate-200 bg-white/80 sticky top-0 z-10 backdrop-blur-md">
         <div className="max-w-4xl mx-auto px-4 h-16 flex items-center justify-between">
           <Link href={`/modules/${moduleSlug}`} className="text-slate-500 hover:text-slate-900 flex items-center transition-colors">

@@ -9,7 +9,9 @@ export const modulesQuery = groq`
     title,
     description,
     level,
-    order
+    order,
+    "chapterCount": count(*[_type == "chapter" && module._ref == ^._id]),
+    "chapterIds": *[_type == "chapter" && module._ref == ^._id]._id
   }
 `
 
