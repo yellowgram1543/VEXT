@@ -58,6 +58,6 @@
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Live Content Integration | 0/3 | In Progress | - |
+| 1. Live Content Integration | 1/3 | In Progress | - |
 | 2. Progress & Persistence | 0/2 | Not started | - |
-| 3. Bunpo-Style UI/UX & Interactivity | 0/3 | Not started | - |
+| 3. Bunpo-Style UI/UX & Interactivity | 1/3 | In Progress | 2026-04-20 |
