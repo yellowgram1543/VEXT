@@ -30,10 +30,13 @@
 **Depends on**: Phase 1
 **Requirements**: PROG-01, PROG-02, PROG-03
 **Success Criteria** (what must be TRUE):
-  1. Prisma schema supports `Progress` records.
+  1. Prisma schema supports `Progress` records without authentication.
   2. Completing a lesson triggers a successful API call to save progress in the database.
   3. Returning users see their previously completed lessons correctly marked in the interface (e.g., via session or global state).
-**Plans**: TBD
+**Plans**: 2 plans
+- [ ] 02-01-PLAN.md — Database & API Core
+- [ ] 02-02-PLAN.md — Progress UI Integration
+**UI hint**: yes
 
 ### Phase 3: Bunpo-Style UI/UX & Interactivity
 **Goal**: The platform provides a clean, minimalist learning experience matching the Bunpo app aesthetic.
@@ -45,13 +48,16 @@
   3. Circular or linear progress bars provide clear visualization of completion percentage for chapters/levels.
   4. Sidebar navigation allows seamless transitions between levels and chapters.
   5. The entire interactive experience is fully responsive and optimized for mobile-first usage.
-**Plans**: TBD
+**Plans**: 3 plans
+- [ ] 03-01-PLAN.md — Global Aesthetics & UI Foundation
+- [ ] 03-02-PLAN.md — Grammar Cards & Interactive Content
+- [ ] 03-03-PLAN.md — Progress & Polish
 **UI hint**: yes
 
 ## Progress Table
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Live Content Integration | 0/3 | Not started | - |
-| 2. Progress & Persistence | 0/1 | Not started | - |
-| 3. Bunpo-Style UI/UX & Interactivity | 0/1 | Not started | - |
+| 1. Live Content Integration | 0/3 | In Progress | - |
+| 2. Progress & Persistence | 0/2 | Not started | - |
+| 3. Bunpo-Style UI/UX & Interactivity | 0/3 | Not started | - |

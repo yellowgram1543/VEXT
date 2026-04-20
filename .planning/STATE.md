@@ -6,8 +6,8 @@
 
 ## Current Position
 **Current Phase**: Phase 1: Live Content Integration
-**Current Plan**: 01-01-PLAN.md
-**Status**: 🟢 READY (Phase 1 planned)
+**Current Plan**: 01-03-PLAN.md (Next)
+**Status**: 🟢 READY (Phase 1, 2, and 3 planned)
 
 [--------------------] 0% Complete
 
@@ -23,11 +23,14 @@
 - **Bunpo-Style Priority**: Final phase dedicated to minimalist UI, interactive lesson cards, and specialized progress visualizations. (D-BUNPO-PRIORITY)
 - **Stop-and-Summarize Mandate**: A global mandate is now in effect to stop and summarize progress after every phase completion. (D-SUMMARIZE)
 - **CMS First**: Prioritizing dynamic content fetching from Sanity to provide real data for all subsequent features. (D-CMS-FIRST)
+- **No-Auth Progress**: Progress tracking in Phase 2 will be database-driven but without authentication, assuming a single global state for individual use. (D-NO-AUTH-PROGRESS)
 
 ### Todos & Blockers
 - [x] Initialize Phase 1 plan (`/gsd-plan-phase 1`).
+- [x] Initialize Phase 2 plan (`/gsd-plan-phase 2`).
+- [x] Initialize Phase 3 plan (`/gsd-plan-phase 3`).
 - [ ] Connect to Sanity project and verify schema.
 
 ## Session Continuity
-**Last session ends**: Planned Phase 1 with 3 waves covering Sanity integration and public access.
-**Next session starts**: Execute `01-01-PLAN.md` to setup Sanity queries and open routing.
+**Last session ends**: Planned Phase 3 with 3 waves covering aesthetics, cards, and progress visualization.
+**Next session starts**: Execute `01-03-PLAN.md` (Phase 1) or proceed to Phase 2/3 as needed.
