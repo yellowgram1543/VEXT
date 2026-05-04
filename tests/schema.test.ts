@@ -40,6 +40,10 @@ describe('Sanity Schema Hierarchy', () => {
     const testField = fields.find((f: any) => f.name === 'test')
     expect(testField).toBeDefined()
     expect(testField.type).toBe('test')
+
+    const applyField = fields.find((f: any) => f.name === 'apply')
+    expect(applyField).toBeDefined()
+    expect(applyField.type).toBe('apply')
   })
 
   it('should have a valid test schema with quiz questions', async () => {
@@ -51,5 +55,16 @@ describe('Sanity Schema Hierarchy', () => {
     expect(questionFields.find((f: any) => f.name === 'type').options.list).toContainEqual({ title: 'Scenario', value: 'scenario' })
     expect(questionFields.find((f: any) => f.name === 'type').options.list).toContainEqual({ title: 'Visual', value: 'visual' })
     expect(questionFields.find((f: any) => f.name === 'image').hidden).toBeDefined()
+  })
+
+  it('should have a valid apply schema with sandbox config', async () => {
+    const { default: applySchema, sandboxConfig } = await import('../src/sanity/schemaTypes/objects/apply')
+    expect(applySchema.name).toBe('apply')
+    expect(sandboxConfig.name).toBe('sandboxConfig')
+    
+    const sandboxFields = (sandboxConfig as any).fields
+    expect(sandboxFields.find((f: any) => f.name === 'runtime')).toBeDefined()
+    expect(sandboxFields.find((f: any) => f.name === 'entryPoint')).toBeDefined()
+    expect(sandboxFields.find((f: any) => f.name === 'requirements')).toBeDefined()
   })
 })

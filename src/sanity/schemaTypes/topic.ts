@@ -48,5 +48,10 @@ export default defineType({
       title: 'Test Stage',
       type: 'test',
     }),
+    defineField({
+      name: 'apply',
+      title: 'Apply Stage',
+      type: 'apply',
+    }),
   ],
 })
