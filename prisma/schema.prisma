@@ -1,8 +1,5 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
-  provider = "prisma-client-js"
+  provider   = "prisma-client-js"
   engineType = "library"
 }
 
@@ -11,20 +8,19 @@ datasource db {
 }
 
 model Account {
-  id                 String  @id @default(cuid())
-  userId             String
-  type               String
-  provider           String
-  providerAccountId  String
-  refresh_token      String?
-  access_token       String?
-  expires_at         Int?
-  token_type         String?
-  scope              String?
-  id_token           String?
-  session_state      String?
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)   
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
 }
@@ -38,15 +34,15 @@ model Session {
 }
 
 model User {
-  id            String    @id @default(cuid())
+  id            String        @id @default(cuid())
   name          String?
-  email         String?   @unique
+  email         String?       @unique
   emailVerified DateTime?
   image         String?
   password      String?
   accounts      Account[]
-  sessions      Session[]
   quizAttempts  QuizAttempt[]
+  sessions      Session[]
   mastery       UserMastery?
 }
 
@@ -58,15 +54,6 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
-// --- Learning Engine Models ---
-
-enum StageType {
-  UNDERSTAND
-  REINFORCE
-  TEST
-  APPLY
-}
-
 model Phase {
   id          String   @id @default(cuid())
   order       Int
@@ -76,23 +63,23 @@ model Phase {
 }
 
 model Module {
-  id          String   @id @default(cuid())
+  id          String  @id @default(cuid())
   phaseId     String
   order       Int
   title       String
   description String?
-  phase       Phase    @relation(fields: [phaseId], references: [id])
+  phase       Phase   @relation(fields: [phaseId], references: [id])
   topics      Topic[]
 }
 
 model Topic {
-  id          String          @id @default(cuid())
-  moduleId    String
-  order       Int
-  title       String
-  slug        String          @unique
-  module      Module          @relation(fields: [moduleId], references: [id])
-  attempts    QuizAttempt[]
+  id       String        @id @default(cuid())
+  moduleId String
+  order    Int
+  title    String
+  slug     String        @unique
+  attempts QuizAttempt[]
+  module   Module        @relation(fields: [moduleId], references: [id])
 }
 
 model Progress {
@@ -107,8 +94,8 @@ model QuizAttempt {
   score     Float
   passed    Boolean
   createdAt DateTime @default(now())
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   topic     Topic    @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model UserMastery {
@@ -119,4 +106,11 @@ model UserMastery {
   conceptsScore Float    @default(0)
   updatedAt     DateTime @updatedAt
   user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+enum StageType {
+  UNDERSTAND
+  REINFORCE
+  TEST
+  APPLY
 }
