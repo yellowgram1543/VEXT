@@ -3,10 +3,11 @@
 
 generator client {
   provider = "prisma-client-js"
+  engineType = "library"
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
 }
 
 model Account {
@@ -15,15 +16,15 @@ model Account {
   type               String
   provider           String
   providerAccountId  String
-  refresh_token      String?  @db.Text
-  access_token       String?  @db.Text
+  refresh_token      String?
+  access_token       String?
   expires_at         Int?
   token_type         String?
   scope              String?
-  id_token           String?  @db.Text
+  id_token           String?
   session_state      String?
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)   
 
   @@unique([provider, providerAccountId])
 }
@@ -45,7 +46,8 @@ model User {
   password      String?
   accounts      Account[]
   sessions      Session[]
-  progress      Progress[]
+  quizAttempts  QuizAttempt[]
+  mastery       UserMastery?
 }
 
 model VerificationToken {
@@ -56,15 +58,65 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
+// --- Learning Engine Models ---
+
+enum StageType {
+  UNDERSTAND
+  REINFORCE
+  TEST
+  APPLY
+}
+
+model Phase {
+  id          String   @id @default(cuid())
+  order       Int
+  title       String
+  description String?
+  modules     Module[]
+}
+
+model Module {
+  id          String   @id @default(cuid())
+  phaseId     String
+  order       Int
+  title       String
+  description String?
+  phase       Phase    @relation(fields: [phaseId], references: [id])
+  topics      Topic[]
+}
+
+model Topic {
+  id          String          @id @default(cuid())
+  moduleId    String
+  order       Int
+  title       String
+  slug        String          @unique
+  module      Module          @relation(fields: [moduleId], references: [id])
+  attempts    QuizAttempt[]
+}
+
 model Progress {
+  chapterId   String   @id
+  completedAt DateTime @default(now())
+}
+
+model QuizAttempt {
   id        String   @id @default(cuid())
   userId    String
-  moduleId  String   // Sanity Module ID
-  chapterId String   // Sanity Chapter ID
-  completed Boolean  @default(false)
-  updatedAt DateTime @updatedAt
+  topicId   String
+  score     Float
+  passed    Boolean
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  topic     Topic    @relation(fields: [topicId], references: [id], onDelete: Cascade)
+}
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@unique([userId, chapterId])
+model UserMastery {
+  id            String   @id @default(cuid())
+  userId        String   @unique
+  mathScore     Float    @default(0)
+  codingScore   Float    @default(0)
+  conceptsScore Float    @default(0)
+  updatedAt     DateTime @updatedAt
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
