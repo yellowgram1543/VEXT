@@ -21,12 +21,35 @@ describe('Sanity Schema Hierarchy', () => {
     expect(phaseField.to[0].type).toBe('phase')
   })
 
-  it('should have a topic schema referencing module', () => {
+  it('should have a topic schema referencing module and stages', () => {
     expect(topic.name).toBe('topic')
     const fields = (topic as any).fields
     const moduleField = fields.find((f: any) => f.name === 'module')
     expect(moduleField).toBeDefined()
     expect(moduleField.type).toBe('reference')
     expect(moduleField.to[0].type).toBe('module')
+
+    const understandField = fields.find((f: any) => f.name === 'understand')
+    expect(understandField).toBeDefined()
+    expect(understandField.type).toBe('understand')
+
+    const reinforceField = fields.find((f: any) => f.name === 'reinforce')
+    expect(reinforceField).toBeDefined()
+    expect(reinforceField.type).toBe('reinforce')
+
+    const testField = fields.find((f: any) => f.name === 'test')
+    expect(testField).toBeDefined()
+    expect(testField.type).toBe('test')
+  })
+
+  it('should have a valid test schema with quiz questions', async () => {
+    const { default: testSchema, quizQuestion } = await import('../src/sanity/schemaTypes/objects/test')
+    expect(testSchema.name).toBe('test')
+    expect(quizQuestion.name).toBe('quizQuestion')
+    
+    const questionFields = (quizQuestion as any).fields
+    expect(questionFields.find((f: any) => f.name === 'type').options.list).toContainEqual({ title: 'Scenario', value: 'scenario' })
+    expect(questionFields.find((f: any) => f.name === 'type').options.list).toContainEqual({ title: 'Visual', value: 'visual' })
+    expect(questionFields.find((f: any) => f.name === 'image').hidden).toBeDefined()
   })
 })

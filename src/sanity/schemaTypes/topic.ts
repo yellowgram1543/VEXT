@@ -36,26 +36,17 @@ export default defineType({
     defineField({
       name: 'understand',
       title: 'Understand Stage',
-      type: 'object',
-      fields: [
-        defineField({
-          name: 'placeholder',
-          type: 'string',
-          initialValue: 'Stage implementation pending'
-        })
-      ]
+      type: 'understand',
     }),
     defineField({
       name: 'reinforce',
       title: 'Reinforce Stage',
-      type: 'object',
-      fields: [
-        defineField({
-          name: 'placeholder',
-          type: 'string',
-          initialValue: 'Stage implementation pending'
-        })
-      ]
+      type: 'reinforce',
+    }),
+    defineField({
+      name: 'test',
+      title: 'Test Stage',
+      type: 'test',
     }),
   ],
 })
