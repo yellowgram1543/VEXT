@@ -1,8 +1,8 @@
 import { defineField, defineType } from 'sanity'
 
 export default defineType({
-  name: 'module',
-  title: 'Module',
+  name: 'phase',
+  title: 'Phase',
   type: 'document',
   fields: [
     defineField({
@@ -12,21 +12,24 @@ export default defineType({
       validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: 'description',
-      title: 'Description',
-      type: 'text',
-    }),
-    defineField({
-      name: 'phase',
-      title: 'Phase',
-      type: 'reference',
-      to: [{ type: 'phase' }],
+      name: 'slug',
+      title: 'Slug',
+      type: 'slug',
+      options: {
+        source: 'title',
+        maxLength: 96,
+      },
       validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: 'order',
       title: 'Order',
       type: 'number',
+    }),
+    defineField({
+      name: 'description',
+      title: 'Description',
+      type: 'text',
     }),
   ],
 })
