@@ -83,8 +83,9 @@ model Topic {
 }
 
 model Progress {
-  chapterId   String   @id
-  completedAt DateTime @default(now())
+  chapterId    String    @id
+  highestStage StageType @default(UNDERSTAND)
+  completedAt  DateTime?
 }
 
 model QuizAttempt {
@@ -111,6 +112,18 @@ model UserMastery {
 enum StageType {
   UNDERSTAND
   REINFORCE
+  PRACTICE
   TEST
   APPLY
+}
+
+model Submission {
+  id         String    @id @default(cuid())
+  topicId    String
+  stage      StageType
+  userId     String?   // Optional for prototype
+  content    String    // The submitted code or math
+  result     String?   // The output or result of evaluation
+  success    Boolean
+  createdAt  DateTime  @default(now())
 }
