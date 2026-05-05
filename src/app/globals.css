@@ -61,11 +61,11 @@
 
 @utility neo-brutal-interactive {
   transition: transform 0.1s ease, box-shadow 0.1s ease;
-}
 
-@utility neo-brutal-interactive:active {
-  transform: translate(4px, 4px);
-  box-shadow: none;
+  &:active {
+    transform: translate(4px, 4px);
+    box-shadow: none;
+  }
 }
 
 /* Base styles */

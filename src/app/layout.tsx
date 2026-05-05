@@ -1,23 +1,31 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Space_Grotesk, Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import AuthContext from "@/components/AuthContext";
+import TopNav from "@/components/layout/TopNav";
+import Sidebar from "@/components/layout/Sidebar";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const spaceGrotesk = Space_Grotesk({
+  variable: "--font-space-grotesk",
   subsets: ["latin"],
   display: "swap",
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const inter = Inter({
+  variable: "--font-inter",
+  subsets: ["latin"],
+  display: "swap",
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  variable: "--font-jetbrains-mono",
   subsets: ["latin"],
   display: "swap",
 });
 
 export const metadata: Metadata = {
-  title: "JLPT Learning Platform",
-  description: "A premium, minimalist JLPT learning experience inspired by Bunpo.",
+  title: "ML Cognitive Coach",
+  description: "A neo-brutalist learning experience for machine learning.",
 };
 
 export default function RootLayout({
@@ -29,10 +37,22 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${spaceGrotesk.variable} ${inter.variable} ${jetbrainsMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-background text-foreground font-sans">
-        <AuthContext>{children}</AuthContext>
+      <body className="min-h-full bg-background text-on-background font-body">
+        <AuthContext>
+          <div className="flex min-h-screen">
+            <Sidebar />
+            <div className="flex-1 flex flex-col min-w-0">
+              <TopNav />
+              <main className="flex-1 pt-20 px-6 md:px-12 pb-12 overflow-y-auto">
+                <div className="max-w-[1000px] mx-auto">
+                  {children}
+                </div>
+              </main>
+            </div>
+          </div>
+        </AuthContext>
       </body>
     </html>
   );
