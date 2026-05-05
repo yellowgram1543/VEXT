@@ -1,64 +1,72 @@
-# Project Roadmap: JLPT Learning Platform
+# Project Roadmap: ML Cognitive Coach
 
 ## Global Mandates
 - **Phase Completion**: STOP and SUMMARIZE after every phase completion. Do not proceed to the next phase without a summary and user confirmation.
+- **3-Tier Separation**: Ensure State, Content, and Execution logic remain decoupled.
 
-## Summary checklist
+## Summary Checklist
 
-- [ ] **Phase 1: Live Content Integration** - Transition from sample data to dynamic Sanity CMS fetches.
-- [ ] **Phase 2: Progress & Persistence** - Implement database-driven progress tracking.
-- [ ] **Phase 3: Bunpo-Style UI/UX & Interactivity** - Implement a clean, minimalist experience with interactive lesson cards and visualizations.
+- [x] **Phase 1: State Machine & Schema Engine** - Define the learning flow and mastery tracking in Prisma.
+- [x] **Phase 2: Content Architecture & Persistence** - Model the CMS for ML topics and implement persistent progress.
+- [x] **Phase 3: Brutalist UI & Dashboard** - Implement the high-contrast Neo-Brutalist UI and dashboard state.
+- [ ] **Phase 4: Execution Engine Integration** - Connect the validation layer for code and math evaluation.
 
 ## Phase Details
 
-### Phase 1: Live Content Integration
-**Goal**: All learning content is dynamically fetched from Sanity CMS, removing reliance on sample files.
-**Depends on**: Nothing
-**Requirements**: CMS-01, CMS-02, CMS-03, CMS-04
-**Success Criteria** (what must be TRUE):
-  1. The application successfully connects to a live Sanity project without configuration errors.
-  2. Chapter and module pages render data fetched directly from Sanity.
-  3. The `src/data/sample-content.ts` file is deprecated and can be safely removed.
-**Plans**: 3 plans
-- [ ] 01-01-PLAN.md — Sanity Data Layer & Access
-- [ ] 01-02-PLAN.md — Live Modules (Home & Detail)
-- [ ] 01-03-PLAN.md — Live Chapters & Cleanup
-**UI hint**: yes
-
-### Phase 2: Progress & Persistence
-**Goal**: User accomplishments are recorded and retrieved from the database to ensure continuity.
-**Depends on**: Phase 1
-**Requirements**: PROG-01, PROG-02, PROG-03
-**Success Criteria** (what must be TRUE):
-  1. Prisma schema supports `Progress` records without authentication.
-  2. Completing a lesson triggers a successful API call to save progress in the database.
-  3. Returning users see their previously completed lessons correctly marked in the interface (e.g., via session or global state).
+### Phase 1: State Machine & Schema Engine
+**Goal**: The database becomes the source of truth for the learning state machine.
 **Plans**: 2 plans
-- [ ] 02-01-PLAN.md — Database & API Core
-- [ ] 02-02-PLAN.md — Progress UI Integration
-**UI hint**: yes
+- [x] 01-01-PLAN.md — Implement the 3-tier hierarchy and mastery models in Prisma.
+- [x] 01-02-PLAN.md — Validate schema integrity and implement core engine utility logic.
 
-### Phase 3: Bunpo-Style UI/UX & Interactivity
-**Goal**: The platform provides a clean, minimalist learning experience matching the Bunpo app aesthetic.
-**Depends on**: Phase 1, Phase 2
-**Requirements**: UI-01, UI-02, UI-03, UI-04, UI-05
-**Success Criteria** (what must be TRUE):
-  1. Interface uses a clean, minimalist design (whitespace, typography, and color palette) matching the Bunpo style.
-  2. Lessons are presented through interactive cards that the user can progress through.
-  3. Circular or linear progress bars provide clear visualization of completion percentage for chapters/levels.
-  4. Sidebar navigation allows seamless transitions between levels and chapters.
-  5. The entire interactive experience is fully responsive and optimized for mobile-first usage.
+**Success Criteria**:
+  1. Prisma schema supports `Phase`, `Module`, `Topic`, and `Stage` hierarchy.
+  2. `TopicProgress` model tracks gated stage unlocking (Content -> Example -> Practice -> Quiz -> Apply).
+  3. `QuizAttempt` and `UserMastery` models track performance and skill metrics.
+
+### Phase 2: Content Architecture & Persistence
+**Goal**: Sanity CMS is structured to deliver content tailored to the 5 stages of the learning engine, and progress is persisted in the database.
+**Plans**: 4 plans
+- [x] 02-01-PLAN.md (Sanity) — Implement core hierarchy (Phase/Module/Topic) and theoretical stages.
+- [x] 02-02-PLAN.md (Sanity) — Implement advanced stages (Test/Apply) and fetch validation.
+- [x] 02-01-PLAN.md (Progress) — Establish database foundation and core API for progress tracking.
+- [x] 02-02-PLAN.md (Progress) — Integrate persistent progress tracking into the UI.
+
+**Success Criteria**:
+  1. Sanity schema supports `practice` (Coding/Math) and `quiz` (Scenario/Visual) types.
+  2. Content blocks include Socratic prompts and sandbox configuration metadata.
+  3. API layer successfully fetches multi-stage content blocks for a specific topic.
+  4. User progress is persisted in the database and reflected across the UI.
+
+### Phase 3: Brutalist UI & Dashboard
+**Goal**: The application adopts the high-signal Neo-Brutalist design language.
 **Plans**: 3 plans
-- [x] 03-01-PLAN.md — Global Aesthetics & UI Foundation
-- [x] 03-02-PLAN.md — Grammar Cards & Interactive Content
-- [ ] 03-03-PLAN.md — Progress & Polish
-**UI hint**: yes
+- [x] 03-01-PLAN.md — Setup Tailwind tokens, global layout shell, and 5-stage backend alignment.
+- [x] 03-02-PLAN.md — Implement Brutalist Dashboard, Module cards, and Skill Mastery Maps.
+- [x] 03-03-PLAN.md — Implement Guided Topic Flow with gated navigation and stage-specific cells.
+
+**Success Criteria**:
+  1. Global styles reflect the thick borders, loud typography, and tactile feedback.
+  2. The Dashboard displays the "Resume Learning" path and skill-mastery maps.
+  3. Topic pages respect the Prisma-driven locks on stages (tabs).
+
+### Phase 4: Execution Engine Integration
+**Goal**: The platform can evaluate user-submitted code and math.
+**Plans**: 3 plans
+- [ ] 04-01-PLAN.md — Establish backend foundation for Python and Math evaluation.
+- [ ] 04-02-PLAN.md — Implement API evaluation layer and learning engine integration.
+- [ ] 04-03-PLAN.md — Connect UI cells to evaluation endpoints and finalize gated flow.
+
+**Success Criteria**:
+  1. A backend service (or edge function) validates Python code output against expected results.
+  2. Math inputs are evaluated for correctness.
+  3. Evaluation results are recorded in Prisma and trigger stage unlocking.
 
 ## Progress Table
 
-| Phase | Plans Complete | Status | Completed |
-|-------|----------------|--------|-----------|
-| 1. Live Content Integration | 2/3 | In Progress | - |
-| 2. Progress & Persistence | 0/2 | Not started | - |
-| 3. Bunpo-Style UI/UX & Interactivity | 2/3 | In Progress | 2026-04-20 |
-
+| Phase | Status |
+|-------|--------|
+| 1. State Machine & Schema Engine | Completed |
+| 2. Content Architecture & Persistence | Completed |
+| 3. Brutalist UI & Dashboard | Completed |
+| 4. Execution Engine Integration | In Progress |
