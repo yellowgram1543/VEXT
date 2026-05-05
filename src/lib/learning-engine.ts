@@ -1,12 +1,8 @@
 import { prisma } from "./prisma";
 import { StageType } from "@prisma/client";
-
-export const STAGE_ORDER: StageType[] = [
-  StageType.UNDERSTAND,
-  StageType.REINFORCE,
-  StageType.TEST,
-  StageType.APPLY,
-];
+import { STAGE_ORDER } from "./constants";
+import { compareMath } from "./evaluators/math";
+import { runPython } from "./evaluators/python";
 
 /**
  * Pure logic to check if a stage is unlocked given the highest unlocked stage.
@@ -40,20 +36,20 @@ export function getNextStage(current: StageType, quizScore?: number): StageType 
 }
 
 /**
- * DB: Retrieve or initialize TopicProgress.
+ * DB: Retrieve or initialize Progress.
+ * Note: Progress is now global (no userId) for the current prototype.
  */
-export async function getTopicProgress(userId: string, topicId: string) {
-  let progress = await prisma.topicProgress.findUnique({
+export async function getTopicProgress(topicId: string) {
+  let progress = await prisma.progress.findUnique({
     where: {
-      userId_topicId: { userId, topicId },
+      chapterId: topicId,
     },
   });
 
   if (!progress) {
-    progress = await prisma.topicProgress.create({
+    progress = await prisma.progress.create({
       data: {
-        userId,
-        topicId,
+        chapterId: topicId,
         highestStage: StageType.UNDERSTAND,
       },
     });
@@ -64,18 +60,18 @@ export async function getTopicProgress(userId: string, topicId: string) {
 
 /**
  * DB: Unlock the next stage sequentially.
- * This handles UNDERSTAND -> REINFORCE -> TEST.
+ * This handles UNDERSTAND -> REINFORCE -> PRACTICE -> TEST.
  * TEST -> APPLY is handled by submitQuiz.
  */
-export async function unlockNextStage(userId: string, topicId: string, currentStage: StageType) {
-  const progress = await getTopicProgress(userId, topicId);
+export async function unlockNextStage(topicId: string, currentStage: StageType) {
+  const progress = await getTopicProgress(topicId);
   
   const nextStage = getNextStage(currentStage);
 
   // If the logic says we can move forward and it's beyond current progress
   if (STAGE_ORDER.indexOf(nextStage) > STAGE_ORDER.indexOf(progress.highestStage)) {
-    return await prisma.topicProgress.update({
-      where: { id: progress.id },
+    return await prisma.progress.update({
+      where: { chapterId: topicId },
       data: { highestStage: nextStage },
     });
   }
@@ -84,7 +80,82 @@ export async function unlockNextStage(userId: string, topicId: string, currentSt
 }
 
 /**
+ * DB: Evaluate practice submission and record it.
+ */
+export async function evaluatePractice(
+  topicId: string,
+  type: 'math' | 'code',
+  submission: string,
+  expected: string,
+  userId?: string
+) {
+  let success = false;
+  let result = "";
+
+  if (type === 'math') {
+    success = compareMath(submission, expected);
+    result = success ? "Correct" : "Incorrect";
+  } else {
+    const evalResult = await runPython(submission);
+    result = evalResult.stdout || evalResult.stderr || evalResult.error || "";
+    success = !evalResult.error && evalResult.stdout.trim() === expected.trim();
+  }
+
+  // Record submission
+  await prisma.submission.create({
+    data: {
+      topicId,
+      stage: StageType.PRACTICE,
+      userId,
+      content: submission,
+      result,
+      success,
+    },
+  });
+
+  if (success) {
+    await unlockNextStage(topicId, StageType.PRACTICE);
+  }
+
+  return { success, result };
+}
+
+/**
+ * DB: Evaluate apply stage submission and record it.
+ */
+export async function evaluateApply(topicId: string, submission: string, userId?: string) {
+  const evalResult = await runPython(submission);
+  const result = evalResult.stdout || evalResult.stderr || evalResult.error || "";
+  const success = !evalResult.error;
+
+  // Record submission
+  await prisma.submission.create({
+    data: {
+      topicId,
+      stage: StageType.APPLY,
+      userId,
+      content: submission,
+      result,
+      success,
+    },
+  });
+
+  if (success) {
+    await prisma.progress.update({
+      where: { chapterId: topicId },
+      data: { 
+        completedAt: new Date(),
+      },
+    });
+  }
+
+  return { success, result };
+}
+
+/**
  * DB: Record quiz attempt and unlock APPLY if passed.
+ * Note: QuizAttempt still references User for historical reasons, 
+ * but Progress (the lock) is now global.
  */
 export async function submitQuiz(userId: string, topicId: string, score: number) {
   const passed = score >= 0.8;
@@ -99,13 +170,12 @@ export async function submitQuiz(userId: string, topicId: string, score: number)
   });
 
   if (passed) {
-    await prisma.topicProgress.upsert({
+    await prisma.progress.upsert({
       where: {
-        userId_topicId: { userId, topicId },
+        chapterId: topicId,
       },
       create: {
-        userId,
-        topicId,
+        chapterId: topicId,
         highestStage: StageType.APPLY,
       },
       update: {
@@ -113,7 +183,7 @@ export async function submitQuiz(userId: string, topicId: string, score: number)
       },
     });
     
-    // Update UserMastery - simplistic for now as per plan focus on state machine
+    // Update UserMastery
     await prisma.userMastery.upsert({
       where: { userId },
       create: {
