@@ -2,7 +2,6 @@
 
 import React from 'react';
 import ReinforceCell from '@/components/stages/ReinforceCell';
-import { StageType } from '@prisma/client';
 
 export default function ReinforceDebugPage() {
   const demoData = {

@@ -31,6 +31,7 @@ interface Pitfall {
 }
 
 interface ReinforceCellProps {
+  practices?: any[]; // Keep for compatibility with TopicFlow
   data?: {
     basic: ExampleTier;
     intermediate: ExampleTier;
@@ -151,7 +152,7 @@ const PitfallsSection = ({ pitfalls }: { pitfalls: Pitfall[] }) => {
   );
 };
 
-export default function ReinforceCell({ data, onComplete, status, loading }: ReinforceCellProps) {
+export default function ReinforceCell({ practices, data, onComplete, status, loading }: ReinforceCellProps) {
   const isCompleted = status === 'COMPLETED';
 
   // Mock data if real data isn't provided (to show the new UI immediately)
