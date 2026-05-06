@@ -35,23 +35,74 @@ export const moduleByIdQuery = groq`
 `
 
 /**
- * Fetches a single chapter by slug.
+ * Fetches a single chapter or topic by slug.
  */
 export const chapterBySlugQuery = groq`
-  *[_type == "chapter" && slug.current == $slug][0] {
+  *[(_type == "chapter" || _type == "topic") && slug.current == $slug][0] {
     _id,
+    _type,
     title,
     slug,
     order,
     content,
     "module": module-> {
       _id,
-      title,
-      "slug": slug.current
+      title
     },
-    "nextChapter": *[_type == "chapter" && module._ref == ^.module._ref && order > ^.order] | order(order asc)[0] {
+    "nextChapter": *[(_type == "chapter" || _type == "topic") && module._ref == ^.module._ref && order > ^.order] | order(order asc)[0] {
       title,
       slug
+    },
+    understand {
+      content[] {
+        ...,
+        _type == "socraticPrompt" => {
+          question,
+          hint,
+          explanation
+        }
+      }
+    },
+    reinforce {
+      practices[] {
+        ...
+      }
+    },
+    test {
+      questions[] {
+        question,
+        type,
+        "image": image.asset->url,
+        options,
+        correctAnswer,
+        explanation
+      }
+    },
+    apply {
+      instruction,
+      spec,
+      sandbox {
+        runtime,
+        entryPoint,
+        requirements
+      }
+    }
+  }
+`
+
+/**
+ * Fetches all modules and their chapters for the hierarchical sidebar.
+ */
+export const sidebarHierarchyQuery = groq`
+  *[_type == "module"] | order(order asc) {
+    _id,
+    title,
+    order,
+    "chapters": *[(_type == "chapter" || _type == "topic") && module._ref == ^._id] | order(order asc) {
+      _id,
+      title,
+      slug,
+      order
     }
   }
 `

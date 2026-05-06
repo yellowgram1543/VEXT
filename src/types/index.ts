@@ -2,28 +2,56 @@ export interface Module {
   _id: string;
   title: string;
   description: string;
-  level: 'N5' | 'N4' | 'N3' | 'N2' | 'N1';
   order: number;
   slug?: { current: string };
-  chapters?: Chapter[];
+  chapters?: Topic[];
   chapterCount?: number;
   chapterIds?: string[];
 }
 
-export interface Chapter {
+export interface Topic {
   _id: string;
+  _type: 'topic' | 'chapter';
   title: string;
   slug: { current: string };
   order: number;
-  content: any[]; // Using any[] for now as PortableText is complex, but I'll try to refine
+  content?: any[]; // Legacy
   module?: {
     _id: string;
     title: string;
-    slug: string;
   };
   nextChapter?: {
     title: string;
     slug: { current: string };
   };
-  completed?: boolean;
+  understand?: {
+    content: any[];
+  };
+  reinforce?: {
+    practices: any[];
+  };
+  test?: {
+    questions: QuizQuestion[];
+  };
+  apply?: {
+    instruction: string;
+    spec: any[];
+    sandbox: {
+      runtime: string;
+      entryPoint: string;
+      requirements: string[];
+    };
+  };
+}
+
+export interface QuizQuestion {
+  id: string;
+  type: 'mcq' | 'true-false' | 'scenario' | 'debugging' | 'interpretation' | 'model-selection' | 'interview' | 'numerical';
+  question: string;
+  options?: string[];
+  correctAnswer: string | number;
+  explanation: string;
+  code?: string;
+  image?: string;
+  hint?: string;
 }

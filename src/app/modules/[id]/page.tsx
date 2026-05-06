@@ -1,29 +1,31 @@
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { fetchSanity } from '@/lib/sanity'
-import { moduleByIdQuery } from '@/lib/sanity.queries'
+import { sidebarHierarchyQuery } from '@/lib/sanity.queries'
 import { Module } from '@/types'
 import { prisma } from '@/lib/prisma'
-import ProgressBar from '@/components/ProgressBar'
+import { isChapterLocked } from '@/lib/progress-utils'
+
+import { Progress } from '@prisma/client'
+import { cn } from '@/lib/utils'
 
 export default async function ModulePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
-  
-  let moduleData: Module | null = null;
+
+  let allModules: Module[] = [];
+  let currentModule: Module | null = null;
+  let progressData: Progress[] = [];
   let error = false
-  let completedChapterIds: Set<string> = new Set()
 
   try {
-    // Parallel fetch for module data and progress
-    const [sanityData, progressData] = await Promise.all([
-      fetchSanity<Module>(moduleByIdQuery, { id }),
-      prisma.progress.findMany({
-        select: { chapterId: true }
-      })
+    const [sanityModules, dbProgress] = await Promise.all([
+      fetchSanity<Module[]>(sidebarHierarchyQuery),
+      prisma.progress.findMany()
     ])
-    
-    moduleData = sanityData
-    completedChapterIds = new Set(progressData.map(p => p.chapterId))
+
+    allModules = sanityModules;
+    currentModule = sanityModules.find(m => m._id === id) || null;
+    progressData = dbProgress;
   } catch (e) {
     console.error('Error fetching module data:', e)
     error = true
@@ -31,95 +33,115 @@ export default async function ModulePage({ params }: { params: Promise<{ id: str
 
   if (error) {
     return (
-      <main className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-3xl mx-auto text-center">
-          <h1 className="text-2xl font-bold text-red-600 mb-4">Error</h1>
-          <p className="text-gray-600 mb-8">Failed to load module details. Please try again later.</p>
-          <Link href="/" className="text-blue-600 hover:underline">
-            Back to Home
+      <main className="min-h-screen bg-background py-12 px-4 sm:px-6 lg:px-8">  
+        <div className="max-w-3xl mx-auto text-center bg-error-container border-3 border-brand-dark p-8 rounded-neo neo-brutal-shadow">
+          <h1 className="text-2xl font-black text-on-error-container mb-4 uppercase">Error</h1>    
+          <p className="text-on-error-container mb-8 font-medium">Failed to load module details. Please try again later.</p>
+          <Link href="/" className="inline-block bg-white border-3 border-brand-dark px-6 py-2 rounded-neo font-bold hover:bg-surface-container transition-colors">
+            Back to Dashboard
           </Link>
         </div>
       </main>
     )
   }
 
-  if (!moduleData) {
+
+  if (!currentModule) {
     notFound()
   }
 
-  const chapters = moduleData.chapters || []
-  const totalChapters = chapters.length
-  const completedCount = chapters.filter(c => completedChapterIds.has(c._id)).length
-  const progressPercentage = totalChapters > 0 ? (completedCount / totalChapters) * 100 : 0
+  const chapters = currentModule.chapters || []
 
   return (
-    <main className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8 animate-fade-in">
-      <div className="max-w-3xl mx-auto">
-        <Link href="/" className="text-blue-600 hover:text-blue-800 mb-8 inline-block">
-          ← Back to All Modules
+    <main className="min-h-screen bg-background font-body py-12 px-4 sm:px-6 lg:px-8 animate-fade-in">
+      <div className="max-w-4xl mx-auto">
+        <Link href="/" className="group flex items-center gap-2 text-brand-dark font-heading font-bold uppercase text-xs tracking-widest mb-8 hover:underline">
+           <span>←</span> Back to Dashboard
         </Link>
-        <header className="mb-10 bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
-          <div className="flex items-center space-x-2 mb-4">
-            <span className="px-3 py-1 bg-blue-100 text-blue-700 text-xs font-bold rounded-full">{moduleData.level}</span>
-            <span className="text-gray-400">/</span>
-            <span className="text-gray-500 font-medium">Module {moduleData.order}</span>
-          </div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-4">{moduleData.title}</h1>
-          <p className="text-lg text-gray-600 mb-8">{moduleData.description}</p>
-          
-          <div className="pt-6 border-t border-gray-100">
-            <div className="flex justify-between items-end mb-2">
-              <div>
-                <span className="text-3xl font-bold text-blue-600">{Math.round(progressPercentage)}%</span>
-                <span className="text-gray-400 ml-2 font-medium">Complete</span>
-              </div>
-              <span className="text-sm text-gray-500 font-medium">
-                {completedCount} of {totalChapters} chapters mastered
-              </span>
-            </div>
-            <ProgressBar progress={progressPercentage} size="md" />
+        
+        <header className="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 gap-8">
+          <div>
+            <p className="font-heading font-bold uppercase text-secondary tracking-widest text-xs mb-1">
+              Current Module
+            </p>
+            <h1 className="text-5xl font-black text-brand-dark">
+              {currentModule.title}
+            </h1>
+            <p className="text-lg text-brand-dark/70 font-medium mt-4 max-w-2xl">
+              {currentModule.description}
+            </p>
           </div>
         </header>
 
-        <section className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-          <div className="px-6 py-4 border-b border-gray-200 bg-gray-50/50">
-            <h2 className="text-sm font-bold text-gray-500 uppercase tracking-wider">Course Curriculum</h2>
+        <section className="space-y-cell-gap">
+          <div className="flex items-center justify-between mb-4">
+             <h2 className="text-sm font-black text-brand-dark uppercase tracking-widest">Chapters / Curriculum</h2>
+             <span className="text-[10px] font-bold text-brand-dark/50 uppercase">{chapters.length} Units</span>
           </div>
-          <div className="divide-y divide-gray-200">
+          
+          <div className="flex flex-col gap-3">
             {chapters.length > 0 ? (
               chapters.map((chapter) => {
-                const isCompleted = completedChapterIds.has(chapter._id)
+                const isLocked = isChapterLocked(chapter._id, allModules, progressData);
+                const progressRecord = progressData.find(p => p.chapterId === chapter._id);
+                const isCompleted = !!progressRecord?.completedAt;
+
                 return (
-                  <Link 
-                    key={chapter._id} 
-                    href={`/chapters/${chapter.slug.current}`}
-                    className="flex items-center justify-between px-6 py-5 hover:bg-blue-50/50 transition-colors group"
+                  <Link
+                    key={chapter._id}
+                    href={isLocked ? '#' : `/chapters/${chapter.slug.current}`}
+                    className={cn(
+                      "flex items-center justify-between px-6 py-6 border-3 border-brand-dark rounded-neo transition-all",
+                      isCompleted 
+                        ? "bg-surface-container-low grayscale-[0.5]" 
+                        : isLocked
+                          ? "bg-gray-100 border-gray-300 opacity-60 cursor-not-allowed"
+                          : "bg-white neo-brutal-shadow neo-brutal-interactive"
+                    )}
                   >
-                    <div className="flex items-center space-x-4">
-                      <span className={`flex items-center justify-center w-8 h-8 rounded-full font-bold text-sm ${
-                        isCompleted 
-                          ? "bg-green-100 text-green-600" 
-                          : "bg-gray-100 text-gray-500 group-hover:bg-blue-100 group-hover:text-blue-600"
-                      }`}>
+                    <div className="flex items-center space-x-6">
+                      <div className={cn(
+                        "flex items-center justify-center w-10 h-10 border-3 border-brand-dark rounded-full font-heading font-black text-lg",
+                        isCompleted
+                          ? "bg-accent-purple text-white"
+                          : isLocked
+                            ? "bg-gray-200 text-gray-400 border-gray-300"
+                            : "bg-primary-container text-brand-dark"
+                      )}>
                         {isCompleted ? "✓" : chapter.order}
-                      </span>
-                      <span className={`text-lg font-medium group-hover:text-blue-700 ${
-                        isCompleted ? "text-gray-400" : "text-gray-800"
-                      }`}>
-                        {chapter.title}
-                      </span>
+                      </div>
+                      <div>
+                        <span className={cn(
+                          "text-xl font-black block leading-tight",
+                          isCompleted ? "text-brand-dark/40 line-through" : isLocked ? "text-gray-400" : "text-brand-dark"
+                        )}>
+                          {chapter.title}
+                        </span>
+                        {isCompleted && (
+                          <span className="text-[10px] font-bold uppercase tracking-widest text-accent-purple">Mastered</span>
+                        )}
+                        {isLocked && (
+                          <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400">Locked</span>
+                        )}
+                      </div>
                     </div>
-                    <div className="flex items-center text-gray-400 group-hover:text-blue-400">
-                      <span className="text-sm mr-2">{isCompleted ? "Review" : "Start Lesson"}</span>
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
-                      </svg>
+                    <div className="flex items-center">
+                      <div className={cn(
+                        "px-4 py-1 border-3 border-brand-dark rounded-neo font-heading font-bold uppercase text-[10px] tracking-widest",
+                        isCompleted 
+                          ? "bg-white text-brand-dark/40" 
+                          : isLocked
+                            ? "bg-gray-200 text-gray-400 border-gray-300"
+                            : "bg-accent-purple text-white"
+                      )}>
+                        {isCompleted ? "Review" : isLocked ? "Locked" : "Run Cell"}
+                      </div>
                     </div>
                   </Link>
                 )
               })
             ) : (
-              <div className="px-6 py-8 text-center text-gray-500">
+              <div className="px-6 py-12 text-center border-3 border-dashed border-brand-dark/30 rounded-neo bg-white/50 italic text-brand-dark/50">
                 No chapters found for this module yet.
               </div>
             )}

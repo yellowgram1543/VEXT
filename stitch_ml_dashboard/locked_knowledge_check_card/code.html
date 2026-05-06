@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700;900&amp;family=Inter:wght@400;700&amp;family=JetBrains+Mono&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "secondary-container": "#f1d6ff",
+                    "surface-container-low": "#f4f3f6",
+                    "secondary-fixed-dim": "#d7bde5",
+                    "error": "#ba1a1a",
+                    "primary": "#42617d",
+                    "on-surface": "#1a1c1e",
+                    "inverse-primary": "#aacaea",
+                    "surface-container-lowest": "#ffffff",
+                    "error-container": "#ffdad6",
+                    "surface-container-high": "#e8e8ea",
+                    "on-secondary": "#ffffff",
+                    "on-error": "#ffffff",
+                    "on-error-container": "#93000a",
+                    "tertiary-container": "#ebbb88",
+                    "on-secondary-fixed": "#251432",
+                    "on-background": "#1a1c1e",
+                    "surface-tint": "#42617d",
+                    "tertiary-fixed-dim": "#eebe8a",
+                    "surface-bright": "#faf9fb",
+                    "background": "#faf9fb",
+                    "surface-variant": "#e3e2e4",
+                    "surface-container-highest": "#e3e2e4",
+                    "surface": "#faf9fb",
+                    "secondary": "#6b5779",
+                    "on-primary-fixed": "#001d32",
+                    "tertiary": "#7b572d",
+                    "primary-container": "#a7c7e7",
+                    "on-primary": "#ffffff",
+                    "inverse-surface": "#2f3033",
+                    "primary-fixed-dim": "#aacaea",
+                    "on-secondary-fixed-variant": "#533f60",
+                    "on-secondary-container": "#705b7d",
+                    "surface-container": "#eeedf0",
+                    "outline": "#73777e",
+                    "primary-fixed": "#cde5ff",
+                    "on-tertiary-fixed": "#2b1700",
+                    "on-surface-variant": "#42474d",
+                    "on-primary-container": "#34536f",
+                    "on-tertiary": "#ffffff",
+                    "on-tertiary-container": "#6c4a21",
+                    "surface-dim": "#dadadc",
+                    "on-tertiary-fixed-variant": "#614018",
+                    "on-primary-fixed-variant": "#294964",
+                    "tertiary-fixed": "#ffddbb",
+                    "outline-variant": "#c2c7ce",
+                    "inverse-on-surface": "#f1f0f3",
+                    "secondary-fixed": "#f3daff"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "10px",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "container-padding": "32px",
+                    "md": "16px",
+                    "cell-gap": "12px",
+                    "unit": "4px",
+                    "lg": "24px",
+                    "xs": "4px",
+                    "xl": "40px",
+                    "sm": "8px"
+            },
+            "fontFamily": {
+                    "h2": ["Space Grotesk"],
+                    "body-md": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "h1": ["Space Grotesk"],
+                    "label-bold": ["Inter"],
+                    "code-block": ["JetBrains Mono"],
+                    "h3": ["Space Grotesk"]
+            },
+            "fontSize": {
+                    "h2": ["32px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                    "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                    "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                    "h1": ["48px", {"lineHeight": "1.1", "fontWeight": "700"}],
+                    "label-bold": ["14px", {"lineHeight": "1.0", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                    "code-block": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                    "h3": ["24px", {"lineHeight": "1.2", "fontWeight": "700"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 48;
+        }
+        .custom-border-color {
+            border-color: #330C2F;
+        }
+    </style>
+</head>
+<body class="bg-background min-h-screen flex items-center justify-center p-md">
+<!-- Standalone Locked Block Card -->
+<div class="w-full max-w-[800px] bg-surface-dim opacity-60 border-[3px] border-dashed custom-border-color rounded-lg p-lg flex items-center justify-between gap-md cursor-not-allowed">
+<div class="flex flex-col gap-xs">
+<h3 class="font-h3 text-h3 text-on-surface">
+                Knowledge Check: Gradients
+            </h3>
+<p class="font-body-md text-body-md text-on-surface-variant">
+                Complete the previous modules to unlock this assessment.
+            </p>
+</div>
+<div class="flex-shrink-0 flex items-center justify-center">
+<span class="material-symbols-outlined text-[48px] text-on-surface-variant" data-icon="lock">
+                lock
+            </span>
+</div>
+</div>
+</body></html>

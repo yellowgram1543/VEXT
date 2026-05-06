@@ -6,31 +6,31 @@ interface ProgressBarProps {
   showLabel?: boolean;
 }
 
-const ProgressBar: React.FC<ProgressBarProps> = ({ 
-  progress, 
-  size = 'md', 
-  showLabel = false 
+const ProgressBar: React.FC<ProgressBarProps> = ({
+  progress,
+  size = 'md',
+  showLabel = false
 }) => {
   // Clamp progress between 0 and 100
   const clampedProgress = Math.min(100, Math.max(0, progress));
-  
+
   const heightMap = {
-    sm: 'h-1',
-    md: 'h-2',
-    lg: 'h-3'
+    sm: 'h-4',
+    md: 'h-6',
+    lg: 'h-8'
   };
 
   return (
     <div className="w-full">
       {showLabel && (
-        <div className="flex justify-between items-center mb-1">
-          <span className="text-xs font-medium text-gray-500">Progress</span>
-          <span className="text-xs font-bold text-blue-600">{Math.round(clampedProgress)}%</span>
+        <div className="flex justify-between items-center mb-2">
+          <span className="font-bold text-xs uppercase tracking-widest text-[#330C2F]">Progress</span>
+          <span className="font-bold text-xs text-[#330C2F]">{Math.round(clampedProgress)}%</span>
         </div>
       )}
-      <div className={`w-full bg-gray-200 rounded-full overflow-hidden ${heightMap[size]}`}>
-        <div 
-          className="bg-blue-500 h-full transition-all duration-500 ease-out rounded-full"
+      <div className={`w-full bg-[#F7F7FB] border-[3px] border-[#330C2F] rounded-full overflow-hidden ${heightMap[size]} relative`}>
+        <div
+          className="bg-[#7B287D] h-full border-r-[3px] border-[#330C2F] transition-all duration-500 ease-out"
           style={{ width: `${clampedProgress}%` }}
         />
       </div>

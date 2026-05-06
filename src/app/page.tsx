@@ -1,88 +1,137 @@
-import Link from 'next/link'
 import { fetchSanity } from '@/lib/sanity'
 import { modulesQuery } from '@/lib/sanity.queries'
 import { Module } from '@/types'
 import { prisma } from '@/lib/prisma'
-import ProgressBar from '@/components/ProgressBar'
+import ModuleCard from '@/components/ModuleCard'
+import SkillMasteryMap from '@/components/SkillMasteryMap'
+import { ChevronRight, Play } from 'lucide-react'
+import Link from 'next/link'
+
+import { STAGE_LABELS } from '@/lib/constants'
 
 export default async function Home() {
   let modules: Module[] = []
   let completedChapterIds: Set<string> = new Set()
+  let activeProgress: any = null
   let error = false
 
   try {
-    const [sanityModules, progressData] = await Promise.all([
+    const [sanityModules, progressData, latestProgress] = await Promise.all([
       fetchSanity<Module[]>(modulesQuery),
       prisma.progress.findMany({
+        where: { NOT: { completedAt: null } },
         select: { chapterId: true }
+      }),
+      prisma.progress.findFirst({
+        orderBy: { lastVisitedAt: 'desc' }
       })
     ])
     modules = sanityModules
     completedChapterIds = new Set(progressData.map(p => p.chapterId))
+    activeProgress = latestProgress
   } catch (e) {
     console.error('Error fetching data:', e)
     error = true
   }
 
+  // Find the topic title for the active progress
+  const activeTopic = modules.flatMap(m => m.chapters || []).find(c => c._id === activeProgress?.chapterId) || 
+                      modules.flatMap(m => m.chapters || []).find(c => c.slug?.current && activeProgress?.chapterId);
+
   return (
-    <main className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8 animate-fade-in">
-      <div className="max-w-4xl mx-auto">
-        <header className="mb-12">
-          <h1 className="text-4xl font-extrabold text-gray-900 mb-4">
-            JLPT Learning Platform
-          </h1>
-          <p className="text-xl text-gray-600">
-            A modular approach to mastering Japanese, from N5 to N1.
-          </p>
+    <main className="min-h-screen bg-background font-body py-12 px-4 sm:px-6 lg:px-8 animate-fade-in">
+      <div className="max-w-5xl mx-auto">
+        <header className="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 gap-6">
+          <div>
+            <p className="font-heading font-bold uppercase text-secondary tracking-widest text-xs mb-1">
+              Dashboard
+            </p>
+            <h1 className="text-5xl font-black text-brand-dark">
+              ML Cognitive Coach
+            </h1>
+          </div>
         </header>
 
-        <section>
-          <h2 className="text-2xl font-bold text-gray-800 mb-6">Learning Modules</h2>
-          
-          {error ? (
-            <div className="p-6 bg-red-50 border border-red-200 rounded-xl">
-              <p className="text-red-700">Failed to load modules. Please try again later.</p>
+        {activeProgress && (
+          <section className="mb-12">
+            <div className="bg-[#F1D6FF] border-3 border-brand-dark rounded-neo p-8 flex flex-col md:flex-row justify-between items-center gap-6 shadow-[6px_6px_0px_0px_#330C2F]">
+              <div className="flex items-center gap-6">
+                <div className="bg-white border-3 border-brand-dark p-4 rounded-full shadow-[3px_3px_0px_0px_#330C2F]">
+                  <Play className="w-8 h-8 text-[#7B287D] fill-current" />
+                </div>
+                <div>
+                   <h2 className="text-sm font-black text-brand-dark/60 uppercase tracking-widest mb-1">Continue Learning</h2>
+                   <p className="text-2xl font-black text-brand-dark">
+                     Resume: <span className="uppercase">{activeTopic?.title || "Latest Topic"}</span>
+                   </p>
+                   <p className="text-xs font-bold text-[#7B287D] uppercase mt-1">
+                     Current Stage: {STAGE_LABELS[activeProgress.highestStage as keyof typeof STAGE_LABELS]}
+                   </p>
+                </div>
+              </div>
+              <Link 
+                href={activeTopic?.slug?.current ? `/chapters/${activeTopic.slug.current}` : '#'}
+                className="bg-white border-3 border-brand-dark px-8 py-3 rounded-neo font-heading font-black uppercase text-sm tracking-widest neo-brutal-shadow neo-brutal-interactive transition-all flex items-center gap-2"
+              >
+                Go to Lab <ChevronRight className="w-5 h-5" />
+              </Link>
             </div>
-          ) : modules && modules.length > 0 ? (
-            <div className="grid gap-6 md:grid-cols-2">
-              {modules.map((module) => {
-                const totalChapters = module.chapterCount || 0;
-                const completedCount = module.chapterIds?.filter(id => completedChapterIds.has(id)).length || 0;
-                const progressPercentage = totalChapters > 0 ? (completedCount / totalChapters) * 100 : 0;
+          </section>
+        )}
 
-                return (
-                  <Link 
-                    key={module._id}
-                    href={`/modules/${module._id}`}
-                    className="block p-6 bg-white rounded-xl shadow-sm border border-gray-200 hover:border-blue-500 hover:shadow-md transition-all group"
-                  >
-                    <div className="flex justify-between items-start mb-4">
-                      <span className="px-3 py-1 bg-blue-100 text-blue-700 text-sm font-semibold rounded-full">
-                        {module.level}
-                      </span>
-                      <span className="text-gray-400 text-sm">Module {module.order}</span>
-                    </div>
-                    <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">{module.title}</h3>
-                    <p className="text-gray-600 line-clamp-2 mb-6">{module.description}</p>
-                    
-                    <div className="mt-auto">
-                      <div className="flex justify-between items-center mb-2">
-                        <span className="text-sm font-medium text-gray-500">
-                          {completedCount} / {totalChapters} Chapters
-                        </span>
-                        <span className="text-sm font-bold text-blue-600">
-                          {Math.round(progressPercentage)}%
-                        </span>
-                      </div>
-                      <ProgressBar progress={progressPercentage} size="sm" />
-                    </div>
-                  </Link>
-                );
-              })}
-            </div>
-          ) : (
-            <p className="text-gray-500 italic">No modules found. Please check back later!</p>
-          )}
+        <section className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+           <div className="lg:col-span-8">
+             <h2 className="text-2xl font-black text-brand-dark mb-6 uppercase tracking-tight">
+               Learning Modules
+             </h2>
+
+             {error ? (
+               <div className="p-6 bg-error-container border-3 border-brand-dark rounded-neo neo-brutal-shadow">
+                 <p className="text-on-error-container font-bold">Failed to load modules. Please try again later.</p>
+               </div>
+             ) : modules && modules.length > 0 ? (
+               <div className="grid gap-6 md:grid-cols-2">
+                 {modules.map((module) => {
+                   const totalChapters = module.chapterCount || 0;
+                   const completedCount = module.chapterIds?.filter(id => completedChapterIds.has(id)).length || 0;
+                   const progressPercentage = totalChapters > 0 ? (completedCount / totalChapters) * 100 : 0;
+
+                   return (
+                     <ModuleCard 
+                       key={module._id}
+                       module={module}
+                       progressPercentage={progressPercentage}
+                       completedCount={completedCount}
+                       totalChapters={totalChapters}
+                     />
+                   );
+                 })}
+               </div>
+             ) : (
+               <p className="text-on-surface-variant italic">No modules found. Please check back later!</p>
+             )}
+           </div>
+
+           <div className="lg:col-span-4 space-y-8">
+              <SkillMasteryMap />
+              
+              <aside className="bg-secondary-container border-3 border-brand-dark p-6 rounded-neo neo-brutal-shadow">
+                <div className="flex items-center gap-2 mb-4 text-on-secondary-container">
+                  <span className="text-2xl">💡</span>
+                  <h3 className="text-xl font-black">Quick Tips</h3>
+                </div>
+                <ul className="space-y-3 text-on-secondary-container font-medium text-sm">
+                  <li className="flex items-start gap-2">
+                    <span className="font-bold">•</span>
+                    <span>Complete quizzes with 80%+ to unlock next stages.</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="font-bold">•</span>
+                    <span>Practical application is the key to retention.</span>
+                  </li>
+                </ul>
+              </aside>
+           </div>
         </section>
       </div>
     </main>

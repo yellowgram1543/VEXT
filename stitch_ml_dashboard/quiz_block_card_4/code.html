@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700;900&amp;family=Inter:wght@400;700&amp;family=JetBrains+Mono&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-container-low": "#f4f3f6",
+                    "tertiary": "#7b572d",
+                    "error-container": "#ffdad6",
+                    "on-secondary-fixed": "#251432",
+                    "on-surface": "#1a1c1e",
+                    "primary-fixed": "#cde5ff",
+                    "surface-container-high": "#e8e8ea",
+                    "on-tertiary-container": "#6c4a21",
+                    "surface-container-highest": "#e3e2e4",
+                    "outline-variant": "#c2c7ce",
+                    "surface-tint": "#42617d",
+                    "tertiary-container": "#ebbb88",
+                    "on-primary-fixed": "#001d32",
+                    "surface-container": "#eeedf0",
+                    "on-background": "#1a1c1e",
+                    "on-tertiary-fixed": "#2b1700",
+                    "on-tertiary": "#ffffff",
+                    "on-primary-container": "#34536f",
+                    "primary": "#42617d",
+                    "tertiary-fixed-dim": "#eebe8a",
+                    "primary-container": "#a7c7e7",
+                    "inverse-surface": "#2f3033",
+                    "surface-container-lowest": "#ffffff",
+                    "secondary-fixed-dim": "#d7bde5",
+                    "outline": "#73777e",
+                    "on-primary-fixed-variant": "#294964",
+                    "on-error": "#ffffff",
+                    "on-secondary": "#ffffff",
+                    "tertiary-fixed": "#ffddbb",
+                    "secondary-fixed": "#f3daff",
+                    "on-tertiary-fixed-variant": "#614018",
+                    "on-surface-variant": "#42474d",
+                    "on-primary": "#ffffff",
+                    "surface-variant": "#e3e2e4",
+                    "primary-fixed-dim": "#aacaea",
+                    "on-secondary-fixed-variant": "#533f60",
+                    "inverse-on-surface": "#f1f0f3",
+                    "surface-dim": "#dadadc",
+                    "surface-bright": "#faf9fb",
+                    "secondary-container": "#f1d6ff",
+                    "error": "#ba1a1a",
+                    "on-secondary-container": "#705b7d",
+                    "inverse-primary": "#aacaea",
+                    "on-error-container": "#93000a",
+                    "surface": "#faf9fb",
+                    "background": "#faf9fb",
+                    "secondary": "#6b5779",
+                    "brutalist-border": "#330C2F",
+                    "quiz-accent": "#7B287D",
+                    "quiz-secondary": "#CDB4DB"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "10px",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "sm": "8px",
+                    "md": "16px",
+                    "xs": "4px",
+                    "lg": "24px",
+                    "cell-gap": "12px",
+                    "unit": "4px",
+                    "container-padding": "32px",
+                    "xl": "40px"
+            },
+            "fontFamily": {
+                    "code-block": ["JetBrains Mono"],
+                    "h3": ["Space Grotesk"],
+                    "h1": ["Space Grotesk"],
+                    "body-md": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "h2": ["Space Grotesk"],
+                    "label-bold": ["Inter"]
+            },
+            "fontSize": {
+                    "code-block": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                    "h3": ["24px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                    "h1": ["48px", {"lineHeight": "1.1", "fontWeight": "700"}],
+                    "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                    "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                    "h2": ["32px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                    "label-bold": ["14px", {"lineHeight": "1.0", "letterSpacing": "0.05em", "fontWeight": "700"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .brutalist-card {
+            border: 3px solid #330C2F;
+            box-shadow: 4px 4px 0px 0px #330C2F;
+            transition: all 0.1s ease;
+        }
+        .brutalist-button-active:active {
+            transform: translate(4px, 4px);
+            box-shadow: 0px 0px 0px 0px #330C2F;
+        }
+    </style>
+</head>
+<body class="bg-surface-bright min-h-screen flex items-center justify-center p-md">
+<main class="w-full max-w-[800px]">
+<!-- Quiz Block Card -->
+<article class="brutalist-card bg-white rounded-lg flex flex-col overflow-hidden">
+<!-- Top Header -->
+<header class="flex justify-between items-center p-md border-b-[3px] border-brutalist-border bg-surface-container-low">
+<div class="flex items-center gap-xs">
+<span class="material-symbols-outlined text-brutalist-border" data-icon="quiz">quiz</span>
+<h3 class="font-h3 text-h3 text-brutalist-border uppercase tracking-tighter">QUIZ</h3>
+</div>
+<div class="flex items-center gap-xs bg-brutalist-border text-white px-md py-xs rounded-full">
+<span class="material-symbols-outlined text-sm" data-icon="timer">timer</span>
+<span class="font-code-block text-code-block">00:45</span>
+</div>
+</header>
+<!-- Main Body -->
+<section class="p-lg md:p-xl space-y-lg">
+<div class="space-y-sm">
+<h2 class="font-h2 text-h2 text-brutalist-border leading-none">Knowledge Check: Gradients</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant">
+                        In the context of machine learning and optimization, the gradient represents the vector of partial derivatives with respect to all variables. It points in the direction of the steepest ascent of the cost function. Understanding how gradients propagate through the network is fundamental to backpropagation and the weights adjustment process during training.
+                    </p>
+</div>
+<!-- Answer Area Placeholder -->
+<div class="w-full min-h-[240px] border-[3px] border-brutalist-border rounded-lg flex p-lg text-center border-none"><div class="w-full flex flex-col gap-lg">
+<!-- Checkbox Group Section -->
+<div class="flex flex-col gap-md">
+<p class="font-label-bold text-label-bold text-brutalist-border uppercase mb-xs">Select all that apply:</p>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-md">
+<!-- Option A -->
+<div class="flex items-center gap-md p-md border-[3px] border-brutalist-border rounded-lg bg-white cursor-pointer hover:bg-surface-container-low transition-colors shadow-[4px_4px_0px_0px_#330C2F] active:shadow-none active:translate-x-[2px] active:translate-y-[2px]">
+<span class="material-symbols-outlined text-brutalist-border">check_box_outline_blank</span>
+<span class="font-body-md text-body-md text-on-surface">Option A</span>
+</div>
+<!-- Option B -->
+<div class="flex items-center gap-md p-md border-[3px] border-brutalist-border rounded-lg bg-white cursor-pointer hover:bg-surface-container-low transition-colors shadow-[4px_4px_0px_0px_#330C2F] active:shadow-none active:translate-x-[2px] active:translate-y-[2px]">
+<span class="material-symbols-outlined text-brutalist-border">check_box_outline_blank</span>
+<span class="font-body-md text-body-md text-on-surface">Option B</span>
+</div>
+<!-- Option C -->
+<div class="flex items-center gap-md p-md border-[3px] border-brutalist-border rounded-lg bg-white cursor-pointer hover:bg-surface-container-low transition-colors shadow-[4px_4px_0px_0px_#330C2F] active:shadow-none active:translate-x-[2px] active:translate-y-[2px]">
+<span class="material-symbols-outlined text-brutalist-border">check_box_outline_blank</span>
+<span class="font-body-md text-body-md text-on-surface">Option C</span>
+</div>
+<!-- Option D -->
+<div class="flex items-center gap-md p-md border-[3px] border-brutalist-border rounded-lg bg-white cursor-pointer hover:bg-surface-container-low transition-colors shadow-[4px_4px_0px_0px_#330C2F] active:shadow-none active:translate-x-[2px] active:translate-y-[2px]">
+<span class="material-symbols-outlined text-brutalist-border">check_box_outline_blank</span>
+<span class="font-body-md text-body-md text-on-surface">Option D</span>
+</div>
+</div>
+</div><div class="flex flex-col gap-md pt-md border-t-[3px] border-brutalist-border border-dashed">
+<p class="font-label-bold text-label-bold text-brutalist-border uppercase mb-xs">Complete the formula:</p>
+<div class="flex items-center gap-md font-code-block text-body-lg text-brutalist-border">
+<span>MSE = (1/n) * </span>
+<input class="flex-1 max-w-[200px] border-[3px] border-brutalist-border rounded-lg px-md py-sm bg-white shadow-[4px_4px_0px_0px_#330C2F] focus:outline-none focus:shadow-none focus:translate-x-[2px] focus:translate-y-[2px] transition-all font-code-block" placeholder="Σ(y - ŷ)²" type="text"/>
+</div>
+</div>
+<!-- True/False Section -->
+<div class="flex flex-col gap-md pt-md border-t-[3px] border-brutalist-border border-dashed">
+<p class="font-label-bold text-label-bold text-brutalist-border uppercase mb-xs">Match the Concepts:</p>
+<div class="grid grid-cols-2 gap-xl">
+<!-- Left Column: Labels + Dropdowns -->
+<div class="space-y-md">
+<div class="flex flex-col gap-xs">
+<label class="font-h3 text-h3 text-brutalist-border uppercase">Bias</label>
+<select class="w-full border-[3px] border-brutalist-border rounded-lg p-sm bg-white shadow-[4px_4px_0px_0px_#330C2F] font-body-md text-on-surface cursor-pointer focus:outline-none">
+<option value="">Select match...</option>
+<option value="over">Overfitting</option>
+<option value="under">Underfitting</option>
+</select>
+</div>
+<div class="flex flex-col gap-xs">
+<label class="font-h3 text-h3 text-brutalist-border uppercase">Variance</label>
+<select class="w-full border-[3px] border-brutalist-border rounded-lg p-sm bg-white shadow-[4px_4px_0px_0px_#330C2F] font-body-md text-on-surface cursor-pointer focus:outline-none">
+<option value="">Select match...</option>
+<option value="over">Overfitting</option>
+<option value="under">Underfitting</option>
+</select>
+</div>
+</div>
+<!-- Right Column: Static Labels -->
+<div class="space-y-md flex flex-col justify-center">
+<div class="p-md border-[3px] border-brutalist-border rounded-lg bg-surface-container-low font-body-md text-brutalist-border font-bold shadow-[4px_4px_0px_0px_#330C2F]">
+                Overfitting
+            </div>
+<div class="p-md border-[3px] border-brutalist-border rounded-lg bg-surface-container-low font-body-md text-brutalist-border font-bold shadow-[4px_4px_0px_0px_#330C2F]">
+                Underfitting
+            </div>
+</div>
+</div>
+</div><div class="flex flex-col gap-md pt-md border-t-[3px] border-brutalist-border border-dashed">
+<p class="font-label-bold text-label-bold text-brutalist-border uppercase mb-xs">Quick Assessment:</p>
+<div class="flex gap-md">
+<button class="flex-1 brutalist-card brutalist-button-active bg-white text-brutalist-border font-h3 text-h3 py-md rounded-lg uppercase hover:bg-surface-container-low transition-all">
+                True
+            </button>
+<button class="flex-1 brutalist-card brutalist-button-active bg-white text-brutalist-border font-h3 text-h3 py-md rounded-lg uppercase hover:bg-surface-container-low transition-all">
+                False
+            </button>
+</div>
+</div>
+</div></div>
+</section>
+<!-- Bottom Action Bar -->
+<footer class="p-md md:p-lg border-t-[3px] border-brutalist-border bg-surface-container-low flex flex-col sm:flex-row justify-end gap-md">
+<button class="brutalist-card brutalist-button-active bg-quiz-secondary text-brutalist-border font-label-bold text-label-bold py-md px-lg rounded-lg uppercase flex items-center justify-center gap-xs hover:bg-opacity-90">
+<span class="material-symbols-outlined" data-icon="save">save</span>
+                    Save &amp; Next
+                </button>
+<button class="brutalist-card brutalist-button-active bg-quiz-accent text-white font-label-bold text-label-bold py-md px-lg rounded-lg uppercase flex items-center justify-center gap-xs hover:brightness-110">
+<span class="material-symbols-outlined" data-icon="send">send</span>
+                    Submit
+                </button>
+</footer>
+</article>
+<!-- Contextual Decorative Elements (Notebook Cells Vibe) -->
+<div class="mt-lg flex flex-col gap-cell-gap opacity-40">
+<div class="h-[3px] bg-brutalist-border w-1/4 rounded-full"></div>
+<div class="h-[3px] bg-brutalist-border w-1/12 rounded-full"></div>
+</div>
+</main>
+</body></html>

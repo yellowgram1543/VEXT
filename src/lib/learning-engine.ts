@@ -40,20 +40,15 @@ export function getNextStage(current: StageType, quizScore?: number): StageType 
  * Note: Progress is now global (no userId) for the current prototype.
  */
 export async function getTopicProgress(topicId: string) {
-  let progress = await prisma.progress.findUnique({
-    where: {
+  const progress = await prisma.progress.upsert({
+    where: { chapterId: topicId },
+    update: { lastVisitedAt: new Date() },
+    create: {
       chapterId: topicId,
+      highestStage: StageType.UNDERSTAND,
+      lastVisitedAt: new Date(),
     },
   });
-
-  if (!progress) {
-    progress = await prisma.progress.create({
-      data: {
-        chapterId: topicId,
-        highestStage: StageType.UNDERSTAND,
-      },
-    });
-  }
 
   return progress;
 }
@@ -63,10 +58,10 @@ export async function getTopicProgress(topicId: string) {
  * This handles UNDERSTAND -> REINFORCE -> PRACTICE -> TEST.
  * TEST -> APPLY is handled by submitQuiz.
  */
-export async function unlockNextStage(topicId: string, currentStage: StageType) {
+export async function unlockNextStage(topicId: string, currentStage: StageType, quizScore?: number) {
   const progress = await getTopicProgress(topicId);
   
-  const nextStage = getNextStage(currentStage);
+  const nextStage = getNextStage(currentStage, quizScore);
 
   // If the logic says we can move forward and it's beyond current progress
   if (STAGE_ORDER.indexOf(nextStage) > STAGE_ORDER.indexOf(progress.highestStage)) {

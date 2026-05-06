@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;800;900&amp;family=Inter:wght@300;400;500;600;700&amp;family=JetBrains+Mono:wght@400;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-container-highest": "#e3e2e4",
+                    "on-secondary-fixed-variant": "#533f60",
+                    "on-secondary": "#ffffff",
+                    "on-error": "#ffffff",
+                    "outline": "#73777e",
+                    "on-primary-fixed-variant": "#294964",
+                    "surface-dim": "#dadadc",
+                    "tertiary-fixed": "#ffddbb",
+                    "secondary-fixed-dim": "#d7bde5",
+                    "on-tertiary-fixed-variant": "#614018",
+                    "surface-variant": "#e3e2e4",
+                    "outline-variant": "#c2c7ce",
+                    "surface-container": "#eeedf0",
+                    "inverse-on-surface": "#f1f0f3",
+                    "on-tertiary": "#ffffff",
+                    "primary-container": "#a7c7e7",
+                    "on-surface": "#1a1c1e",
+                    "surface-container-lowest": "#ffffff",
+                    "on-surface-variant": "#42474d",
+                    "error-container": "#ffdad6",
+                    "primary": "#42617d",
+                    "on-error-container": "#93000a",
+                    "secondary-fixed": "#f3daff",
+                    "surface-container-high": "#e8e8ea",
+                    "tertiary-fixed-dim": "#eebe8a",
+                    "on-background": "#1a1c1e",
+                    "background": "#faf9fb",
+                    "on-primary": "#ffffff",
+                    "secondary": "#6b5779",
+                    "on-secondary-container": "#705b7d",
+                    "surface-container-low": "#f4f3f6",
+                    "inverse-primary": "#aacaea",
+                    "tertiary": "#7b572d",
+                    "surface": "#faf9fb",
+                    "on-tertiary-container": "#6c4a21",
+                    "on-secondary-fixed": "#251432",
+                    "primary-fixed": "#cde5ff",
+                    "surface-bright": "#faf9fb",
+                    "surface-tint": "#42617d",
+                    "tertiary-container": "#ebbb88",
+                    "secondary-container": "#f1d6ff",
+                    "error": "#ba1a1a",
+                    "on-primary-container": "#34536f",
+                    "on-primary-fixed": "#001d32",
+                    "inverse-surface": "#2f3033",
+                    "primary-fixed-dim": "#aacaea",
+                    "on-tertiary-fixed": "#2b1700"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "md": "16px",
+                    "lg": "24px",
+                    "container-padding": "32px",
+                    "xl": "40px",
+                    "cell-gap": "12px",
+                    "xs": "4px",
+                    "unit": "4px",
+                    "sm": "8px"
+            },
+            "fontFamily": {
+                    "code-block": ["JetBrains Mono"],
+                    "h2": ["Space Grotesk"],
+                    "body-lg": ["Inter"],
+                    "h3": ["Space Grotesk"],
+                    "body-md": ["Inter"],
+                    "label-bold": ["Inter"],
+                    "h1": ["Space Grotesk"]
+            },
+            "fontSize": {
+                    "code-block": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                    "h2": ["32px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                    "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                    "h3": ["24px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                    "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                    "label-bold": ["14px", {"lineHeight": "1.0", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                    "h1": ["48px", {"lineHeight": "1.1", "fontWeight": "700"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .custom-shadow {
+            box-shadow: 4px 4px 0px 0px #330C2F;
+        }
+        .active-shadow {
+            box-shadow: 2px 2px 0px 0px #330C2F;
+        }
+        .sidebar-border {
+            border-right: 3px solid #330C2F;
+        }
+        .section-separator {
+            border-bottom: 3px solid #330C2F;
+        }
+        .sidebar-bg {
+            background-color: #A7C7E7;
+        }
+        .brand-text {
+            color: #330C2F;
+        }
+        .active-item {
+            background-color: #7B287D;
+            color: #ffffff;
+        }
+        .inactive-item {
+            color: #330C2F;
+        }
+    </style>
+</head>
+<body class="bg-background font-body-md text-on-background m-0 p-0 overflow-hidden">
+<!-- Sidebar Container -->
+<aside class="sidebar-bg sidebar-border w-64 h-screen fixed left-0 top-0 flex flex-col z-50">
+<!-- Top Section -->
+<header class="section-separator p-lg flex flex-col gap-xs">
+<h1 class="font-h1 text-[24px] leading-tight brand-text font-black tracking-tighter">
+                ML MASTERCLASS
+            </h1>
+<p class="font-body-md text-sm brand-text opacity-90">
+                Module 3: Neural Networks
+            </p>
+</header>
+<!-- Navigation Section -->
+<nav class="flex-grow p-md flex flex-col gap-cell-gap overflow-y-auto">
+<!-- Curriculum -->
+<div class="inactive-item font-h3 text-lg px-md py-sm hover:translate-x-1 hover:translate-y-1 transition-transform cursor-pointer">
+                Curriculum
+            </div>
+<!-- Modules -->
+<div class="inactive-item font-h3 text-lg px-md py-sm hover:translate-x-1 hover:translate-y-1 transition-transform cursor-pointer">
+                Modules
+            </div>
+<!-- Notebooks (Active) -->
+<div class="active-item font-h3 text-lg px-md py-sm border-2 border-[#330C2F] active-shadow translate-x-[1px] translate-y-[1px] cursor-default">
+                Notebooks
+            </div>
+<!-- Challenges -->
+<div class="inactive-item font-h3 text-lg px-md py-sm hover:translate-x-1 hover:translate-y-1 transition-transform cursor-pointer">
+                Challenges
+            </div>
+</nav>
+<!-- Bottom Section -->
+<footer class="p-lg border-t-[3px] border-[#330C2F] mt-auto">
+<button class="w-full py-md px-lg bg-surface-container-lowest border-[3px] border-[#330C2F] brand-text font-h3 text-base custom-shadow active:translate-x-1 active:translate-y-1 active:shadow-none transition-all uppercase tracking-wider">
+                Upgrade to Pro
+            </button>
+</footer>
+</aside>
+</body></html>

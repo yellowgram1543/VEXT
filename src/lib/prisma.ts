@@ -1,13 +1,12 @@
+// Prisma Client Singleton
 import { PrismaClient } from '@prisma/client'
 import { PrismaBetterSqlite3 } from '@prisma/adapter-better-sqlite3'
 
-// Singleton pattern for Next.js 15+ & Prisma 7
 const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined
 }
 
 const createPrismaClient = () => {
-  // Use environment variable if available, otherwise fallback to local SQLite
   const url = process.env.DATABASE_URL || 'file:./prisma/dev.db'
   const adapter = new PrismaBetterSqlite3({ url })
 
@@ -17,6 +16,9 @@ const createPrismaClient = () => {
   })
 }
 
-export const prisma = globalForPrisma.prisma ?? createPrismaClient()
+// In development, we sometimes need to force a new client to pick up schema changes
+export const prisma = (process.env.NODE_ENV === 'development' && typeof window === 'undefined') 
+  ? createPrismaClient() 
+  : (globalForPrisma.prisma ?? createPrismaClient())
 
 if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma

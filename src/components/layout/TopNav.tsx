@@ -1,41 +1,105 @@
 "use client";
 
 import React from "react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { Flame } from "lucide-react";
+import ProgressBar from "@/components/ProgressBar";
+import { useProgress } from "@/components/ProgressContext";
 
-const TopNav = () => {
-  const pathname = usePathname();
+interface TopNavProps {
+  topicTitle?: string;
+  currentStage?: string;
+  progress?: number;
+}
 
-  const tabs = [
-    { name: "Notebooks", href: "/chapters", active: pathname.startsWith("/chapters") },
-    { name: "Curriculum", href: "/modules", active: pathname.startsWith("/modules") },
-  ];
+const STAGE_STEPS: Record<string, string> = {
+  "Content": "1/5",
+  "Example": "2/5",
+  "Practice": "3/5",
+  "Quiz": "4/5",
+  "Apply": "5/5"
+};
+
+const TopNav = ({ 
+  topicTitle: propTopicTitle, 
+  currentStage: propCurrentStage, 
+  progress: propProgress 
+}: TopNavProps) => {
+  const { totalMastery, streak: globalStreak, contextualInfo } = useProgress();
+  
+  // Prioritize context if available, fallback to props
+  const topicTitle = contextualInfo.topicTitle || propTopicTitle;
+  const currentStage = contextualInfo.currentStage || propCurrentStage;
+  const progress = contextualInfo.progress !== undefined ? contextualInfo.progress : propProgress;
+
+  const stepLabel = currentStage ? (STAGE_STEPS[currentStage] || "1/5") : "";
 
   return (
-    <nav className="fixed top-0 right-0 left-64 z-40 h-20 bg-white border-b-3 border-brand-dark flex items-center px-6">
-      <div className="max-w-[1000px] w-full mx-auto flex items-center justify-between">
-        {/* Center: Navigation Tabs */}
-        <div className="flex items-center gap-8 h-20">
-          {tabs.map((tab) => (
-            <Link
-              key={tab.name}
-              href={tab.href}
-              className={`h-full flex items-center px-4 font-bold text-sm tracking-widest uppercase transition-all hover:bg-surface-container-low ${
-                tab.active
-                  ? "border-b-4 border-accent-purple text-brand-dark"
-                  : "text-on-surface-variant hover:text-brand-dark"
-              }`}
-            >
-              {tab.name}
-            </Link>
-          ))}
+    <nav 
+      className="fixed top-0 right-0 z-40 h-20 bg-white border-b-3 border-brand-dark flex items-center px-8 transition-[left] duration-300"
+      style={{ left: 'var(--sidebar-width)' }}
+    >
+      <div className="w-full flex items-center justify-between gap-8">
+        {/* Left: Content Start (Contextual) */}
+        <div className="flex items-center gap-10 min-w-0">
+          {topicTitle ? (
+            <>
+              <div className="flex items-baseline gap-2 shrink-0">
+                <span className="text-[10px] font-black uppercase tracking-widest text-brand-dark/40">
+                  Topic:
+                </span>
+                <span className="font-heading font-black text-brand-dark uppercase truncate max-w-[180px]">
+                  {topicTitle}
+                </span>
+              </div>
+
+              {currentStage && (
+                <div className="flex items-center gap-2 shrink-0">
+                  <span className="text-[10px] font-black uppercase tracking-widest text-brand-dark/40">
+                    Stage:
+                  </span>
+                  <div className="bg-[#7B287D] text-white px-3 py-0.5 rounded-neo-sm border-2 border-brand-dark text-[10px] font-black uppercase shadow-[2px_2px_0px_0px_#330C2F]">
+                    {currentStage} (Step {stepLabel})
+                  </div>
+                </div>
+              )}
+
+              {progress !== undefined && (
+                <div className="flex items-center gap-3 flex-grow max-w-[200px]">
+                  <span className="text-[10px] font-black uppercase tracking-widest text-brand-dark/40 whitespace-nowrap">
+                    Stage Progress:
+                  </span>
+                  <div className="flex-grow">
+                     <ProgressBar progress={progress} size="sm" />
+                  </div>
+                  <span className="text-[10px] font-black text-brand-dark">{progress}%</span>
+                </div>
+              )}
+            </>
+          ) : (
+            <div className="font-heading font-black text-brand-dark uppercase tracking-widest opacity-20">
+              Machine Learning Lab
+            </div>
+          )}
         </div>
 
-        {/* Right: Profile Avatar */}
-        <div className="flex items-center">
-          <button className="relative w-12 h-12 rounded-full border-3 border-brand-dark neo-brutal-shadow neo-brutal-interactive overflow-hidden bg-primary-container">
-            <div className="w-full h-full bg-accent-purple/20 flex items-center justify-center text-brand-dark font-bold">
+        {/* Right: Actions & Global Progress */}
+        <div className="flex items-center gap-6 shrink-0">
+          <div className="flex items-center gap-4">
+             <div className="hidden md:flex flex-col items-end gap-1 mr-2">
+                <span className="text-[9px] font-black uppercase tracking-tighter text-brand-dark/40 leading-none">Global Mastery</span>
+                <div className="w-32">
+                   <ProgressBar progress={totalMastery} size="sm" />
+                </div>
+             </div>
+             
+             <div className="flex items-center gap-2 bg-[#FFADAD] text-brand-dark border-3 border-brand-dark px-4 py-1.5 rounded-neo shadow-[3px_3px_0px_0px_#330C2F] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all">
+               <Flame className="w-4 h-4 fill-current" />
+               <span className="font-heading font-black text-xs uppercase">{globalStreak} Day Streak</span>
+             </div>
+          </div>
+
+          <button className="relative w-12 h-12 rounded-full border-3 border-brand-dark shadow-[4px_4px_0px_0px_#330C2F] active:translate-x-1 active:translate-y-1 active:shadow-none transition-all overflow-hidden bg-[#A7C7E7]">
+            <div className="w-full h-full flex items-center justify-center text-brand-dark font-black">
               AI
             </div>
           </button>

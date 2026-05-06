@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;800;900&amp;family=Inter:wght@300;400;500;600;700;800;900&amp;family=JetBrains+Mono:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "surface-container-high": "#e8e8ea",
+            "on-tertiary-container": "#6c4a21",
+            "on-surface-variant": "#42474d",
+            "surface-container-low": "#f4f3f6",
+            "on-error-container": "#93000a",
+            "primary-fixed-dim": "#aacaea",
+            "surface-container-highest": "#e3e2e4",
+            "on-tertiary-fixed": "#2b1700",
+            "tertiary-fixed-dim": "#eebe8a",
+            "tertiary-fixed": "#ffddbb",
+            "tertiary": "#7b572d",
+            "inverse-surface": "#2f3033",
+            "surface-container-lowest": "#ffffff",
+            "surface-tint": "#42617d",
+            "surface-variant": "#e3e2e4",
+            "primary-fixed": "#cde5ff",
+            "on-background": "#1a1c1e",
+            "inverse-on-surface": "#f1f0f3",
+            "on-primary-fixed-variant": "#294964",
+            "on-secondary": "#ffffff",
+            "outline": "#73777e",
+            "secondary-fixed": "#f3daff",
+            "surface": "#faf9fb",
+            "on-error": "#ffffff",
+            "outline-variant": "#c2c7ce",
+            "on-tertiary": "#ffffff",
+            "surface-bright": "#faf9fb",
+            "tertiary-container": "#ebbb88",
+            "background": "#faf9fb",
+            "on-secondary-fixed-variant": "#533f60",
+            "surface-dim": "#dadadc",
+            "on-secondary-fixed": "#251432",
+            "secondary-fixed-dim": "#d7bde5",
+            "error-container": "#ffdad6",
+            "on-tertiary-fixed-variant": "#614018",
+            "on-primary-container": "#34536f",
+            "primary-container": "#a7c7e7",
+            "primary": "#42617d",
+            "on-surface": "#1a1c1e",
+            "error": "#ba1a1a",
+            "secondary-container": "#f1d6ff",
+            "on-primary-fixed": "#001d32",
+            "on-primary": "#ffffff",
+            "surface-container": "#eeedf0",
+            "secondary": "#6b5779",
+            "inverse-primary": "#aacaea",
+            "on-secondary-container": "#705b7d"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "xl": "40px",
+            "container-padding": "32px",
+            "xs": "4px",
+            "md": "16px",
+            "cell-gap": "12px",
+            "sm": "8px",
+            "lg": "24px",
+            "unit": "4px"
+          },
+          "fontFamily": {
+            "body-lg": ["Inter"],
+            "h3": ["Space Grotesk"],
+            "h1": ["Space Grotesk"],
+            "code-block": ["JetBrains Mono"],
+            "body-md": ["Inter"],
+            "label-bold": ["Inter"],
+            "h2": ["Space Grotesk"]
+          },
+          "fontSize": {
+            "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+            "h3": ["24px", {"lineHeight": "1.2", "fontWeight": "700"}],
+            "h1": ["48px", {"lineHeight": "1.1", "fontWeight": "700"}],
+            "code-block": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
+            "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+            "label-bold": ["14px", {"lineHeight": "1.0", "letterSpacing": "0.05em", "fontWeight": "700"}],
+            "h2": ["32px", {"lineHeight": "1.2", "fontWeight": "700"}]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    
+    .neo-brutal-shadow {
+      box-shadow: 4px 4px 0px 0px rgba(51, 12, 47, 1);
+    }
+    
+    .active-tab-shadow {
+      box-shadow: 0px 4px 0px 0px #7B287D;
+    }
+
+    .active-tab-interaction:active {
+      transform: translate(2px, 2px);
+      box-shadow: none;
+    }
+  </style>
+</head>
+<body class="bg-background font-body-md text-on-background m-0 p-0">
+<!-- TopAppBar Component -->
+<nav class="fixed top-0 left-0 w-full z-50 h-20 bg-white border-b-[3px] border-[#330C2F] flex items-center px-6">
+<div class="max-w-[1000px] w-full mx-auto flex items-center justify-between">
+<!-- Left: Logo -->
+<div class="flex items-center">
+<span class="font-h3 text-h3 text-[#330C2F] font-black tracking-tighter uppercase">
+          AI/ML NOTEBOOK
+        </span>
+</div>
+<!-- Center: Navigation Tabs -->
+<div class="hidden md:flex items-center gap-xl h-20">
+<!-- Notebooks (Active) -->
+<a class="h-full flex items-center px-4 font-label-bold text-label-bold text-[#330C2F] border-b-[4px] border-[#7B287D] transition-all hover:bg-surface-container-low" href="#">
+          Notebooks
+        </a>
+<!-- Curriculum (Inactive) -->
+<a class="h-full flex items-center px-4 font-label-bold text-label-bold text-on-surface-variant hover:text-[#330C2F] transition-all hover:bg-surface-container-low" href="#">
+          Curriculum
+        </a>
+</div>
+<!-- Right: Profile Avatar -->
+<div class="flex items-center">
+<button class="relative w-12 h-12 rounded-full border-[3px] border-[#330C2F] neo-brutal-shadow active:translate-x-[4px] active:translate-y-[4px] active:shadow-none transition-all overflow-hidden bg-primary-container group">
+<img alt="Profile Avatar" class="w-full h-full object-cover" data-alt="A professional studio headshot of a young data scientist with a confident expression, set against a vibrant, high-contrast violet and magenta background. The lighting is sharp and cinematic, highlighting the clean neo-brutalist aesthetic of the platform. The overall mood is intelligent, modern, and high-energy, matching the serious play personality of an advanced technical learning environment." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAvTSBk4xc3HXp_gkBn619Svf9-DgE-lMw-UAd1hihN9hjSZrAE-ZICe94pBhSYgeCAvi7zhqmEVB7LWc7PiqoTZg2vFLtydet43ojdgLL_kuxnJ3skgw6VE14OBHgDfsOPoDizgoX-COhxwU1PwUzNSa0TQnHe2dRhNMpvRoxyiVr-yAVlSQ2j_3bH9HdNveP2n78qnts6eYDg2yr-jhDXhS4YecL-sZC-cBNhvtwWQVmHmZMvvFaI_OJhbnWxa6QzTcR11y9HdMs"/>
+</button>
+</div>
+</div>
+</nav>
+<!-- Spacer to prevent content from hiding under fixed nav -->
+<div class="h-20"></div>
+</body></html>

@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700;800;900&amp;family=Inter:wght@400;700&amp;family=JetBrains+Mono&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-tertiary": "#ffffff",
+                        "secondary-fixed": "#f3daff",
+                        "outline-variant": "#c2c7ce",
+                        "on-primary-fixed": "#001d32",
+                        "inverse-on-surface": "#f1f0f3",
+                        "on-tertiary-fixed": "#2b1700",
+                        "outline": "#73777e",
+                        "on-secondary-fixed": "#251432",
+                        "tertiary-container": "#ebbb88",
+                        "surface-container": "#eeedf0",
+                        "surface": "#faf9fb",
+                        "on-tertiary-container": "#6c4a21",
+                        "on-background": "#1a1c1e",
+                        "secondary": "#6b5779",
+                        "on-surface": "#1a1c1e",
+                        "surface-container-low": "#f4f3f6",
+                        "surface-bright": "#faf9fb",
+                        "surface-container-highest": "#e3e2e4",
+                        "on-tertiary-fixed-variant": "#614018",
+                        "error": "#ba1a1a",
+                        "background": "#faf9fb",
+                        "secondary-container": "#f1d6ff",
+                        "inverse-surface": "#2f3033",
+                        "surface-tint": "#42617d",
+                        "primary-fixed-dim": "#aacaea",
+                        "primary-container": "#a7c7e7",
+                        "surface-dim": "#dadadc",
+                        "on-error": "#ffffff",
+                        "on-secondary-fixed-variant": "#533f60",
+                        "on-error-container": "#93000a",
+                        "inverse-primary": "#aacaea",
+                        "primary-fixed": "#cde5ff",
+                        "surface-variant": "#e3e2e4",
+                        "primary": "#42617d",
+                        "tertiary-fixed-dim": "#eebe8a",
+                        "surface-container-lowest": "#ffffff",
+                        "on-primary": "#ffffff",
+                        "tertiary-fixed": "#ffddbb",
+                        "on-secondary-container": "#705b7d",
+                        "secondary-fixed-dim": "#d7bde5",
+                        "tertiary": "#7b572d",
+                        "surface-container-high": "#e8e8ea",
+                        "on-primary-fixed-variant": "#294964",
+                        "on-secondary": "#ffffff",
+                        "on-primary-container": "#34536f",
+                        "error-container": "#ffdad6",
+                        "on-surface-variant": "#42474d",
+                        "custom-border": "#330C2F",
+                        "custom-accent": "#7B287D",
+                        "custom-secondary": "#CDB4DB",
+                        "code-bg": "#1E1E2F"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px",
+                        "neo": "10px"
+                    },
+                    "spacing": {
+                        "lg": "24px",
+                        "unit": "4px",
+                        "md": "16px",
+                        "xl": "40px",
+                        "cell-gap": "12px",
+                        "xs": "4px",
+                        "sm": "8px",
+                        "container-padding": "32px"
+                    },
+                    "fontFamily": {
+                        "h3": ["Space Grotesk"],
+                        "h2": ["Space Grotesk"],
+                        "body-md": ["Inter"],
+                        "code-block": ["JetBrains Mono"],
+                        "label-bold": ["Inter"],
+                        "h1": ["Space Grotesk"],
+                        "body-lg": ["Inter"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .neo-shadow {
+            box-shadow: 4px 4px 0px 0px #330C2F;
+        }
+        .neo-shadow-sm {
+            box-shadow: 2px 2px 0px 0px #330C2F;
+        }
+        .active-shift:active {
+            transform: translate(4px, 4px);
+            box-shadow: none;
+        }
+    </style>
+</head>
+<body class="bg-surface font-body-md text-on-surface p-xl flex justify-center items-center min-h-screen">
+<!-- Practice Block Card -->
+<div class="w-full max-w-[800px] bg-primary-container border-[3px] border-custom-border rounded-neo neo-shadow overflow-hidden flex flex-col">
+<!-- Top Header Strip -->
+<div class="px-md py-sm bg-white/30 border-b-[3px] border-custom-border flex justify-between items-center">
+<span class="font-h3 text-label-bold uppercase tracking-widest text-custom-border">PRACTICE</span>
+<div class="bg-custom-accent text-white px-md py-xs rounded-neo border-[3px] border-custom-border text-label-bold text-[12px]">
+                ACTIVE
+            </div>
+</div>
+<!-- Main Body -->
+<div class="p-lg space-y-md">
+<!-- Header Section -->
+<div class="flex flex-col md:flex-row gap-lg">
+<div class="flex-1">
+<h2 class="font-h2 text-h2 text-custom-border mb-sm">Calculate Mean Square Error</h2>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-prose">
+                        In this exercise, you will implement the Mean Square Error (MSE) calculation. Complete the Python function below to iterate through the true values and predictions, computing the average of squared differences.
+                    </p>
+</div>
+<!-- Visual Anchor Image -->
+<div class="w-full md:w-48 h-32 rounded-neo border-[3px] border-custom-border overflow-hidden flex-shrink-0 neo-shadow-sm">
+<img class="w-full h-full object-cover" data-alt="A high-quality technical illustration showing the calculation of Mean Square Error, featuring data points, a regression line, and squared error residuals, designed in a high-contrast neo-brutalist style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCgjorkTuxSjX37m3LKmuyzhbak2QP5Rb9IlzrOl-XGXCZFCB3FKG-hR0PFLk4QJN8XwrXpj_rK8qfdCePWzKG-VEBPgujgvah6S14C8RfGNC5n2BFslYhbbxChP91ifUpfuwEkLXlEBDFoAEBAWCF_IMJaYTiBljjN9zo_i-fgP1YRf3X_1kJYBOj9XYUAvps-57iUTqp0dqpsmRiqD8nIAAIGhrD2vbIo0YgOY0tEVLXZqL4ZIY1k5oZhSxsw0VrW_zllW9jyXTg"/>
+</div>
+</div>
+<!-- Tabs Row -->
+<div class="flex gap-sm pt-sm">
+<button class="bg-white text-custom-border border-[3px] border-custom-border px-lg py-sm rounded-neo font-label-bold hover:bg-surface-container active-shift neo-shadow-sm">
+                    Coding
+                </button>
+<button class="bg-custom-accent text-white border-[3px] border-custom-border px-lg py-sm rounded-neo font-label-bold active-shift neo-shadow-sm">
+                    Math
+                </button>
+<button class="bg-white text-custom-border border-[3px] border-custom-border px-lg py-sm rounded-neo font-label-bold hover:bg-surface-container active-shift neo-shadow-sm">
+                    Concept
+                </button>
+</div>
+<!-- Coding Section -->
+<div class="space-y-sm"><!-- Math Section -->
+<div class="space-y-lg py-sm">
+<div class="space-y-sm">
+<h3 class="font-h3 text-h3 text-custom-border">Calculate entropy for given dataset</h3>
+<p class="font-body-md text-on-surface-variant">A dataset contains 10 samples: 6 of Class A and 4 of Class B. Calculate the entropy $H(S)$.</p>
+</div>
+<!-- Calculation Inputs -->
+<div class="flex flex-col gap-md">
+<div class="flex items-center gap-md">
+<label class="font-label-bold text-custom-border w-24">Step 1: P(A)</label>
+<input class="bg-white border-[3px] border-custom-border rounded-neo p-sm w-32 focus:ring-0 focus:outline-none font-code-block text-sm" placeholder="0.0" step="0.1" type="number"/>
+</div>
+<div class="flex items-center gap-md">
+<label class="font-label-bold text-custom-border w-24">Step 2: P(B)</label>
+<input class="bg-white border-[3px] border-custom-border rounded-neo p-sm w-32 focus:ring-0 focus:outline-none font-code-block text-sm" placeholder="0.0" step="0.1" type="number"/>
+</div>
+<div class="flex items-center gap-md">
+<label class="font-label-bold text-custom-border w-24">Entropy:</label>
+<input class="bg-white border-[3px] border-custom-border rounded-neo p-sm w-32 focus:ring-0 focus:outline-none font-code-block text-sm" placeholder="Result" step="0.001" type="number"/>
+</div>
+</div>
+<!-- Action Buttons -->
+<div class="flex flex-wrap gap-md pt-xs">
+<button class="bg-custom-accent text-white border-[3px] border-custom-border px-xl py-sm rounded-neo font-label-bold uppercase flex items-center gap-sm active-shift neo-shadow">
+<span class="material-symbols-outlined">check_circle</span>
+            Check Answer
+        </button>
+<button class="bg-white text-custom-border border-[3px] border-custom-border px-xl py-sm rounded-neo font-label-bold uppercase flex items-center gap-sm active-shift neo-shadow">
+<span class="material-symbols-outlined">visibility</span>
+            Show Formula
+        </button>
+</div>
+</div></div>
+</div>
+<!-- Bottom Section -->
+<div class="mt-auto px-lg py-md bg-surface-container-lowest border-t-[3px] border-custom-border rounded-b-neo">
+<div class="flex flex-col gap-xs">
+<div class="flex justify-between items-center mb-xs">
+<span class="font-label-bold text-custom-border uppercase text-xs tracking-widest">Unit Progress</span>
+<span class="font-label-bold text-custom-border text-xs">60%</span>
+</div>
+<!-- Progress Bar -->
+<div class="w-full h-lg bg-[#F7F7FB] border-[3px] border-custom-border rounded-full overflow-hidden relative">
+<div class="h-full bg-custom-accent border-r-[3px] border-custom-border" style="width: 60%"></div>
+</div>
+</div>
+</div>
+</div>
+</body></html>

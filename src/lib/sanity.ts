@@ -10,3 +10,14 @@ export const client = createClient({
   apiVersion,
   useCdn: process.env.NODE_ENV === 'production',
 })
+
+/**
+ * Helper to fetch data from Sanity with Next.js cache tags
+ */
+export async function fetchSanity<T>(query: string, params: Record<string, unknown> = {}): Promise<T> {
+  return client.fetch<T>(query, params, {
+    next: {
+      tags: ['content'],
+    },
+  })
+}

@@ -3,7 +3,6 @@
 import * as React from 'react'
 
 interface ChapterCompleteButtonProps {
-  moduleId?: string;
   chapterId: string;
 }
 

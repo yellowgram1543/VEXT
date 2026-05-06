@@ -1,17 +1,18 @@
-# Project: JLPT Learning Platform
+# Project: ML Cognitive Coach
 
 ## Core Value
-A streamlined, high-quality JLPT (Japanese Language Proficiency Test) learning platform that tracks user progress across chapters and modules, powered by Sanity CMS for flexible content management.
+An intelligent, state-driven Machine Learning Cognitive Coach that enforces active learning through a gated, multi-stage flow: **Understand → Reinforce → Test → Apply → Reflect**. It prioritizes deep understanding and practical application over passive content consumption.
 
 ## Success Definition
-Users can sign in, browse JLPT content fetched from Sanity, complete lessons, and see their progress tracked persistently via Prisma.
+Users navigate a structured ML curriculum where progression is strictly controlled by mastery gates (80% score threshold) and culminates in hands-on implementation projects in a sandboxed environment.
 
 ## Current Focus
-Transitioning from a hardcoded sample structure to a fully dynamic, CMS-driven, and user-authenticated learning experience.
+Pivoting the architecture from a generic JLPT reader to a 3-tier ML learning engine: State (Prisma), Content (Sanity), and Execution (Backend).
 
 ## Technical Stack
-- **Framework**: Next.js (App Router)
-- **CMS**: Sanity (Studio integrated)
-- **Database**: Prisma with SQLite (or PostgreSQL)
-- **Auth**: NextAuth.js
-- **Styling**: Tailwind CSS
+- **State Machine**: Prisma (PostgreSQL/SQLite) - Enforces the learning hierarchy and progression logic.
+- **Content Layer**: Sanity CMS - Stores rich technical content, Socratic prompts, and sandbox specs.
+- **Execution Engine**: (Future) Backend compute service for code/math validation.
+- **Frontend**: Next.js (App Router) - Delivers a high-contrast Neo-Brutalist UI.
+- **Styling**: Tailwind CSS with custom Brutalist theme.
+- **Typography**: Space Grotesk (Headers), Inter (Body), JetBrains Mono (Code).

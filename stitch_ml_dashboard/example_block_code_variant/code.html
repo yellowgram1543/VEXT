@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container": "#eeedf0",
+                        "on-tertiary-fixed": "#2b1700",
+                        "surface-container-lowest": "#ffffff",
+                        "primary-fixed": "#cde5ff",
+                        "tertiary": "#7b572d",
+                        "surface-bright": "#faf9fb",
+                        "on-primary-fixed-variant": "#294964",
+                        "error-container": "#ffdad6",
+                        "inverse-on-surface": "#f1f0f3",
+                        "on-secondary-container": "#705b7d",
+                        "surface-variant": "#e3e2e4",
+                        "on-tertiary-fixed-variant": "#614018",
+                        "surface-container-highest": "#e3e2e4",
+                        "on-surface-variant": "#42474d",
+                        "on-secondary-fixed-variant": "#533f60",
+                        "secondary-fixed-dim": "#d7bde5",
+                        "secondary-container": "#f1d6ff",
+                        "on-tertiary-container": "#6c4a21",
+                        "primary": "#42617d",
+                        "on-primary": "#ffffff",
+                        "error": "#ba1a1a",
+                        "surface-tint": "#42617d",
+                        "surface-container-high": "#e8e8ea",
+                        "primary-container": "#a7c7e7",
+                        "on-error": "#ffffff",
+                        "tertiary-fixed": "#ffddbb",
+                        "on-tertiary": "#ffffff",
+                        "on-secondary": "#ffffff",
+                        "on-error-container": "#93000a",
+                        "secondary": "#6b5779",
+                        "tertiary-fixed-dim": "#eebe8a",
+                        "primary-fixed-dim": "#aacaea",
+                        "on-surface": "#1a1c1e",
+                        "inverse-surface": "#2f3033",
+                        "secondary-fixed": "#f3daff",
+                        "inverse-primary": "#aacaea",
+                        "surface-dim": "#dadadc",
+                        "on-background": "#1a1c1e",
+                        "tertiary-container": "#ebbb88",
+                        "on-primary-fixed": "#001d32",
+                        "background": "#faf9fb",
+                        "outline-variant": "#c2c7ce",
+                        "outline": "#73777e",
+                        "on-primary-container": "#34536f",
+                        "surface-container-low": "#f4f3f6",
+                        "surface": "#faf9fb",
+                        "on-secondary-fixed": "#251432",
+                        "brutal-shadow": "#330C2F",
+                        "brutal-border": "#330C2F",
+                        "card-accent": "#CDB4DB"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "brutal": "10px",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "xs": "4px",
+                        "unit": "4px",
+                        "lg": "24px",
+                        "sm": "8px",
+                        "container-padding": "32px",
+                        "cell-gap": "12px",
+                        "md": "16px",
+                        "xl": "40px"
+                    },
+                    "fontFamily": {
+                        "h3": ["Space Grotesk"],
+                        "body-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "label-bold": ["Inter"],
+                        "code-block": ["JetBrains Mono"],
+                        "h1": ["Space Grotesk"],
+                        "h2": ["Space Grotesk"]
+                    },
+                    "fontSize": {
+                        "h3": ["24px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                        "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "label-bold": ["14px", {"lineHeight": "1.0", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                        "code-block": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                        "h1": ["48px", {"lineHeight": "1.1", "fontWeight": "700"}],
+                        "h2": ["32px", {"lineHeight": "1.2", "fontWeight": "700"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .brutal-card {
+            box-shadow: 4px 4px 0px 0px #330C2F;
+        }
+        .brutal-border-3 {
+            border: 3px solid #330C2F;
+        }
+    </style>
+</head>
+<body class="bg-background min-h-screen flex items-center justify-center p-md">
+<!-- Example Block Card Component -->
+<div class="w-full max-w-[800px] brutal-card bg-card-accent brutal-border-3 rounded-brutal overflow-hidden">
+<!-- Top Header Strip -->
+<div class="flex justify-between items-center px-md py-sm border-b-[3px] border-brutal-border">
+<span class="font-h3 text-label-bold text-on-surface uppercase tracking-widest">EXAMPLE</span>
+<div class="bg-surface-container-lowest brutal-border-3 px-sm py-xs rounded-full flex items-center gap-xs">
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="font-label-bold text-[12px] uppercase">COMPLETED</span>
+</div>
+</div>
+<!-- Main Body -->
+<div class="p-lg space-y-lg">
+<!-- Title -->
+<h2 class="font-h2 text-h2 text-on-surface">Interactive Regression Plot</h2>
+<!-- Visualization Box -->
+<div class="space-y-md">
+<!-- Code Toggle -->
+<div class="flex justify-end">
+<span class="font-code-block text-[12px] text-on-surface-variant uppercase tracking-tight">
+            View: <span class="text-primary font-bold cursor-pointer">sklearn</span> | <span class="hover:text-primary cursor-pointer">from scratch</span>
+</span>
+</div>
+<!-- Code Block -->
+<div class="bg-white brutal-border-3 rounded-lg p-md overflow-x-auto">
+<pre class="font-code-block text-code-block text-on-surface"><code>from sklearn.linear_model import LinearRegression
+
+# Initialize and fit the model
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Make predictions
+predictions = model.predict(X_test)</code></pre>
+</div>
+<!-- Short Explanation -->
+<p class="font-body-md text-body-md text-on-surface-variant">
+        Using scikit-learn's LinearRegression class allows for efficient, optimized model fitting using Ordinary Least Squares.
+        This implementation automatically handles intercept calculation and feature scaling if specified.
+    </p>
+</div>
+<!-- Section Tabs -->
+<div class="brutal-border-3 bg-white rounded-brutal overflow-hidden flex">
+<!-- Active Tab -->
+<div class="flex-1 text-center py-md bg-primary-container border-r-[3px] border-brutal-border">
+<span class="font-label-bold text-on-primary-container uppercase">Basic</span>
+</div>
+<!-- Inactive Tab -->
+<div class="flex-1 text-center py-md bg-white border-r-[3px] border-brutal-border hover:bg-surface-container transition-colors cursor-pointer">
+<span class="font-label-bold text-on-surface-variant uppercase">Intermediate</span>
+</div>
+<!-- Inactive Tab -->
+<div class="flex-1 text-center py-md bg-white hover:bg-surface-container transition-colors cursor-pointer">
+<span class="font-label-bold text-on-surface-variant uppercase">Advanced</span>
+</div>
+</div>
+<!-- Below Tabs Explanation -->
+<div class="bg-white brutal-border-3 p-md rounded-lg">
+<p class="font-body-md text-body-md text-on-surface">
+                    The basic model calculates the line of best fit by minimizing the vertical distance between each data point and the regression line itself.
+                </p>
+</div>
+<!-- Common Pitfall Section -->
+<div class="border-t-[3px] border-brutal-border pt-lg">
+<div class="flex items-start gap-sm">
+<span class="material-symbols-outlined text-error" style="font-variation-settings: 'FILL' 1;">warning</span>
+<div class="space-y-xs">
+<h3 class="font-h3 text-[18px] text-on-surface">Common Pitfall</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">
+                            Many assume lower training error means better model. In reality, extremely low error often indicates overfitting rather than predictive accuracy.
+                        </p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</body></html>

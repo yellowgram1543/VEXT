@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary-container": "#a7c7e7",
+                        "on-surface": "#1a1c1e",
+                        "background": "#faf9fb",
+                        "outline": "#330C2F"
+                    },
+                    borderRadius: {
+                        "custom": "10px"
+                    },
+                    spacing: {
+                        "unit": "4px",
+                        "md": "16px",
+                        "lg": "24px",
+                        "xl": "40px"
+                    },
+                    fontFamily: {
+                        "h1": ["Space Grotesk"],
+                        "h2": ["Space Grotesk"],
+                        "h3": ["Space Grotesk"],
+                        "body-md": ["Inter"],
+                        "label-bold": ["Inter"]
+                    },
+                    fontSize: {
+                        "h1": ["48px", { "lineHeight": "1.1", "fontWeight": "700" }],
+                        "h2": ["32px", { "lineHeight": "1.2", "fontWeight": "700" }],
+                        "h3": ["24px", { "lineHeight": "1.2", "fontWeight": "700" }],
+                        "body-md": ["16px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "label-bold": ["14px", { "lineHeight": "1.0", "letterSpacing": "0.05em", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .neo-brutal-shadow {
+            box-shadow: 4px 4px 0px 0px #330C2F;
+        }
+        .neo-brutal-border {
+            border: 3px solid #330C2F;
+        }
+    </style>
+</head>
+<body class="bg-background min-h-screen flex items-center justify-center p-6">
+<!-- Content Block Card -->
+<div class="max-w-[800px] w-full bg-primary-container neo-brutal-border neo-brutal-shadow rounded-custom overflow-hidden">
+<!-- Top Header Strip -->
+<div class="flex items-center justify-between px-lg py-md border-b-[3px] border-outline">
+<span class="font-label-bold text-label-bold text-outline">CONTENT</span>
+<span class="bg-white neo-brutal-border px-4 py-1 rounded-full font-label-bold text-[12px] text-outline">COMPLETED</span>
+</div>
+<!-- Inner Content Area -->
+<div class="p-lg md:p-xl">
+<div class="bg-white neo-brutal-border rounded-custom p-lg md:p-xl">
+<!-- Main Body: Title & Paragraph -->
+<header class="mb-lg">
+<h2 class="font-h2 text-h2 text-outline mb-md">Introduction to Cost Functions</h2>
+<p class="font-body-md text-body-md text-on-surface">
+                        Cost functions act as a mathematical compass for machine learning models, measuring performance by calculating the quantitative difference between predicted outputs and actual ground-truth values. By aggregating these errors across the entire dataset, the function provides a single scalar value that guides the optimization process toward better accuracy.
+                    </p>
+</header>
+<!-- Section: Key Points -->
+<div class="mb-lg">
+<h3 class="font-h3 text-[20px] font-bold text-outline mb-sm">Key Points</h3>
+<ul class="space-y-unit">
+<li class="flex items-start gap-2 font-body-md text-body-md text-on-surface">
+<span class="mt-2 w-2 h-2 rounded-full bg-outline flex-shrink-0"></span>
+                            Understanding error metrics
+                        </li>
+<li class="flex items-start gap-2 font-body-md text-body-md text-on-surface">
+<span class="mt-2 w-2 h-2 rounded-full bg-outline flex-shrink-0"></span>
+                            The role of residuals
+                        </li>
+<li class="flex items-start gap-2 font-body-md text-body-md text-on-surface">
+<span class="mt-2 w-2 h-2 rounded-full bg-outline flex-shrink-0"></span>
+                            Minimizing the loss function
+                        </li>
+</ul>
+</div>
+<!-- Section: Think About It -->
+<div class="bg-primary-container/10 p-md rounded-lg border-l-[4px] border-outline">
+<h3 class="font-h3 text-[20px] font-bold text-outline mb-sm">Think About It</h3>
+<div class="space-y-md">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-outline" style="font-variation-settings: 'FILL' 1;">help_center</span>
+<p class="font-body-md text-body-md font-medium text-outline italic">Why does increasing model complexity reduce bias?</p>
+</div>
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-outline" style="font-variation-settings: 'FILL' 1;">help_center</span>
+<p class="font-body-md text-body-md font-medium text-outline italic">What happens if we remove regularization?</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</body></html>
