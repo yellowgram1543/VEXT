@@ -17,13 +17,11 @@ interface Milestone {
 }
 
 interface ApplyCellProps {
-  topicId: string;
   instruction?: string;
   onComplete?: () => void;
 }
 
 export default function ApplyCell({ 
-  topicId: _topicId, 
   instruction = "Build a robust Linear Regression pipeline to predict housing prices with outlier handling.",
   onComplete
 }: ApplyCellProps) {

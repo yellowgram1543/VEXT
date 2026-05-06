@@ -36,7 +36,7 @@ const SocraticPrompt = ({ question, hint, explanation }: SocraticPromptProps) =>
             <div>
               <button 
                 onClick={() => setShowHint(!showHint)}
-                aria-expanded={showHint ? "true" : "false"}
+                aria-expanded={!!showHint}
                 aria-controls={hintId}
                 className="text-sm font-black text-brand-dark/60 hover:text-brand-dark flex items-center gap-1 transition-colors"
               >
@@ -56,7 +56,7 @@ const SocraticPrompt = ({ question, hint, explanation }: SocraticPromptProps) =>
 
           <button 
             onClick={() => setShowExplanation(!showExplanation)}
-            aria-expanded={showExplanation ? "true" : "false"}
+            aria-expanded={showExplanation}
             aria-controls={explanationId}
             className={cn(
               "mt-2 w-full py-3 border-3 border-brand-dark font-black uppercase rounded-neo transition-all",
@@ -130,7 +130,7 @@ const components: PortableTextComponents = {
 };
 
 interface UnderstandCellProps {
-  content: any[];
+  content: any;
   onComplete?: () => void;
   status?: 'COMPLETED' | 'ACTIVE' | 'LOCKED';
   loading?: boolean;

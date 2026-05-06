@@ -7,8 +7,6 @@ import {
   ArrowRight, BarChart, Smile, Meh, Frown
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import 'prismjs/components/prism-python';
-import 'prismjs/themes/prism-tomorrow.css';
 import MathRenderer from '@/components/MathRenderer';
 import MasteryBreadcrumbs, { StageType } from '@/components/MasteryBreadcrumbs';
 
@@ -35,7 +33,7 @@ export interface QuizQuestion {
 }
 
 interface QuizCellProps {
-  topicId: string;
+  topicId?: string;
   questions: QuizQuestion[];
   title?: string;
   description?: string;
@@ -43,7 +41,6 @@ interface QuizCellProps {
 }
 
 export default function QuizCell({ 
-  topicId: _topicId,
   questions, 
   title = "Mastery Check", 
   description = "Demonstrate your understanding across all 7 cognitive dimensions.", 
@@ -59,7 +56,7 @@ export default function QuizCell({
   const [confidence, setConfidence] = useState<'low' | 'med' | 'high' | null>(null);
   
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const [answers, setAnswers] = useState<Record<string, { val: any; confidence: string | null }>>({});
+  const [answers, setAnswers] = useState<Record<string, { val: number | string | boolean[] | null; confidence: string | null }>>({});
   const [loading, setLoading] = useState(false);
   const [quizFinished, setQuizFinished] = useState(false);
   const [finalScore, setFinalScore] = useState<number | null>(null);
@@ -114,9 +111,10 @@ export default function QuizCell({
     return breakdown;
   }, [quizFinished, answers, activeQuestions]);
 
-  function checkCorrect(q: QuizQuestion, val: any) {
+  function checkCorrect(q: QuizQuestion, val: number | string | boolean[] | null) {
+    if (val === null) return false;
     if (q.type === 'numerical') {
-      return val?.toString().trim() === q.correctAnswer.toString().trim();
+      return val.toString().trim() === q.correctAnswer.toString().trim();
     }
     if (q.type === 'interview' || q.type === 'scenario') {
       const points = val as boolean[];
@@ -201,7 +199,7 @@ export default function QuizCell({
               {dimensionBreakdown && Object.entries(dimensionBreakdown).map(([dim, stats], idx) => {
                 const perc = (stats.correct / stats.total) * 100;
                 return (
-                  <div key={dim} className="space-y-2 animate-in slide-in-from-left duration-500" style={{ animationDelay: `${idx * 150}ms` } as any}>
+                  <div key={dim} className="space-y-2 animate-in slide-in-from-left duration-500" style={{ animationDelay: `${idx * 150}ms` } as React.CSSProperties}>
                     <div className="flex justify-between text-[10px] font-black uppercase tracking-wider text-brand-dark/70">
                       <span>{dim}</span>
                       <span>{stats.correct} / {stats.total}</span>
@@ -209,7 +207,7 @@ export default function QuizCell({
                     <div className="h-3 bg-white border-2 border-brand-dark rounded-full overflow-hidden">
                       <div 
                         className={cn("h-full transition-all duration-1000", perc >= 80 ? "bg-green-400" : perc >= 50 ? "bg-yellow-400" : "bg-red-400")} 
-                        style={{ width: `${perc}%` } as any}
+                        style={{ width: `${perc}%` } as React.CSSProperties}
                       />
                     </div>
                   </div>
@@ -282,6 +280,7 @@ export default function QuizCell({
                       key={index}
                       disabled={isSubmitted || loading}
                       onClick={() => setSelectedOption(index)}
+                      title={`Option ${index + 1}: ${option}`}
                       className={cn(
                         "p-6 text-left border-3 border-brand-dark rounded-neo font-black transition-all shadow-[6px_6px_0px_0px_#330C2F] active:translate-x-1 active:translate-y-1 active:shadow-none group",
                         selectedOption === index 
