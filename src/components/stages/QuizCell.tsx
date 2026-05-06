@@ -7,8 +7,7 @@ import {
   Calculator, MessageSquare, Target, UserCheck, Search, ArrowRight, Layers
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-// @ts-ignore
-import { highlight, languages } from 'prismjs';
+import Prism from 'prismjs';
 import 'prismjs/components/prism-python';
 import 'prismjs/themes/prism-tomorrow.css';
 import MathRenderer from '@/components/MathRenderer';
@@ -241,7 +240,7 @@ export default function QuizCell({
             </div>
             <pre className="p-6 bg-[#1E1E2F] text-sm overflow-x-auto leading-relaxed">
               <code dangerouslySetInnerHTML={{ 
-                __html: highlight(currentQuestion.code, languages.python, 'python') 
+                __html: Prism.highlight(currentQuestion.code, Prism.languages.python, 'python') 
               }} />
             </pre>
           </div>

@@ -7,11 +7,6 @@ import {
   Terminal, ArrowRight, Zap, Target, Database, Bug
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-// @ts-ignore
-import { highlight, languages } from 'prismjs';
-import 'prismjs/components/prism-python';
-import 'prismjs/themes/prism-tomorrow.css';
-
 interface Milestone {
   id: string;
   title: string;
