@@ -311,7 +311,7 @@ export default function QuizCell({
                         <button 
                           key={level.id}
                           title={level.label}
-                          onClick={() => setConfidence(level.id as any)}
+                          onClick={() => setConfidence(level.id as 'low' | 'med' | 'high')}
                           className={cn(
                             "flex items-center gap-2 px-6 py-3 rounded-neo border-3 border-brand-dark text-xs font-black uppercase tracking-widest transition-all",
                             confidence === level.id 

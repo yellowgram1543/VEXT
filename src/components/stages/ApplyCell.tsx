@@ -17,6 +17,7 @@ interface Milestone {
 }
 
 interface ApplyCellProps {
+  topicId?: string;
   instruction?: string;
   onComplete?: () => void;
 }
