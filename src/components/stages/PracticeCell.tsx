@@ -1,8 +1,11 @@
+'use client';
+
 import React, { useState } from 'react';
 import { 
   CheckCircle, Loader2, AlertCircle, 
   RefreshCw, ArrowRight, Calculator, Search, 
-  Layers, MessageSquare, Lightbulb, TrendingUp, FileCode, Zap, Play, Terminal
+  Layers, MessageSquare, Lightbulb, TrendingUp, FileCode, Zap, Play, Terminal,
+  ChevronRight, Eye, HelpCircle
 } from 'lucide-react';
 import dynamic from 'next/dynamic';
 const Editor = dynamic(() => import('@monaco-editor/react'), { 
@@ -18,18 +21,14 @@ type TabType = 'coding' | 'math' | 'concept';
 interface Exercise {
   id: string;
   tab: TabType;
+  type: string;
   label: string;
   instruction: string;
   icon: any;
-  hint: string;
+  hints: string[];
+  solution: string;
   expected: string;
-}
-
-interface PracticeCellProps {
-  topicId: string;
-  onComplete?: () => void;
-  status?: 'COMPLETED' | 'ACTIVE' | 'LOCKED';
-  loading?: boolean;
+  initialCode?: string;
 }
 
 const ALL_EXERCISES: Exercise[] = [
@@ -37,80 +36,159 @@ const ALL_EXERCISES: Exercise[] = [
   { 
     id: 'code-completion', 
     tab: 'coding', 
-    label: 'Code Completion', 
+    type: 'Completion',
+    label: 'Vectorized Dot Product', 
     icon: FileCode,
-    instruction: 'Complete the dot product logic. The input arrays a and b are provided.',
-    hint: 'Use sum(x*y for x,y in zip(a,b))',
-    expected: 'zip'
+    instruction: 'Complete the vectorized implementation of the dot product using NumPy. Do NOT use loops.',
+    hints: [
+      'NumPy provides a dedicated function for matrix multiplication and dot products.',
+      'Check the `np.dot()` or `@` operator documentation.'
+    ],
+    solution: 'import numpy as np\n\ndef dot_product(a, b):\n    return np.dot(a, b)',
+    expected: 'dot',
+    initialCode: 'import numpy as np\n\ndef dot_product(a, b):\n    # TODO: Implement vectorized dot product\n    pass'
   },
   { 
     id: 'code-debugging', 
     tab: 'coding', 
-    label: 'NumPy Test', 
+    type: 'Debugging',
+    label: 'Shape Mismatch Debug', 
     icon: Search,
-    instruction: 'Import numpy as np and print a 2x2 matrix of zeros.',
-    hint: 'import numpy as np; print(np.zeros((2,2)))',
-    expected: 'zeros'
-  },
-  { 
-    id: 'code-optimization', 
-    tab: 'coding', 
-    label: 'Optimization', 
-    icon: Zap,
-    instruction: 'Calculate the mean of [1, 2, 3, 4, 5] using NumPy.',
-    hint: 'np.mean([1,2,3,4,5])',
-    expected: 'mean'
+    instruction: 'Fix the error in this matrix multiplication. The weights $W$ and input $X$ have incompatible shapes.',
+    hints: [
+      'Matrix multiplication $AB$ requires the columns of $A$ to match the rows of $B$.',
+      'Use `.T` to transpose a matrix if needed.'
+    ],
+    solution: 'import numpy as np\n\nX = np.random.randn(10, 5)\nW = np.random.randn(10, 5)\n# Fix: Transpose W\nresult = np.dot(X, W.T)',
+    expected: 'W.T',
+    initialCode: 'import numpy as np\n\nX = np.random.randn(10, 5)\nW = np.random.randn(10, 5)\n\n# This currently fails. Fix it!\nresult = np.dot(X, W)'
   },
   
   // MATH TAB
   { 
     id: 'math-numerical', 
     tab: 'math', 
-    label: 'Numerical Problem', 
+    type: 'Numerical',
+    label: 'Gradient Calculation', 
     icon: Calculator,
-    instruction: 'Calculate the gradient of $f(x) = 3x^2$ at $x = 2$.',
-    hint: "f'(x) = 6x, so 6 * 2 = ?",
-    expected: '12'
+    instruction: 'Calculate the partial derivative $\\frac{\\partial f}{\\partial w}$ for $f(w, x) = \\sigma(wx + b)$ where $\\sigma$ is the sigmoid function, at $w=0.5, x=2, b=0$. (Recall: $\\sigma\'(z) = \\sigma(z)(1-\\sigma(z))$)',
+    hints: [
+      'Use the chain rule: $\\frac{\\partial f}{\\partial w} = \\frac{\\partial \\sigma}{\\partial z} \\cdot \\frac{\\partial z}{\\partial w}$.',
+      'First calculate $z = wx + b$, then $\\sigma(z)$, then the final derivative.',
+      '$\\sigma(1) \\approx 0.73$. So $\\sigma\'(1) = 0.73 \\cdot (1 - 0.73) \\approx 0.197$. Now multiply by $x=2$.'
+    ],
+    solution: '0.394',
+    expected: '0.39'
   },
   { 
-    id: 'math-formula', 
+    id: 'math-derivation', 
     tab: 'math', 
-    label: 'Formula Application', 
+    type: 'Derivations',
+    label: 'MSE Gradient', 
     icon: Layers,
-    instruction: 'What is the standard formula for $L_2$ regularization (Ridge)?',
-    hint: 'It involves the sum of squared weights: $\\lambda \\sum w_j^2$',
-    expected: 'lambda'
+    instruction: 'Derive the gradient of the Mean Squared Error loss $L = \\frac{1}{2}(y - \\hat{y})^2$ with respect to $\\hat{y}$.',
+    hints: [
+      'Apply the power rule and the chain rule.',
+      'The outer derivative is $2 \\cdot \\frac{1}{2} (y - \\hat{y})^{2-1}$.',
+      'Don\'t forget the inner derivative of $(y - \\hat{y})$ with respect to $\\hat{y}$.'
+    ],
+    solution: '-(y - \\hat{y}) or (\\hat{y} - y)',
+    expected: 'y'
   },
 
   // CONCEPT TAB
   { 
     id: 'concept-scenario', 
     tab: 'concept', 
-    label: 'Scenario Analysis', 
+    type: 'Scenarios',
+    label: 'Regularization Strategy', 
     icon: MessageSquare,
-    instruction: 'A model has high training error and high test error. What is this called?',
-    hint: 'High bias.',
-    expected: 'underfitting'
-  },
-  { 
-    id: 'concept-debugging', 
-    tab: 'concept', 
-    label: 'Reasoning Debugging', 
-    icon: Lightbulb,
-    instruction: 'Why is using Accuracy bad for a fraud detection model with 99.9% legit cases?',
-    hint: 'Class imbalance makes accuracy misleading.',
-    expected: 'imbalance'
+    instruction: 'Your model is overfitting heavily (Train Accuracy: 99%, Val Accuracy: 72%). Which regularization would you apply if you want to perform feature selection simultaneously?',
+    hints: [
+      'L2 (Ridge) penalizes large weights but keeps them non-zero.',
+      'L1 (Lasso) encourages sparsity by driving some weights exactly to zero.'
+    ],
+    solution: 'L1 Regularization (Lasso)',
+    expected: 'l1'
   },
   { 
     id: 'concept-tradeoff', 
     tab: 'concept', 
-    label: 'Trade-off Analysis', 
+    type: 'Trade-offs',
+    label: 'Bias-Variance Dilemma', 
     icon: TrendingUp,
-    instruction: 'As model complexity increases, what happens to Variance?',
-    hint: 'It goes up.',
-    expected: 'increases'
+    instruction: 'As you decrease the $k$ in $k$-Nearest Neighbors ($k$-NN), what happens to the model\'s complexity and variance?',
+    hints: [
+      'Small $k$ (e.g., $k=1$) makes the model very sensitive to local noise.',
+      'Higher sensitivity to noise means higher variance and higher complexity.'
+    ],
+    solution: 'Complexity increases, Variance increases.',
+    expected: 'increase'
   }
 ];
+
+const ProgressiveHint = ({ hints, solution, id }: { hints: string[]; solution: string; id: string }) => {
+  const [hintLevel, setHintLevel] = useState(0);
+  const [showSolution, setShowSolution] = useState(false);
+
+  return (
+    <div className="mt-4 space-y-3">
+      <div className="flex flex-wrap gap-2">
+        {hints.map((_, idx) => (
+          <button
+            key={idx}
+            onClick={() => {
+              setHintLevel(idx + 1);
+              setShowSolution(false);
+            }}
+            className={cn(
+              "flex items-center gap-1.5 px-3 py-1.5 rounded-full border-2 font-black text-[10px] uppercase tracking-wider transition-all",
+              hintLevel > idx 
+                ? "bg-yellow-100 border-yellow-600 text-yellow-700" 
+                : "bg-white border-brand-dark/10 text-brand-dark/40 hover:border-brand-dark/30"
+            )}
+          >
+            <Lightbulb className="w-3 h-3" />
+            Hint {idx + 1}
+          </button>
+        ))}
+        <button
+          onClick={() => setShowSolution(!showSolution)}
+          className={cn(
+            "flex items-center gap-1.5 px-3 py-1.5 rounded-full border-2 font-black text-[10px] uppercase tracking-wider transition-all",
+            showSolution 
+              ? "bg-purple-100 border-purple-600 text-purple-700" 
+              : "bg-white border-brand-dark/10 text-brand-dark/40 hover:border-brand-dark/30"
+          )}
+        >
+          <Eye className="w-3 h-3" />
+          {showSolution ? 'Hide Solution' : 'Solution'}
+        </button>
+      </div>
+
+      <div className="space-y-2">
+        {hintLevel > 0 && Array.from({ length: hintLevel }).map((_, idx) => (
+          <div key={idx} className="p-3 bg-yellow-50 border-2 border-yellow-200 rounded-neo-sm flex items-start gap-3 animate-in slide-in-from-left-2 duration-200">
+            <HelpCircle className="w-4 h-4 text-yellow-600 shrink-0 mt-0.5" />
+            <div className="text-xs font-medium text-yellow-900 italic">
+              <MathRenderer math={hints[idx]} />
+            </div>
+          </div>
+        ))}
+        {showSolution && (
+          <div className="p-4 bg-purple-50 border-2 border-purple-200 rounded-neo-sm animate-in zoom-in-95 duration-200">
+            <div className="text-[10px] font-black uppercase text-purple-600 mb-2 flex items-center gap-2">
+              <CheckCircle className="w-3 h-3" /> Expected Solution
+            </div>
+            <pre className="font-code text-xs text-purple-900 bg-white/50 p-2 rounded border border-purple-100 overflow-x-auto">
+              <code>{solution}</code>
+            </pre>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
 
 export default function PracticeCell({ 
   topicId, 
@@ -119,7 +197,14 @@ export default function PracticeCell({
   loading: externalLoading
 }: PracticeCellProps) {
   const [activeTab, setActiveTab] = useState<TabType>('coding');
-  const [answers, setAnswers] = useState<Record<string, string>>({});
+  const [answers, setAnswers] = useState<Record<string, string>>(() => {
+    // Pre-fill initial code for coding tasks
+    const initial: Record<string, string> = {};
+    ALL_EXERCISES.forEach(ex => {
+      if (ex.initialCode) initial[ex.id] = ex.initialCode;
+    });
+    return initial;
+  });
   const [outputs, setOutputs] = useState<Record<string, { stdout: string; stderr: string }>>({});
   const [executingId, setExecutingId] = useState<string | null>(null);
   const [results, setResults] = useState<Record<string, { success: boolean; feedback: string }> | null>(null);
@@ -156,7 +241,7 @@ export default function PracticeCell({
         success: isCorrect,
         feedback: isCorrect 
           ? "Spot on! Great understanding." 
-          : `Not quite. Hint: ${ex.hint}`
+          : "Not quite correct. Try using the hints above to refine your answer!"
       };
     });
 
@@ -224,7 +309,7 @@ export default function PracticeCell({
       <div className="flex flex-wrap gap-3 p-2 bg-surface-container/30 border-3 border-brand-dark rounded-neo">
         {(['coding', 'math', 'concept'] as TabType[]).map((tab) => {
           const tabCount = ALL_EXERCISES.filter(ex => ex.tab === tab).length;
-          const completedCount = ALL_EXERCISES.filter(ex => ex.tab === tab && answers[ex.id]).length;
+          const completedCount = ALL_EXERCISES.filter(ex => ex.tab === tab && answers[ex.id] && answers[ex.id] !== ex.initialCode).length;
           return (
             <button 
               key={tab} 
@@ -256,7 +341,10 @@ export default function PracticeCell({
                 <div className="p-2 bg-brand-dark/5 rounded-lg">
                   <ex.icon className="w-5 h-5 text-[#7B287D]" />
                 </div>
-                <h3 className="font-heading font-black uppercase text-sm tracking-widest">{ex.label}</h3>
+                <div className="flex flex-col">
+                  <span className="text-[8px] font-black uppercase tracking-widest text-brand-dark/40">{ex.type}</span>
+                  <h3 className="font-heading font-black uppercase text-sm tracking-widest">{ex.label}</h3>
+                </div>
                 {result && (
                   <span className={cn(
                     "ml-auto text-[10px] font-black uppercase px-2 py-0.5 rounded border-2",
@@ -270,87 +358,92 @@ export default function PracticeCell({
               <div className="text-sm font-bold mb-4 text-brand-dark/80 leading-relaxed">
                 <MathRenderer math={ex.instruction} />
               </div>
-              
-              {activeTab === 'coding' ? (
-                <div className="flex flex-col gap-4">
-                  <div className="w-full min-h-[140px] bg-[#1E1E2F] border-2 border-brand-dark rounded-lg overflow-hidden shadow-inner font-code text-sm group">
-                    <div className="flex items-center justify-between px-4 py-2 bg-brand-dark/20 border-b border-brand-dark/30">
-                      <span className="text-[10px] text-white/40 uppercase font-black tracking-widest flex items-center gap-2">
-                        <div className="w-2 h-2 rounded-full bg-yellow-500" /> python
-                      </span>
-                      <div className="flex items-center gap-2">
-                        <div className="relative group/tooltip">
-                          <button 
-                            onClick={() => resetKernel()}
-                            aria-label="Reset Python Kernel"
-                            className="p-1.5 bg-brand-dark/20 hover:bg-red-500/20 text-white/60 hover:text-red-400 rounded transition-all border border-white/5"
-                          >
-                            <RefreshCw className="w-3.5 h-3.5" />
-                          </button>
-                          {/* Tooltip */}
-                          <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-4 py-3 bg-brand-dark text-white text-[11px] font-medium rounded-xl shadow-2xl opacity-0 group-hover/tooltip:opacity-100 pointer-events-none transition-all w-64 border border-white/10 z-50 leading-relaxed">
-                            <span className="font-black text-[#CDB4DB] block mb-1">RESET KERNEL</span>
-                            Deletes all saved variables and functions from memory. Use this to start fresh if your code behaves unexpectedly.
-                            <div className="absolute top-full left-1/2 -translate-x-1/2 border-8 border-transparent border-t-brand-dark" />
-                          </div>
-                        </div>
-                        <button 
-                          onClick={() => handleRunCode(ex.id)}
-                          disabled={isExecuting}
-                          className="flex items-center gap-2 px-4 py-1.5 bg-[#7B287D] hover:bg-[#923494] text-white rounded-md text-[10px] font-black uppercase tracking-widest transition-all shadow-lg active:scale-95 disabled:opacity-50"
-                        >
-                          {isExecuting ? <Loader2 className="w-3 h-3 animate-spin" /> : <Play className="w-3 h-3" />}
-                          {isExecuting ? "Executing..." : "Run Code"}
-                        </button>
-                      </div>
-                    </div>
-                    <Editor
-                      height="200px"
-                      defaultLanguage="python"
-                      theme="vs-dark"
-                      value={answers[ex.id] || ''}
-                      onChange={(value) => handleInputChange(ex.id, value || '')}
-                      options={{
-                        minimap: { enabled: false },
-                        fontSize: 13,
-                        fontWeight: 'bold',
-                        lineNumbers: 'on',
-                        scrollBeyondLastLine: false,
-                        padding: { top: 16, bottom: 16 },
-                        fontFamily: '"JetBrains Mono", "Fira Code", monospace',
-                        renderLineHighlight: 'all',
-                        contextmenu: false,
-                        quickSuggestions: true,
-                      }}
-                    />
-                  </div>
 
-                  {/* Output Console */}
-                  {(output || isExecuting) && (
-                    <div className="w-full bg-[#0F0F17] border-2 border-brand-dark rounded-lg p-4 font-code text-xs animate-in slide-in-from-top-2 duration-200">
-                      <div className="flex items-center gap-2 mb-2 text-white/40 uppercase font-black tracking-tighter">
-                        <Terminal className="w-3 h-3" /> Console Output
+              <ProgressiveHint hints={ex.hints} solution={ex.solution} id={ex.id} />
+              
+              <div className="mt-6">
+                {activeTab === 'coding' ? (
+                  <div className="flex flex-col gap-4">
+                    <div className="w-full min-h-[140px] bg-[#1E1E2F] border-2 border-brand-dark rounded-lg overflow-hidden shadow-inner font-code text-sm group">
+                      <div className="flex items-center justify-between px-4 py-2 bg-brand-dark/20 border-b border-brand-dark/30">
+                        <span className="text-[10px] text-white/40 uppercase font-black tracking-widest flex items-center gap-2">
+                          <div className="w-2 h-2 rounded-full bg-yellow-500" /> python
+                        </span>
+                        <div className="flex items-center gap-2">
+                          <div className="relative group/tooltip">
+                            <button 
+                              onClick={() => resetKernel()}
+                              aria-label="Reset Python Kernel"
+                              className="p-1.5 bg-brand-dark/20 hover:bg-red-500/20 text-white/60 hover:text-red-400 rounded transition-all border border-white/5"
+                            >
+                              <RefreshCw className="w-3.5 h-3.5" />
+                            </button>
+                            {/* Tooltip */}
+                            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-4 py-3 bg-brand-dark text-white text-[11px] font-medium rounded-xl shadow-2xl opacity-0 group-hover/tooltip:opacity-100 pointer-events-none transition-all w-64 border border-white/10 z-50 leading-relaxed">
+                              <span className="font-black text-[#CDB4DB] block mb-1">RESET KERNEL</span>
+                              Deletes all saved variables and functions from memory. Use this to start fresh if your code behaves unexpectedly.
+                              <div className="absolute top-full left-1/2 -translate-x-1/2 border-8 border-transparent border-t-brand-dark" />
+                            </div>
+                          </div>
+                          <button 
+                            onClick={() => handleRunCode(ex.id)}
+                            disabled={isExecuting}
+                            className="flex items-center gap-2 px-4 py-1.5 bg-[#7B287D] hover:bg-[#923494] text-white rounded-md text-[10px] font-black uppercase tracking-widest transition-all shadow-lg active:scale-95 disabled:opacity-50"
+                          >
+                            {isExecuting ? <Loader2 className="w-3 h-3 animate-spin" /> : <Play className="w-3 h-3" />}
+                            {isExecuting ? "Executing..." : "Run Code"}
+                          </button>
+                        </div>
                       </div>
-                      {isExecuting && !output && (
-                        <div className="text-yellow-400/80 animate-pulse">Initializing Python environment and loading packages (NumPy, Scikit-Learn)...</div>
-                      )}
-                      {output?.stdout && <pre className="text-green-400 whitespace-pre-wrap">{output.stdout}</pre>}
-                      {output?.stderr && <pre className="text-red-400 whitespace-pre-wrap">{output.stderr}</pre>}
-                      {!isExecuting && !output?.stdout && !output?.stderr && <div className="text-white/20 italic">Process finished with no output.</div>}
+                      <Editor
+                        height="200px"
+                        defaultLanguage="python"
+                        theme="vs-dark"
+                        value={answers[ex.id] || ''}
+                        onChange={(value) => handleInputChange(ex.id, value || '')}
+                        options={{
+                          minimap: { enabled: false },
+                          fontSize: 13,
+                          fontWeight: 'bold',
+                          lineNumbers: 'on',
+                          scrollBeyondLastLine: false,
+                          padding: { top: 16, bottom: 16 },
+                          fontFamily: '"JetBrains Mono", "Fira Code", monospace',
+                          renderLineHighlight: 'all',
+                          contextmenu: false,
+                          quickSuggestions: true,
+                        }}
+                      />
                     </div>
-                  )}
-                </div>
-              ) : (
-                <textarea 
-                  value={answers[ex.id] || ''}
-                  onChange={(e) => handleInputChange(ex.id, e.target.value)}
-                  placeholder="Type your answer here..."
-                  className={cn(
-                    "w-full h-28 rounded-lg p-4 font-body text-sm transition-all shadow-inner focus:outline-none focus:ring-2",
-                    "bg-slate-50 text-brand-dark border-2 border-brand-dark/20 placeholder:text-brand-dark/30 focus:border-brand-dark focus:ring-brand-dark/5"
-                  )}
-                />
-              )}
+
+                    {/* Output Console */}
+                    {(output || isExecuting) && (
+                      <div className="w-full bg-[#0F0F17] border-2 border-brand-dark rounded-lg p-4 font-code text-xs animate-in slide-in-from-top-2 duration-200">
+                        <div className="flex items-center gap-2 mb-2 text-white/40 uppercase font-black tracking-tighter">
+                          <Terminal className="w-3 h-3" /> Console Output
+                        </div>
+                        {isExecuting && !output && (
+                          <div className="text-yellow-400/80 animate-pulse">Initializing Python environment and loading packages (NumPy, Scikit-Learn)...</div>
+                        )}
+                        {output?.stdout && <pre className="text-green-400 whitespace-pre-wrap">{output.stdout}</pre>}
+                        {output?.stderr && <pre className="text-red-400 whitespace-pre-wrap">{output.stderr}</pre>}
+                        {!isExecuting && !output?.stdout && !output?.stderr && <div className="text-white/20 italic">Process finished with no output.</div>}
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <textarea 
+                    value={answers[ex.id] || ''}
+                    onChange={(e) => handleInputChange(ex.id, e.target.value)}
+                    placeholder="Type your answer here..."
+                    className={cn(
+                      "w-full h-28 rounded-lg p-4 font-body text-sm transition-all shadow-inner focus:outline-none focus:ring-2",
+                      "bg-slate-50 text-brand-dark border-2 border-brand-dark/20 placeholder:text-brand-dark/30 focus:border-brand-dark focus:ring-brand-dark/5"
+                    )}
+                  />
+                )}
+              </div>
+              
               {result && !result.success && (
                 <div className="mt-4 flex items-start gap-3 p-3 bg-red-50 border-2 border-red-200 rounded-lg text-red-600">
                   <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
@@ -376,3 +469,4 @@ export default function PracticeCell({
     </div>
   );
 }
+
