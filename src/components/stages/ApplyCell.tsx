@@ -2,9 +2,9 @@
 
 import React, { useState, useEffect } from 'react';
 import { 
-  Rocket, CheckCircle2, Loader2, AlertCircle, FlaskConical, 
+  Rocket, CheckCircle2, Loader2, FlaskConical, 
   FileText, Code2, ShieldAlert, Cpu, Timer, BarChart, 
-  Terminal, ArrowRight, Zap, Target, Database, Bug
+  Terminal, ArrowRight, Zap, Target, Bug
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 interface Milestone {
@@ -21,7 +21,7 @@ interface ApplyCellProps {
 }
 
 export default function ApplyCell({ 
-  topicId, 
+  topicId: _topicId, 
   instruction = "Build a robust Linear Regression pipeline to predict housing prices with outlier handling.",
   onComplete
 }: ApplyCellProps) {
@@ -92,7 +92,7 @@ export default function ApplyCell({
             <Target className="w-4 h-4" /> Project Specification
           </h3>
           <p className="text-lg font-bold text-brand-dark leading-relaxed italic">
-            "{instruction}"
+            &ldquo;{instruction}&rdquo;
           </p>
           <div className="flex flex-wrap gap-4 mt-4 pt-4 border-t-2 border-brand-dark/5">
             <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest bg-white border-2 border-brand-dark/10 px-3 py-1 rounded-full">
@@ -137,10 +137,12 @@ export default function ApplyCell({
           <div className="animate-in slide-in-from-bottom-4 duration-500 space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-2">
-                <label className="text-xs font-black uppercase tracking-widest text-brand-dark/50 flex items-center gap-2">
+                <label htmlFor="model-strategy" className="text-xs font-black uppercase tracking-widest text-brand-dark/50 flex items-center gap-2">
                   <Terminal className="w-3 h-3" /> Model Strategy
                 </label>
                 <textarea 
+                  id="model-strategy"
+                  title="Model Strategy Description"
                   value={designDoc.strategy}
                   onChange={(e) => setDesignDoc({...designDoc, strategy: e.target.value})}
                   placeholder="e.g., Using SGD Regressor with L2 penalty to handle sparse features..."
@@ -149,8 +151,10 @@ export default function ApplyCell({
               </div>
               <div className="space-y-6">
                 <div className="space-y-2">
-                  <label className="text-xs font-black uppercase tracking-widest text-brand-dark/50">Primary Metric</label>
+                  <label htmlFor="primary-metric" className="text-xs font-black uppercase tracking-widest text-brand-dark/50">Primary Metric</label>
                   <select 
+                    id="primary-metric"
+                    title="Select Primary Performance Metric"
                     value={designDoc.metric}
                     onChange={(e) => setDesignDoc({...designDoc, metric: e.target.value})}
                     className="w-full p-4 font-black border-3 border-brand-dark rounded-neo appearance-none bg-white cursor-pointer"
@@ -162,8 +166,10 @@ export default function ApplyCell({
                   </select>
                 </div>
                 <div className="space-y-2">
-                  <label className="text-xs font-black uppercase tracking-widest text-brand-dark/50">Cleaning Strategy</label>
+                  <label htmlFor="cleaning-strategy" className="text-xs font-black uppercase tracking-widest text-brand-dark/50">Cleaning Strategy</label>
                   <input 
+                    id="cleaning-strategy"
+                    title="Cleaning Strategy Details"
                     type="text" 
                     value={designDoc.cleaning}
                     onChange={(e) => setDesignDoc({...designDoc, cleaning: e.target.value})}
@@ -200,6 +206,8 @@ export default function ApplyCell({
                   </div>
                 </div>
                 <textarea 
+                  id="pipeline-code"
+                  title="Python Pipeline Code"
                   value={code}
                   onChange={(e) => setCode(e.target.value)}
                   className="w-full h-[400px] p-6 bg-[#1E1E2F] text-[#D4D4D4] font-code text-sm border-3 border-brand-dark rounded-b-neo shadow-[8px_8px_0px_0px_#330C2F] focus:outline-none resize-none leading-relaxed"
@@ -279,7 +287,10 @@ export default function ApplyCell({
                     </div>
                     <div className="space-y-4">
                       {['Injecting NaN values', 'Synthesizing Outliers', 'Shifting Feature Distribution'].map((t, i) => (
-                        <div key={i} className="flex items-center gap-3 text-white font-mono text-sm animate-in slide-in-from-left duration-500" style={{ animationDelay: `${i * 1000}ms` }}>
+                        <div key={i} className={cn(
+                          "flex items-center gap-3 text-white font-mono text-sm animate-in slide-in-from-left duration-500",
+                          i === 1 ? "delay-[1000ms]" : i === 2 ? "delay-[2000ms]" : ""
+                        )}>
                           <Bug className="w-4 h-4 text-red-500" />
                           <span>{t}</span>
                           <div className="flex-1 border-b border-dashed border-white/20" />

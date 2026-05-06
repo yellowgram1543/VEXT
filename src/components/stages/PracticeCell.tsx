@@ -34,6 +34,7 @@ interface Exercise {
   icon: any;
   hints: string[];
   solution: string;
+  checklist?: string[]; // New: For Concept self-evaluation points
   expected: string;
   initialCode?: string;
 }
@@ -84,7 +85,7 @@ const ALL_EXERCISES: Exercise[] = [
       'First calculate $z = wx + b$, then $\\sigma(z)$, then the final derivative.',
       '$\\sigma(1) \\approx 0.73$. So $\\sigma\'(1) = 0.73 \\cdot (1 - 0.73) \\approx 0.197$. Now multiply by $x=2$.'
     ],
-    solution: '0.394',
+    solution: 'The final result is approximately 0.394.',
     expected: '0.39'
   },
   { 
@@ -99,7 +100,7 @@ const ALL_EXERCISES: Exercise[] = [
       'The outer derivative is $2 \\cdot \\frac{1}{2} (y - \\hat{y})^{2-1}$.',
       'Don\'t forget the inner derivative of $(y - \\hat{y})$ with respect to $\\hat{y}$.'
     ],
-    solution: '-(y - \\hat{y}) or (\\hat{y} - y)',
+    solution: 'Using the chain rule: $\\frac{\\partial L}{\\partial \\hat{y}} = (y - \\hat{y}) \\cdot (-1) = \\hat{y} - y$.',
     expected: 'y'
   },
 
@@ -115,7 +116,12 @@ const ALL_EXERCISES: Exercise[] = [
       'L2 (Ridge) penalizes large weights but keeps them non-zero.',
       'L1 (Lasso) encourages sparsity by driving some weights exactly to zero.'
     ],
-    solution: 'L1 Regularization (Lasso)',
+    checklist: [
+      'Identified L1 Regularization (Lasso) as the technique.',
+      'Explained that L1 penalties create sparse weight vectors.',
+      'Noted that zeroed-out weights effectively perform feature selection.'
+    ],
+    solution: 'L1 Regularization (Lasso) is the ideal choice here. Unlike L2, the L1 penalty uses the absolute value of weights, which tends to shrink less important feature weights to exactly zero, thus performing automated feature selection while reducing overfitting.',
     expected: 'l1'
   },
   { 
@@ -129,19 +135,24 @@ const ALL_EXERCISES: Exercise[] = [
       'Small $k$ (e.g., $k=1$) makes the model very sensitive to local noise.',
       'Higher sensitivity to noise means higher variance and higher complexity.'
     ],
-    solution: 'Complexity increases, Variance increases.',
+    checklist: [
+      'Mentioned that smaller $k$ leads to a more complex decision boundary.',
+      'Correctly identified that variance increases as $k$ decreases.',
+      'Noted that small $k$ models are prone to overfitting local noise.'
+    ],
+    solution: 'As $k$ decreases, the model complexity increases because it begins to fit the local noise in the training data rather than the overall distribution. Consequently, the variance increases because the model\'s predictions become highly sensitive to changes in the training set.',
     expected: 'increase'
   }
 ];
 
-const ProgressiveHint = ({ hints, solution, id }: { hints: string[]; solution: string; id: string }) => {
+const ProgressiveHint = ({ exercise }: { exercise: Exercise }) => {
   const [hintLevel, setHintLevel] = useState(0);
   const [showSolution, setShowSolution] = useState(false);
 
   return (
     <div className="mt-4 space-y-3">
       <div className="flex flex-wrap gap-2">
-        {hints.map((_, idx) => (
+        {exercise.hints.map((_, idx) => (
           <button
             key={idx}
             onClick={() => {
@@ -164,12 +175,12 @@ const ProgressiveHint = ({ hints, solution, id }: { hints: string[]; solution: s
           className={cn(
             "flex items-center gap-1.5 px-3 py-1.5 rounded-full border-2 font-black text-[10px] uppercase tracking-wider transition-all",
             showSolution 
-              ? "bg-purple-100 border-purple-600 text-purple-700" 
+              ? "bg-purple-100 border-purple-600 text-purple-700 shadow-[2px_2px_0px_0px_#581C58]" 
               : "bg-white border-brand-dark/10 text-brand-dark/40 hover:border-brand-dark/30"
           )}
         >
           <Eye className="w-3 h-3" />
-          {showSolution ? 'Hide Solution' : 'Solution'}
+          {showSolution ? 'Hide Solution' : 'Check Solution'}
         </button>
       </div>
 
@@ -178,18 +189,34 @@ const ProgressiveHint = ({ hints, solution, id }: { hints: string[]; solution: s
           <div key={idx} className="p-3 bg-yellow-50 border-2 border-yellow-200 rounded-neo-sm flex items-start gap-3 animate-in slide-in-from-left-2 duration-200">
             <HelpCircle className="w-4 h-4 text-yellow-600 shrink-0 mt-0.5" />
             <div className="text-xs font-medium text-yellow-900 italic">
-              <MathRenderer math={hints[idx]} />
+              <MathRenderer math={exercise.hints[idx]} />
             </div>
           </div>
         ))}
         {showSolution && (
-          <div className="p-4 bg-purple-50 border-2 border-purple-200 rounded-neo-sm animate-in zoom-in-95 duration-200">
-            <div className="text-[10px] font-black uppercase text-purple-600 mb-2 flex items-center gap-2">
-              <CheckCircle className="w-3 h-3" /> Expected Solution
+          <div className="p-5 bg-purple-50 border-3 border-purple-200 rounded-neo shadow-[4px_4px_0px_0px_#CDB4DB] animate-in zoom-in-95 duration-200 space-y-4">
+            <div>
+               <div className="text-[10px] font-black uppercase text-purple-600 mb-2 flex items-center gap-2">
+                 <CheckCircle className="w-3 h-3" /> Reference Solution
+               </div>
+               <div className="font-body text-xs text-purple-900 bg-white/60 p-3 rounded-lg border border-purple-100 leading-relaxed">
+                 <MathRenderer math={exercise.solution} />
+               </div>
             </div>
-            <pre className="font-code text-xs text-purple-900 bg-white/50 p-2 rounded border border-purple-100 overflow-x-auto">
-              <code>{solution}</code>
-            </pre>
+
+            {exercise.checklist && (
+              <div>
+                <div className="text-[10px] font-black uppercase text-purple-600 mb-2">Key points for your answer</div>
+                <ul className="space-y-2">
+                  {exercise.checklist.map((point, i) => (
+                    <li key={i} className="flex items-start gap-2 text-xs font-bold text-purple-800/70">
+                      <div className="w-1.5 h-1.5 rounded-full bg-purple-400 mt-1.5 shrink-0" />
+                      <MathRenderer math={point} />
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
           </div>
         )}
       </div>
@@ -205,7 +232,6 @@ export default function PracticeCell({
 }: PracticeCellProps) {
   const [activeTab, setActiveTab] = useState<TabType>('coding');
   const [answers, setAnswers] = useState<Record<string, string>>(() => {
-    // Pre-fill initial code for coding tasks
     const initial: Record<string, string> = {};
     ALL_EXERCISES.forEach(ex => {
       if (ex.initialCode) initial[ex.id] = ex.initialCode;
@@ -214,8 +240,7 @@ export default function PracticeCell({
   });
   const [outputs, setOutputs] = useState<Record<string, { stdout: string; stderr: string }>>({});
   const [executingId, setExecutingId] = useState<string | null>(null);
-  const [results, setResults] = useState<Record<string, { success: boolean; feedback: string }> | null>(null);
-  const [showSummary, setShowSummary] = useState(false);
+  const [isDone, setIsDone] = useState(false);
   const isCompleted = status === 'COMPLETED';
 
   const { runCode, resetKernel } = usePyodide();
@@ -239,70 +264,35 @@ export default function PracticeCell({
     }
   };
 
-  const handleSubmit = async () => {
-    const newResults: Record<string, { success: boolean; feedback: string }> = {};
-    ALL_EXERCISES.forEach(ex => {
-      const answer = (answers[ex.id] || '').toLowerCase();
-      const isCorrect = answer.includes(ex.expected.toLowerCase());
-      newResults[ex.id] = {
-        success: isCorrect,
-        feedback: isCorrect 
-          ? "Spot on! Great understanding." 
-          : "Not quite correct. Try using the hints above to refine your answer!"
-      };
-    });
-
-    setResults(newResults);
-    setShowSummary(true);
-  };
-
-  const calculateScore = () => {
-    if (!results) return 0;
-    const correct = Object.values(results).filter(r => r.success).length;
-    return Math.round((correct / ALL_EXERCISES.length) * 100);
-  };
-
-  const getWeakAreas = () => {
-    if (!results) return [];
-    return ALL_EXERCISES
-      .filter(ex => !results[ex.id].success)
-      .map(ex => `${ex.tab.toUpperCase()}: ${ex.label}`);
-  };
-
   const activeExercises = ALL_EXERCISES.filter(ex => ex.tab === activeTab);
 
-  if (showSummary) {
-    const score = calculateScore();
-    const weakAreas = getWeakAreas();
-
+  if (isDone) {
     return (
-      <div className="bg-white border-4 border-brand-dark rounded-neo p-8 shadow-[8px_8px_0px_0px_#330C2F] animate-in zoom-in-95 duration-200">
+      <div className="bg-white border-4 border-brand-dark rounded-neo p-8 shadow-[12px_12px_0px_0px_#330C2F] animate-in zoom-in-95 duration-200">
         <div className="flex flex-col items-center text-center gap-6">
-          <div className={cn(
-            "w-24 h-24 rounded-full border-4 border-brand-dark flex items-center justify-center text-3xl font-black shadow-[4px_4px_0px_0px_#330C2F]",
-            score >= 80 ? "bg-green-400" : score >= 50 ? "bg-yellow-400" : "bg-red-400"
-          )}>
-            {score}%
+          <div className="w-20 h-20 bg-green-400 rounded-full border-4 border-brand-dark flex items-center justify-center shadow-[4px_4px_0px_0px_#14532d]">
+            <CheckCircle className="w-10 h-10 text-white" />
           </div>
           <div>
-            <h2 className="text-3xl font-black uppercase tracking-tight mb-2">Practice Complete</h2>
-            <p className="text-brand-dark/60 font-medium">Your skills breakdown across Coding, Math, and Concept.</p>
+            <h2 className="text-3xl font-black uppercase tracking-tight mb-2">Practice Session Finished</h2>
+            <p className="text-brand-dark/60 font-medium max-w-md">
+              You've completed the coding, math, and conceptual exercises. Your foundation is solid!
+            </p>
           </div>
-          {weakAreas.length > 0 && (
-            <div className="w-full bg-red-50 border-3 border-red-200 rounded-neo p-4 text-left">
-              <h3 className="font-black uppercase text-xs tracking-widest text-red-600 mb-2">Weak Areas</h3>
-              <ul className="list-disc list-inside text-red-800 text-sm font-medium">
-                {weakAreas.map(area => <li key={area}>{area}</li>)}
-              </ul>
-            </div>
-          )}
           <div className="flex flex-wrap justify-center gap-4 w-full pt-4">
-            <button onClick={() => { setShowSummary(false); setResults(null); }} className="px-8 py-3 bg-white border-3 border-brand-dark rounded-neo font-heading font-black uppercase text-sm tracking-widest shadow-[4px_4px_0px_0px_#330C2F] hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all flex items-center gap-2">
-              <RefreshCw className="w-4 h-4" /> Retry
+            <button 
+              onClick={() => setIsDone(false)} 
+              className="px-8 py-3 bg-white border-3 border-brand-dark rounded-neo font-heading font-black uppercase text-xs tracking-widest shadow-[4px_4px_0px_0px_#330C2F] hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all"
+            >
+              Review Tasks
             </button>
-            <button onClick={onComplete} disabled={externalLoading || isCompleted} className="px-8 py-3 bg-[#7B287D] text-white border-3 border-brand-dark rounded-neo font-heading font-black uppercase text-sm tracking-widest shadow-[4px_4px_0px_0px_#330C2F] hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all flex items-center gap-2 disabled:opacity-50">
+            <button 
+              onClick={onComplete} 
+              disabled={externalLoading || isCompleted} 
+              className="px-8 py-3 bg-[#7B287D] text-white border-3 border-brand-dark rounded-neo font-heading font-black uppercase text-xs tracking-widest shadow-[4px_4px_0px_0px_#330C2F] hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all flex items-center gap-2 disabled:opacity-50"
+            >
               {externalLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <ArrowRight className="w-4 h-4" />}
-              Move to Quiz
+              Go to Quiz
             </button>
           </div>
         </div>
@@ -313,150 +303,104 @@ export default function PracticeCell({
   return (
     <div className="w-full bg-white flex flex-col gap-8">
       {/* Tab Selection */}
-      <div className="flex flex-wrap gap-3 p-2 bg-surface-container/30 border-3 border-brand-dark rounded-neo">
-        {(['coding', 'math', 'concept'] as TabType[]).map((tab) => {
-          const tabCount = ALL_EXERCISES.filter(ex => ex.tab === tab).length;
-          const completedCount = ALL_EXERCISES.filter(ex => ex.tab === tab && answers[ex.id] && answers[ex.id] !== ex.initialCode).length;
-          return (
-            <button 
-              key={tab} 
-              onClick={() => setActiveTab(tab)}
-              className={cn(
-                "flex-1 px-6 py-3 rounded-neo border-3 border-brand-dark font-heading font-black uppercase text-xs tracking-widest transition-all shadow-[3px_3px_0px_0px_#330C2F] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none",
-                activeTab === tab ? "bg-[#7B287D] text-white" : "bg-white text-brand-dark hover:bg-surface-container"
-              )}
-            >
-              <div className="flex flex-col gap-1">
-                <span>{tab}</span>
-                <span className="text-[10px] opacity-60 normal-case font-medium">{completedCount}/{tabCount} Done</span>
-              </div>
-            </button>
-          );
-        })}
+      <div className="flex flex-wrap gap-2 p-1.5 bg-slate-50 border-3 border-brand-dark rounded-neo shadow-[4px_4px_0px_0px_#330C2F]">
+        {(['coding', 'math', 'concept'] as TabType[]).map((tab) => (
+          <button 
+            key={tab} 
+            onClick={() => setActiveTab(tab)}
+            className={cn(
+              "flex-1 px-4 py-3 rounded-neo border-3 border-brand-dark font-heading font-black uppercase text-[10px] tracking-widest transition-all",
+              activeTab === tab 
+                ? "bg-[#7B287D] text-white shadow-[3px_3px_0px_0px_#330C2F] translate-y-[-2px]" 
+                : "bg-white text-brand-dark hover:bg-white/80"
+            )}
+          >
+            {tab}
+          </button>
+        ))}
       </div>
 
       {/* Exercise Cards Stack */}
-      <div className="grid grid-cols-1 gap-6 animate-in slide-in-from-bottom-4 duration-300">
+      <div className="grid grid-cols-1 gap-8">
         {activeExercises.map((ex) => {
-          const result = results?.[ex.id];
           const output = outputs[ex.id];
           const isExecuting = executingId === ex.id;
 
           return (
-            <div key={ex.id} className="border-3 border-brand-dark rounded-neo p-6 bg-white shadow-[4px_4px_0px_0px_#330C2F] hover:shadow-[6px_6px_0px_0px_#330C2F] transition-all">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="p-2 bg-brand-dark/5 rounded-lg">
-                  <ex.icon className="w-5 h-5 text-[#7B287D]" />
+            <div key={ex.id} className="border-3 border-brand-dark rounded-neo p-8 bg-white shadow-[8px_8px_0px_0px_#330C2F]">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="p-2.5 bg-brand-dark/5 rounded-xl border-2 border-brand-dark/10">
+                  <ex.icon className="w-6 h-6 text-[#7B287D]" />
                 </div>
                 <div className="flex flex-col">
-                  <span className="text-[8px] font-black uppercase tracking-widest text-brand-dark/40">{ex.type}</span>
-                  <h3 className="font-heading font-black uppercase text-sm tracking-widest">{ex.label}</h3>
+                  <span className="text-[10px] font-black uppercase tracking-widest text-brand-dark/40">{ex.type}</span>
+                  <h3 className="font-heading font-black uppercase text-base tracking-tighter">{ex.label}</h3>
                 </div>
-                {result && (
-                  <span className={cn(
-                    "ml-auto text-[10px] font-black uppercase px-2 py-0.5 rounded border-2",
-                    result.success ? "bg-green-100 border-green-600 text-green-700" : "bg-red-100 border-red-600 text-red-700"
-                  )}>
-                    {result.success ? "Correct" : "Needs Work"}
-                  </span>
-                )}
               </div>
               
-              <div className="text-sm font-bold mb-4 text-brand-dark/80 leading-relaxed">
+              <div className="text-base font-bold mb-6 text-brand-dark/80 leading-relaxed bg-slate-50 p-6 rounded-neo border-2 border-dashed border-brand-dark/10">
                 <MathRenderer math={ex.instruction} />
               </div>
 
-              <ProgressiveHint hints={ex.hints} solution={ex.solution} id={ex.id} />
+              <ProgressiveHint exercise={ex} />
               
-              <div className="mt-6">
-                {activeTab === 'coding' ? (
-                  <div className="flex flex-col gap-4">
-                    <div className="w-full min-h-[140px] bg-[#1E1E2F] border-2 border-brand-dark rounded-lg overflow-hidden shadow-inner font-code text-sm group">
-                      <div className="flex items-center justify-between px-4 py-2 bg-brand-dark/20 border-b border-brand-dark/30">
-                        <span className="text-[10px] text-white/40 uppercase font-black tracking-widest flex items-center gap-2">
-                          <div className="w-2 h-2 rounded-full bg-yellow-500" /> python
-                        </span>
-                        <div className="flex items-center gap-2">
-                          <div className="relative group/tooltip">
-                            <button 
-                              onClick={() => resetKernel()}
-                              aria-label="Reset Python Kernel"
-                              className="p-1.5 bg-brand-dark/20 hover:bg-red-500/20 text-white/60 hover:text-red-400 rounded transition-all border border-white/5"
-                            >
-                              <RefreshCw className="w-3.5 h-3.5" />
-                            </button>
-                            {/* Tooltip */}
-                            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-4 py-3 bg-brand-dark text-white text-[11px] font-medium rounded-xl shadow-2xl opacity-0 group-hover/tooltip:opacity-100 pointer-events-none transition-all w-64 border border-white/10 z-50 leading-relaxed">
-                              <span className="font-black text-[#CDB4DB] block mb-1">RESET KERNEL</span>
-                              Deletes all saved variables and functions from memory. Use this to start fresh if your code behaves unexpectedly.
-                              <div className="absolute top-full left-1/2 -translate-x-1/2 border-8 border-transparent border-t-brand-dark" />
-                            </div>
-                          </div>
-                          <button 
-                            onClick={() => handleRunCode(ex.id)}
-                            disabled={isExecuting}
-                            className="flex items-center gap-2 px-4 py-1.5 bg-[#7B287D] hover:bg-[#923494] text-white rounded-md text-[10px] font-black uppercase tracking-widest transition-all shadow-lg active:scale-95 disabled:opacity-50"
-                          >
-                            {isExecuting ? <Loader2 className="w-3 h-3 animate-spin" /> : <Play className="w-3 h-3" />}
-                            {isExecuting ? "Executing..." : "Run Code"}
-                          </button>
-                        </div>
+              {activeTab === 'coding' && (
+                <div className="mt-8 flex flex-col gap-4">
+                  <div className="w-full min-h-[200px] bg-[#1E1E2F] border-3 border-brand-dark rounded-neo overflow-hidden shadow-[6px_6px_0px_0px_#330C2F] font-code text-sm">
+                    <div className="flex items-center justify-between px-6 py-3 bg-brand-dark/20 border-b-2 border-brand-dark/30">
+                      <span className="text-[10px] text-white/40 uppercase font-black tracking-widest flex items-center gap-2">
+                        <div className="w-2 h-2 rounded-full bg-yellow-500" /> python kernel
+                      </span>
+                      <div className="flex items-center gap-3">
+                        <button 
+                          onClick={() => resetKernel()}
+                          title="Reset Kernel"
+                          className="p-1.5 hover:bg-red-500/20 text-white/40 hover:text-red-400 rounded transition-all"
+                        >
+                          <RefreshCw className="w-4 h-4" />
+                        </button>
+                        <button 
+                          onClick={() => handleRunCode(ex.id)}
+                          disabled={isExecuting}
+                          className="flex items-center gap-2 px-5 py-2 bg-[#7B287D] hover:bg-[#923494] text-white rounded-neo-sm border-2 border-brand-dark/20 text-[10px] font-black uppercase tracking-widest shadow-lg active:scale-95 disabled:opacity-50 transition-all"
+                        >
+                          {isExecuting ? <Loader2 className="w-3 h-3 animate-spin" /> : <Play className="w-3 h-3" />}
+                          {isExecuting ? "Running..." : "Run Code"}
+                        </button>
                       </div>
-                      <Editor
-                        height="200px"
-                        defaultLanguage="python"
-                        theme="vs-dark"
-                        value={answers[ex.id] || ''}
-                        onChange={(value) => handleInputChange(ex.id, value || '')}
-                        options={{
-                          minimap: { enabled: false },
-                          fontSize: 13,
-                          fontWeight: 'bold',
-                          lineNumbers: 'on',
-                          scrollBeyondLastLine: false,
-                          padding: { top: 16, bottom: 16 },
-                          fontFamily: '"JetBrains Mono", "Fira Code", monospace',
-                          renderLineHighlight: 'all',
-                          contextmenu: false,
-                          quickSuggestions: true,
-                        }}
-                      />
                     </div>
+                    <Editor
+                      height="200px"
+                      defaultLanguage="python"
+                      theme="vs-dark"
+                      value={answers[ex.id] || ''}
+                      onChange={(value) => handleInputChange(ex.id, value || '')}
+                      options={{
+                        minimap: { enabled: false },
+                        fontSize: 14,
+                        lineNumbers: 'on',
+                        scrollBeyondLastLine: false,
+                        padding: { top: 20, bottom: 20 },
+                        fontFamily: '"JetBrains Mono", monospace',
+                        renderLineHighlight: 'all',
+                        contextmenu: false,
+                      }}
+                    />
+                  </div>
 
-                    {/* Output Console */}
-                    {(output || isExecuting) && (
-                      <div className="w-full bg-[#0F0F17] border-2 border-brand-dark rounded-lg p-4 font-code text-xs animate-in slide-in-from-top-2 duration-200">
-                        <div className="flex items-center gap-2 mb-2 text-white/40 uppercase font-black tracking-tighter">
-                          <Terminal className="w-3 h-3" /> Console Output
-                        </div>
-                        {isExecuting && !output && (
-                          <div className="text-yellow-400/80 animate-pulse">Initializing Python environment and loading packages (NumPy, Scikit-Learn)...</div>
-                        )}
-                        {output?.stdout && <pre className="text-green-400 whitespace-pre-wrap">{output.stdout}</pre>}
-                        {output?.stderr && <pre className="text-red-400 whitespace-pre-wrap">{output.stderr}</pre>}
-                        {!isExecuting && !output?.stdout && !output?.stderr && <div className="text-white/20 italic">Process finished with no output.</div>}
+                  {/* Output Console */}
+                  {(output || isExecuting) && (
+                    <div className="w-full bg-[#0F0F17] border-3 border-brand-dark rounded-neo p-6 font-code text-xs animate-in slide-in-from-top-2 duration-200 shadow-[6px_6px_0px_0px_#330C2F]">
+                      <div className="flex items-center gap-2 mb-3 text-white/30 uppercase font-black tracking-widest">
+                        <Terminal className="w-3.5 h-3.5" /> Runtime Output
                       </div>
-                    )}
-                  </div>
-                ) : (
-                  <textarea 
-                    value={answers[ex.id] || ''}
-                    onChange={(e) => handleInputChange(ex.id, e.target.value)}
-                    placeholder="Type your answer here..."
-                    className={cn(
-                      "w-full h-28 rounded-lg p-4 font-body text-sm transition-all shadow-inner focus:outline-none focus:ring-2",
-                      "bg-slate-50 text-brand-dark border-2 border-brand-dark/20 placeholder:text-brand-dark/30 focus:border-brand-dark focus:ring-brand-dark/5"
-                    )}
-                  />
-                )}
-              </div>
-              
-              {result && !result.success && (
-                <div className="mt-4 flex items-start gap-3 p-3 bg-red-50 border-2 border-red-200 rounded-lg text-red-600">
-                  <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
-                  <div className="text-xs font-bold leading-relaxed">
-                    <MathRenderer math={result.feedback} />
-                  </div>
+                      {isExecuting && !output && (
+                        <div className="text-yellow-400/80 animate-pulse font-bold">Mounting virtual environment...</div>
+                      )}
+                      {output?.stdout && <pre className="text-green-400 whitespace-pre-wrap font-bold leading-relaxed">{output.stdout}</pre>}
+                      {output?.stderr && <pre className="text-red-400 whitespace-pre-wrap font-bold leading-relaxed">{output.stderr}</pre>}
+                    </div>
+                  )}
                 </div>
               )}
             </div>
@@ -464,16 +408,17 @@ export default function PracticeCell({
         })}
       </div>
 
-      <div className="flex justify-center pt-8 border-t-3 border-dashed border-brand-dark/20">
+      <div className="flex justify-center pt-12 border-t-4 border-brand-dark/10">
         <button 
-          onClick={handleSubmit} 
-          className="bg-[#7B287D] text-white border-3 border-brand-dark px-14 py-5 rounded-neo font-heading font-black uppercase text-sm tracking-widest shadow-[8px_8px_0px_0px_#330C2F] hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all disabled:opacity-50 flex items-center gap-3 group"
+          onClick={() => setIsDone(true)} 
+          className="bg-[#7B287D] text-white border-3 border-brand-dark px-16 py-5 rounded-neo font-heading font-black uppercase text-sm tracking-widest shadow-[10px_10px_0px_0px_#330C2F] hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all flex items-center gap-3 group"
         >
-          <CheckCircle className="w-6 h-6 group-hover:scale-110 transition-transform" />
-          {isCompleted ? "Re-submit Practice" : "Submit Practice Tasks"}
+          <CheckCircle className="w-6 h-6" />
+          {isCompleted ? "Re-Finish Practice" : "Mark Practice as Finished"}
         </button>
       </div>
     </div>
   );
 }
+
 

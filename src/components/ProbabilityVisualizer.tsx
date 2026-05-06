@@ -101,10 +101,12 @@ export default function ProbabilityVisualizer() {
         {/* Mean Slider */}
         <div className="space-y-3">
           <div className="flex justify-between items-center">
-            <label className="text-[10px] font-black uppercase tracking-widest text-brand-dark/60">Mean (μ)</label>
+            <label htmlFor="mean-range" className="text-[10px] font-black uppercase tracking-widest text-brand-dark/60">Mean (μ)</label>
             <span className="px-2 py-1 bg-brand-dark text-white rounded text-[10px] font-black">{mean}</span>
           </div>
           <input 
+            id="mean-range"
+            title="Adjust distribution mean"
             type="range" 
             min="-3" 
             max="3" 
@@ -118,10 +120,12 @@ export default function ProbabilityVisualizer() {
         {/* Std Dev Slider */}
         <div className="space-y-3">
           <div className="flex justify-between items-center">
-            <label className="text-[10px] font-black uppercase tracking-widest text-brand-dark/60">Std Deviation (σ)</label>
+            <label htmlFor="stddev-range" className="text-[10px] font-black uppercase tracking-widest text-brand-dark/60">Std Deviation (σ)</label>
             <span className="px-2 py-1 bg-brand-dark text-white rounded text-[10px] font-black">{stdDev}</span>
           </div>
           <input 
+            id="stddev-range"
+            title="Adjust distribution standard deviation"
             type="range" 
             min="0.5" 
             max="2" 
