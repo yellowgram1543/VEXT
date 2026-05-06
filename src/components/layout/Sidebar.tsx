@@ -8,19 +8,7 @@ import { cn } from "@/lib/utils";
 import { StageType } from "@prisma/client";
 import { useProgress } from "../ProgressContext";
 
-interface Chapter {
-  _id: string;
-  title: string;
-  slug: { current: string };
-  order: number;
-}
-
-interface Module {
-  _id: string;
-  title: string;
-  order: number;
-  chapters: Chapter[];
-}
+import { Module } from "@/types";
 
 interface ProgressRecord {
   chapterId: string;
@@ -161,7 +149,7 @@ const Sidebar = ({ modules, progress }: SidebarProps) => {
             {/* Chapter Links */}
             {(expandedModules[module._id] || isCollapsed) && (
               <div className={cn("flex flex-col gap-1", isCollapsed ? "items-center" : "pl-6")}>
-                {module.chapters.map((chapter) => {
+                {(module.chapters || []).map((chapter) => {
                   const href = `/chapters/${chapter.slug.current}`;
                   const isActive = pathname === href;
                   const status = getChapterStatus(chapter._id);
