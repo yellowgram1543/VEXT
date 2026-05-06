@@ -4,7 +4,9 @@ import React, { useState, useId } from 'react';
 import { PortableText, PortableTextComponents } from '@portabletext/react';
 import { HelpCircle, ChevronDown, ChevronUp, CheckCircle2, Loader2 } from 'lucide-react';
 import MathRenderer from '@/components/MathRenderer';
+import MasteryBreadcrumbs, { StageType } from '@/components/MasteryBreadcrumbs';
 import { cn } from '@/lib/utils';
+import MLVisualizer from '@/components/MLVisualizer';
 
 interface SocraticPromptProps {
   question: string;
@@ -34,7 +36,7 @@ const SocraticPrompt = ({ question, hint, explanation }: SocraticPromptProps) =>
             <div>
               <button 
                 onClick={() => setShowHint(!showHint)}
-                aria-expanded={showHint}
+                aria-expanded={showHint ? "true" : "false"}
                 aria-controls={hintId}
                 className="text-sm font-black text-brand-dark/60 hover:text-brand-dark flex items-center gap-1 transition-colors"
               >
@@ -54,7 +56,7 @@ const SocraticPrompt = ({ question, hint, explanation }: SocraticPromptProps) =>
 
           <button 
             onClick={() => setShowExplanation(!showExplanation)}
-            aria-expanded={showExplanation}
+            aria-expanded={showExplanation ? "true" : "false"}
             aria-controls={explanationId}
             className={cn(
               "mt-2 w-full py-3 border-3 border-brand-dark font-black uppercase rounded-neo transition-all",
@@ -84,8 +86,6 @@ const SocraticPrompt = ({ question, hint, explanation }: SocraticPromptProps) =>
     </div>
   );
 };
-
-import MLVisualizer from '@/components/MLVisualizer';
 
 const components: PortableTextComponents = {
   types: {
@@ -142,7 +142,9 @@ export default function UnderstandCell({ content, onComplete, status, loading }:
   const gateId = useId();
 
   return (
-    <div className="bg-white space-y-8">
+    <div className="flex flex-col gap-8">
+      <MasteryBreadcrumbs currentStage={StageType.CONCEPT} />
+      <div className="bg-white space-y-8">
       <article aria-label="Understand Stage Content">
         <PortableText value={content} components={components} />
       </article>
@@ -190,6 +192,7 @@ export default function UnderstandCell({ content, onComplete, status, loading }:
           )}
         </button>
       </div>
+     </div>
     </div>
   );
 }

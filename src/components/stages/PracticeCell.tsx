@@ -5,7 +5,7 @@ import {
   CheckCircle, Loader2, AlertCircle, 
   RefreshCw, ArrowRight, Calculator, Search, 
   Layers, MessageSquare, Lightbulb, TrendingUp, FileCode, Zap, Play, Terminal,
-  ChevronRight, Eye, HelpCircle
+  ChevronRight, Eye, HelpCircle, RotateCcw
 } from 'lucide-react';
 import dynamic from 'next/dynamic';
 const Editor = dynamic(() => import('@monaco-editor/react'), { 
@@ -13,6 +13,7 @@ const Editor = dynamic(() => import('@monaco-editor/react'), {
   loading: () => <div className="h-[200px] bg-[#1e1e1e] flex items-center justify-center text-gray-500 font-code text-xs">Loading Editor...</div>
 });
 import MathRenderer from '@/components/MathRenderer';
+import MasteryBreadcrumbs, { StageType } from '@/components/MasteryBreadcrumbs';
 import { usePyodide } from '@/hooks/usePyodide';
 import { cn } from '@/lib/utils';
 
@@ -34,7 +35,7 @@ interface Exercise {
   icon: any;
   hints: string[];
   solution: string;
-  checklist?: string[]; // New: For Concept self-evaluation points
+  checklist?: string[];
   expected: string;
   initialCode?: string;
 }
@@ -264,36 +265,51 @@ export default function PracticeCell({
     }
   };
 
+  const resetToStarter = (id: string) => {
+    const original = ALL_EXERCISES.find(ex => ex.id === id)?.initialCode;
+    if (original) {
+      setAnswers(prev => ({ ...prev, [id]: original }));
+      setOutputs(prev => {
+        const next = { ...prev };
+        delete next[id];
+        return next;
+      });
+    }
+  };
+
   const activeExercises = ALL_EXERCISES.filter(ex => ex.tab === activeTab);
 
   if (isDone) {
     return (
-      <div className="bg-white border-4 border-brand-dark rounded-neo p-8 shadow-[12px_12px_0px_0px_#330C2F] animate-in zoom-in-95 duration-200">
-        <div className="flex flex-col items-center text-center gap-6">
-          <div className="w-20 h-20 bg-green-400 rounded-full border-4 border-brand-dark flex items-center justify-center shadow-[4px_4px_0px_0px_#14532d]">
-            <CheckCircle className="w-10 h-10 text-white" />
-          </div>
-          <div>
-            <h2 className="text-3xl font-black uppercase tracking-tight mb-2">Practice Session Finished</h2>
-            <p className="text-brand-dark/60 font-medium max-w-md">
-              You've completed the coding, math, and conceptual exercises. Your foundation is solid!
-            </p>
-          </div>
-          <div className="flex flex-wrap justify-center gap-4 w-full pt-4">
-            <button 
-              onClick={() => setIsDone(false)} 
-              className="px-8 py-3 bg-white border-3 border-brand-dark rounded-neo font-heading font-black uppercase text-xs tracking-widest shadow-[4px_4px_0px_0px_#330C2F] hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all"
-            >
-              Review Tasks
-            </button>
-            <button 
-              onClick={onComplete} 
-              disabled={externalLoading || isCompleted} 
-              className="px-8 py-3 bg-[#7B287D] text-white border-3 border-brand-dark rounded-neo font-heading font-black uppercase text-xs tracking-widest shadow-[4px_4px_0px_0px_#330C2F] hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all flex items-center gap-2 disabled:opacity-50"
-            >
-              {externalLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <ArrowRight className="w-4 h-4" />}
-              Go to Quiz
-            </button>
+      <div className="flex flex-col gap-8">
+        <MasteryBreadcrumbs currentStage={StageType.PRACTICE} />
+        <div className="bg-white border-4 border-brand-dark rounded-neo p-8 shadow-[12px_12px_0px_0px_#330C2F] animate-in zoom-in-95 duration-200">
+          <div className="flex flex-col items-center text-center gap-6">
+            <div className="w-20 h-20 bg-green-400 rounded-full border-4 border-brand-dark flex items-center justify-center shadow-[4px_4px_0px_0px_#14532d]">
+              <CheckCircle className="w-10 h-10 text-white" />
+            </div>
+            <div>
+              <h2 className="text-3xl font-black uppercase tracking-tight mb-2">Practice Session Finished</h2>
+              <p className="text-brand-dark/60 font-medium max-w-md">
+                You've completed the coding, math, and conceptual exercises. Your foundation is solid!
+              </p>
+            </div>
+            <div className="flex flex-wrap justify-center gap-4 w-full pt-4">
+              <button 
+                onClick={() => setIsDone(false)} 
+                className="px-8 py-3 bg-white border-3 border-brand-dark rounded-neo font-heading font-black uppercase text-xs tracking-widest shadow-[4px_4px_0px_0px_#330C2F] hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all"
+              >
+                Review Tasks
+              </button>
+              <button 
+                onClick={onComplete} 
+                disabled={externalLoading || isCompleted} 
+                className="px-8 py-3 bg-[#7B287D] text-white border-3 border-brand-dark rounded-neo font-heading font-black uppercase text-sm tracking-widest shadow-[6px_6px_0px_0px_#330C2F] hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all flex items-center gap-2 disabled:opacity-50"
+              >
+                {externalLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <ArrowRight className="w-4 h-4" />}
+                Go to Quiz
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -301,7 +317,9 @@ export default function PracticeCell({
   }
 
   return (
-    <div className="w-full bg-white flex flex-col gap-8">
+    <div className="w-full flex flex-col gap-8">
+      <MasteryBreadcrumbs currentStage={StageType.PRACTICE} />
+      
       {/* Tab Selection */}
       <div className="flex flex-wrap gap-2 p-1.5 bg-slate-50 border-3 border-brand-dark rounded-neo shadow-[4px_4px_0px_0px_#330C2F]">
         {(['coding', 'math', 'concept'] as TabType[]).map((tab) => (
@@ -327,7 +345,7 @@ export default function PracticeCell({
           const isExecuting = executingId === ex.id;
 
           return (
-            <div key={ex.id} className="border-3 border-brand-dark rounded-neo p-8 bg-white shadow-[8px_8px_0px_0px_#330C2F]">
+            <div key={ex.id} className="border-3 border-brand-dark rounded-neo p-8 bg-white shadow-[8px_8px_0px_0px_#330C2F] animate-in fade-in slide-in-from-bottom-2 duration-300">
               <div className="flex items-center gap-3 mb-6">
                 <div className="p-2.5 bg-brand-dark/5 rounded-xl border-2 border-brand-dark/10">
                   <ex.icon className="w-6 h-6 text-[#7B287D]" />
@@ -346,16 +364,23 @@ export default function PracticeCell({
               
               {activeTab === 'coding' && (
                 <div className="mt-8 flex flex-col gap-4">
-                  <div className="w-full min-h-[200px] bg-[#1E1E2F] border-3 border-brand-dark rounded-neo overflow-hidden shadow-[6px_6px_0px_0px_#330C2F] font-code text-sm">
+                  <div className="w-full min-h-[200px] bg-[#1E1E2F] border-3 border-brand-dark rounded-neo overflow-hidden shadow-[6px_6px_0px_0px_#330C2F] font-code text-sm relative">
                     <div className="flex items-center justify-between px-6 py-3 bg-brand-dark/20 border-b-2 border-brand-dark/30">
                       <span className="text-[10px] text-white/40 uppercase font-black tracking-widest flex items-center gap-2">
                         <div className="w-2 h-2 rounded-full bg-yellow-500" /> python kernel
                       </span>
                       <div className="flex items-center gap-3">
                         <button 
+                          onClick={() => resetToStarter(ex.id)}
+                          title="Reset Code"
+                          className="flex items-center gap-1.5 px-3 py-1.5 bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/30 rounded-neo-sm text-[9px] font-black uppercase tracking-widest transition-all"
+                        >
+                          <RotateCcw className="w-3 h-3" /> Reset
+                        </button>
+                        <button 
                           onClick={() => resetKernel()}
-                          title="Reset Kernel"
-                          className="p-1.5 hover:bg-red-500/20 text-white/40 hover:text-red-400 rounded transition-all"
+                          title="Restart Kernel"
+                          className="p-1.5 hover:bg-yellow-500/20 text-white/40 hover:text-yellow-400 rounded transition-all"
                         >
                           <RefreshCw className="w-4 h-4" />
                         </button>
@@ -420,5 +445,3 @@ export default function PracticeCell({
     </div>
   );
 }
-
-
