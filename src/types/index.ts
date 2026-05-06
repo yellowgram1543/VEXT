@@ -20,6 +20,10 @@ export interface Topic {
     _id: string;
     title: string;
   };
+  prevChapter?: {
+    title: string;
+    slug: { current: string };
+  };
   nextChapter?: {
     title: string;
     slug: { current: string };

@@ -49,6 +49,10 @@ export const chapterBySlugQuery = groq`
       _id,
       title
     },
+    "prevChapter": *[(_type == "chapter" || _type == "topic") && module._ref == ^.module._ref && order < ^.order] | order(order desc)[0] {
+      title,
+      slug
+    },
     "nextChapter": *[(_type == "chapter" || _type == "topic") && module._ref == ^.module._ref && order > ^.order] | order(order asc)[0] {
       title,
       slug

@@ -223,18 +223,29 @@ export default function TopicFlow({ topic, initialHighestStage }: TopicFlowProps
           {/* Footer Navigation */}
           <div className="bg-slate-50 border-t-3 border-brand-dark p-6 flex flex-col sm:flex-row justify-between items-center gap-4">
             {activeIndex === 0 ? (
-              <button
-                onClick={() => router.push('/dashboard')}
-                className="flex items-center gap-2 font-black uppercase text-xs tracking-widest text-brand-dark/40 hover:text-brand-dark transition-all"
-              >
-                <ArrowLeft className="w-4 h-4" /> Prev Module
-              </button>
+              /* First Block: Content */
+              topic.prevChapter ? (
+                <button
+                  onClick={() => router.push(`/chapters/${topic.prevChapter?.slug.current}`)}
+                  className="flex items-center gap-2 font-black uppercase text-xs tracking-widest text-brand-dark/40 hover:text-brand-dark transition-all"
+                >
+                  <ArrowLeft className="w-4 h-4" /> Prev Chapter
+                </button>
+              ) : (
+                <button
+                  onClick={() => router.push('/dashboard')}
+                  className="flex items-center gap-2 font-black uppercase text-xs tracking-widest text-brand-dark/40 hover:text-brand-dark transition-all"
+                >
+                  <ArrowLeft className="w-4 h-4" /> Prev Module
+                </button>
+              )
             ) : (
+              /* Intermediate Blocks */
               <button
                 onClick={() => handleStageClick(STAGE_ORDER[activeIndex - 1])}
                 className="flex items-center gap-2 font-black uppercase text-xs tracking-widest text-brand-dark/40 hover:text-brand-dark transition-all"
               >
-                <ArrowLeft className="w-4 h-4" /> Previous Chapter
+                <ArrowLeft className="w-4 h-4" /> Prev Block
               </button>
             )}
             
@@ -248,19 +259,30 @@ export default function TopicFlow({ topic, initialHighestStage }: TopicFlowProps
             </div>
 
             {activeIndex === STAGE_ORDER.length - 1 ? (
-              <button
-                onClick={() => router.push('/dashboard')}
-                className="flex items-center gap-2 font-black uppercase text-xs tracking-widest text-green-600 hover:translate-x-1 transition-all"
-              >
-                Next Module <ArrowRight className="w-4 h-4" />
-              </button>
+              /* Last Block: Apply */
+              topic.nextChapter ? (
+                <button
+                  onClick={() => router.push(`/chapters/${topic.nextChapter?.slug.current}`)}
+                  className="flex items-center gap-2 font-black uppercase text-xs tracking-widest text-[#7B287D] hover:translate-x-1 transition-all"
+                >
+                  Next Chapter <ArrowRight className="w-4 h-4" />
+                </button>
+              ) : (
+                <button
+                  onClick={() => router.push('/dashboard')}
+                  className="flex items-center gap-2 font-black uppercase text-xs tracking-widest text-green-600 hover:translate-x-1 transition-all"
+                >
+                  Next Module <ArrowRight className="w-4 h-4" />
+                </button>
+              )
             ) : (
+              /* Intermediate Blocks */
               <button
                 onClick={() => handleStageClick(STAGE_ORDER[activeIndex + 1])}
                 disabled={getStatus(STAGE_ORDER[activeIndex + 1]) === 'LOCKED'}
                 className="flex items-center gap-2 font-black uppercase text-xs tracking-widest text-[#7B287D] hover:translate-x-1 disabled:opacity-0 transition-all"
               >
-                Next Chapter <ArrowRight className="w-4 h-4" />
+                Next Block <ArrowRight className="w-4 h-4" />
               </button>
             )}
           </div>
