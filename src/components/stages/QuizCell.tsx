@@ -54,6 +54,8 @@ export default function QuizCell({
   const [numericalAnswer, setNumericalAnswer] = useState<string>('');
   const [essayAnswer, setEssayAnswer] = useState<string>('');
   const [checkedPoints, setCheckedPoints] = useState<boolean[]>([]);
+  const [showChecklist, setShowChecklist] = useState(false);
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [answers, setAnswers] = useState<Record<string, any>>({});
   const [loading, setLoading] = useState(false);
@@ -112,6 +114,14 @@ export default function QuizCell({
     return selectedOption;
   };
 
+  const handleRevealChecklist = async () => {
+    if (essayAnswer.length < 20) return;
+    setIsAnalyzing(true);
+    await new Promise(r => setTimeout(r, 1200)); // Simulate AI analysis
+    setIsAnalyzing(false);
+    setShowChecklist(true);
+  };
+
   const handleSubmit = () => {
     setIsSubmitted(true);
     const val = getCurrentVal();
@@ -125,6 +135,7 @@ export default function QuizCell({
       setNumericalAnswer('');
       setEssayAnswer('');
       setCheckedPoints([]);
+      setShowChecklist(false);
       setIsSubmitted(false);
     } else {
       setLoading(true);
@@ -267,11 +278,13 @@ export default function QuizCell({
               />
               {currentQuestion.hint && !isSubmitted && (
                 <div className="flex items-center gap-3 p-4 bg-yellow-50 border-2 border-yellow-200 rounded-neo-sm">
-                  <Lightbulb className="w-5 h-5 text-yellow-600" />
-                  <p className="text-sm font-bold text-yellow-800">
-                    <span className="uppercase text-[10px] opacity-60 block">Pro-tip</span>
-                    {currentQuestion.hint}
-                  </p>
+                  <div className="p-2 bg-yellow-200 rounded-lg">
+                    <Lightbulb className="w-4 h-4 text-yellow-700" />
+                  </div>
+                  <div className="text-sm font-bold text-yellow-800">
+                    <span className="uppercase text-[9px] font-black opacity-50 block tracking-widest">Pro-tip</span>
+                    <MathRenderer math={currentQuestion.hint} />
+                  </div>
                 </div>
               )}
             </div>
@@ -282,13 +295,33 @@ export default function QuizCell({
                 <textarea 
                   value={essayAnswer}
                   onChange={(e) => setEssayAnswer(e.target.value)}
-                  disabled={isSubmitted}
+                  disabled={isSubmitted || showChecklist || isAnalyzing}
                   placeholder="Explain your reasoning clearly and concisely..."
                   className="w-full p-6 h-40 text-lg font-bold border-3 border-brand-dark rounded-neo shadow-[6px_6px_0px_0px_#330C2F] focus:outline-none focus:translate-x-1 focus:translate-y-1 focus:shadow-none transition-all bg-slate-50"
                 />
               </div>
               
-              {essayAnswer.length > 20 && (
+              {!showChecklist && !isSubmitted && (
+                <button 
+                  onClick={handleRevealChecklist}
+                  disabled={essayAnswer.length < 20 || isAnalyzing}
+                  className="w-full py-4 bg-white border-3 border-brand-dark rounded-neo font-black uppercase text-xs tracking-widest shadow-[4px_4px_0px_0px_#330C2F] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition-all flex items-center justify-center gap-3 disabled:opacity-30"
+                >
+                  {isAnalyzing ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      <span>Scanning Reasoning...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Send className="w-4 h-4" />
+                      <span>Review My Explanation</span>
+                    </>
+                  )}
+                </button>
+              )}
+
+              {showChecklist && (
                 <div className="animate-in slide-in-from-top-4 duration-300">
                   <div className="bg-[#7B287D] text-white p-4 rounded-t-neo border-x-3 border-t-3 border-brand-dark">
                     <h5 className="text-[10px] font-black uppercase tracking-widest flex items-center gap-2">
