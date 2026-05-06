@@ -61,15 +61,38 @@ export default function QuizCell({
   const [quizFinished, setQuizFinished] = useState(false);
   const [finalScore, setFinalScore] = useState<number | null>(null);
 
-  if (!questions || questions.length === 0) {
-    return (
-      <div className="bg-white flex flex-col gap-8 p-8 text-center border-3 border-dashed border-brand-dark/30 rounded-neo">
-        <p className="text-brand-dark/50 italic font-medium">No quiz questions available for this topic.</p>
-      </div>
-    );
-  }
+  const DEMO_QUESTIONS: QuizQuestion[] = [
+    {
+      id: 'demo-q1',
+      type: 'mcq',
+      question: 'Which loss function is most appropriate for a multi-class classification problem where the labels are mutually exclusive?',
+      options: ['Mean Squared Error', 'Binary Cross-Entropy', 'Categorical Cross-Entropy', 'Huber Loss'],
+      correctAnswer: 2,
+      explanation: 'Categorical Cross-Entropy is designed for multi-class problems. Binary Cross-Entropy is for 2 classes, and MSE is typically for regression.'
+    },
+    {
+      id: 'demo-q2',
+      type: 'numerical',
+      question: 'Calculate the Entropy (in bits) of a biased coin that lands heads with probability $p=0.5$.',
+      hint: 'For $p=0.5$, both states have $p_i=0.5$. $\\log_2(0.5) = -1$.',
+      correctAnswer: '1',
+      explanation: '$H(X) = -(0.5 \\cdot (-1) + 0.5 \\cdot (-1)) = 1$. This is the maximum entropy for a binary variable.'
+    },
+    {
+      id: 'demo-q3',
+      type: 'interview',
+      question: 'Briefly explain the concept of "Self-Attention" in the context of the Transformer architecture.',
+      correctAnswer: [
+        'Mention that it relates words within the same sequence.',
+        'Explain that it uses Query, Key, and Value vectors.',
+        'Mention that it allows for parallelization compared to RNNs.'
+      ],
+      explanation: 'Self-attention allows the model to look at other words in the input sequence to get a better encoding for the word it is currently processing.'
+    }
+  ];
 
-  const currentQuestion = questions[currentQuestionIndex];
+  const activeQuestions = questions && questions.length > 0 ? questions : DEMO_QUESTIONS;
+  const currentQuestion = activeQuestions[currentQuestionIndex];
   
   const checkCorrect = (q: QuizQuestion, val: any) => {
     if (q.type === 'numerical') {
@@ -97,7 +120,7 @@ export default function QuizCell({
   };
 
   const handleNext = async () => {
-    if (currentQuestionIndex < questions.length - 1) {
+    if (currentQuestionIndex < activeQuestions.length - 1) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
       setSelectedOption(null);
       setNumericalAnswer('');
@@ -107,8 +130,8 @@ export default function QuizCell({
     } else {
       setLoading(true);
       const allAnswers = { ...answers, [currentQuestion.id]: getCurrentVal() };
-      const correctCount = questions.filter(q => checkCorrect(q, allAnswers[q.id])).length;
-      const score = correctCount / questions.length;
+      const correctCount = activeQuestions.filter(q => checkCorrect(q, allAnswers[q.id])).length;
+      const score = correctCount / activeQuestions.length;
       
       setFinalScore(score);
       setQuizFinished(true);
@@ -189,7 +212,7 @@ export default function QuizCell({
         </div>
         <div className="flex items-center gap-3 bg-white border-3 border-brand-dark text-brand-dark px-6 py-3 rounded-neo text-xs font-black uppercase tracking-widest shadow-[4px_4px_0px_0px_#330C2F]">
           <Timer className="w-4 h-4 text-[#7B287D]" />
-          <span>Question {currentQuestionIndex + 1} / {questions.length}</span>
+          <span>Question {currentQuestionIndex + 1} / {activeQuestions.length}</span>
         </div>
       </div>
 

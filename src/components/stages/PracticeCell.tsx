@@ -18,6 +18,13 @@ import { cn } from '@/lib/utils';
 
 type TabType = 'coding' | 'math' | 'concept';
 
+interface PracticeCellProps {
+  topicId: string;
+  onComplete?: () => void;
+  status?: 'COMPLETED' | 'ACTIVE' | 'LOCKED';
+  loading?: boolean;
+}
+
 interface Exercise {
   id: string;
   tab: TabType;
