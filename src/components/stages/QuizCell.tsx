@@ -75,7 +75,7 @@ export default function QuizCell({
     return val === q.correctAnswer;
   };
 
-  const currentVal = q.type === 'numerical' ? numericalAnswer : selectedOption;
+  const currentVal = currentQuestion.type === 'numerical' ? numericalAnswer : selectedOption;
   const isCorrect = currentQuestion && checkCorrect(currentQuestion, currentVal as any);
 
   const handleSubmit = () => {
