@@ -7,8 +7,8 @@ export default async function SkillMasteryMap() {
   const mastery = await prisma.userMastery.findFirst();
 
   const skills = [
-    { name: 'Concepts', value: mastery?.conceptsScore || 0, color: 'bg-primary' },
-    { name: 'Math', value: mastery?.mathScore || 0, color: 'bg-accent-purple' },
+    { name: 'Theory', value: mastery?.theoryScore || 0, color: 'bg-primary' },
+    { name: 'Math', value: mastery?.numericalScore || 0, color: 'bg-accent-purple' },
     { name: 'Coding', value: mastery?.codingScore || 0, color: 'bg-secondary' },
   ];
 

@@ -192,9 +192,8 @@ export async function submitQuiz(
       },
     });
     
-    // Update UserMastery with dimensional breakdown
     if (breakdown) {
-      const masteryData: any = {};
+      const masteryData: Record<string, { increment: number }> = {};
       const mapping: Record<string, string> = {
         'Theory': 'theoryScore',
         'Numerical': 'numericalScore',

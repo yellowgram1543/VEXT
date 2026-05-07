@@ -46,7 +46,7 @@ export default function TopicFlow({ topic, initialHighestStage }: TopicFlowProps
     return () => setContextualInfo({});
   }, [topic.title, highestStage, activeStage, highestIndex, setContextualInfo]);
 
-  const handleUnlock = async (currentStage: StageType, score?: number) => {
+  const handleUnlock = async (currentStage: StageType, score?: number, breakdown?: Record<string, { total: number; correct: number }>) => {
     if (isUnlocking) return;
     
     setIsUnlocking(true);
@@ -54,7 +54,7 @@ export default function TopicFlow({ topic, initialHighestStage }: TopicFlowProps
       const response = await fetch(`/api/progress/${topic._id}/unlock`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ currentStage, score }),
+        body: JSON.stringify({ currentStage, score, breakdown }),
       });
 
       if (response.ok) {
