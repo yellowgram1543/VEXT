@@ -76,7 +76,6 @@ const ModuleCard: React.FC<ModuleCardProps> = ({
         </div>
       </div>
     </Link>
-    </Link>
   );
 };
 
