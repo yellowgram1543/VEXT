@@ -152,37 +152,8 @@ const PitfallsSection = ({ pitfalls }: { pitfalls: Pitfall[] }) => {
   );
 };
 
-export default function ReinforceCell({ practices, data, onComplete, status, loading }: ReinforceCellProps) {
+export default function ReinforceCell({ practices, onComplete, status, loading }: ReinforceCellProps) {
   const isCompleted = status === 'COMPLETED';
-
-  // Mock data if real data isn't provided (to show the new UI immediately)
-  const displayData = data || {
-    basic: {
-      title: "Fundamental Implementation",
-      explanation: "Start with the most basic version of the algorithm, focusing on the core logic without any overhead.",
-      code: "# Simple Linear Regression\ndef predict(x, w, b):\n    return w * x + b",
-      language: "python"
-    },
-    intermediate: {
-      title: "Real-World Robustness",
-      explanation: "Add input validation, vectorization for performance, and basic error handling for production use.",
-      code: "import numpy as np\n\ndef predict_robust(x, w, b):\n    x = np.asarray(x)\n    if x.size == 0:\n        raise ValueError('Empty input')\n    return np.dot(x, w) + b",
-      language: "python"
-    },
-    advanced: {
-      title: "Optimization & Production Patterns",
-      explanation: "Implement advanced optimization techniques like batch processing, logging, and type hinting.",
-      code: "from typing import Union, List\nimport numpy as np\n\ndef predict_optimized(inputs: Union[List, np.ndarray], weights: np.ndarray) -> np.ndarray:\n    \"\"\"Vectorized prediction with batch support.\"\"\"\n    data = np.atleast_2d(inputs)\n    return np.matmul(data, weights.T)",
-      language: "python"
-    },
-    pitfalls: [
-      {
-        mistake: "for i in range(len(data)):\n    result[i] = w * data[i] + b",
-        correction: "result = np.dot(data, w) + b",
-        reason: "Python loops are significantly slower than vectorized NumPy operations for large datasets."
-      }
-    ]
-  };
 
   return (
     <div className="space-y-8 bg-white">
@@ -190,16 +161,43 @@ export default function ReinforceCell({ practices, data, onComplete, status, loa
         <div className="bg-[#F1D6FF] p-2 rounded-neo-sm border-2 border-brand-dark">
           <Layers className="w-6 h-6 text-brand-dark" />
         </div>
-        <h2 className="text-2xl font-black text-brand-dark uppercase tracking-tight">Advanced Examples</h2>
+        <h2 className="text-2xl font-black text-brand-dark uppercase tracking-tight">Reinforcement Lab</h2>
       </div>
 
       <div className="space-y-6">
-        <TierCard tier={displayData.basic} label="1" icon={Zap} color="bg-blue-100" />
-        <TierCard tier={displayData.intermediate} label="2" icon={TrendingUp} color="bg-orange-100" />
-        <TierCard tier={displayData.advanced} label="3" icon={FunctionSquare} color="bg-purple-100" isCollapsible={true} />
+        {practices && practices.length > 0 ? (
+          practices.map((practice: any, index: number) => (
+            <div key={practice.id || index} className="border-3 border-brand-dark rounded-neo p-6 bg-white shadow-[4px_4px_0px_0px_#330C2F]">
+              <div className="flex items-center gap-2 mb-4">
+                <span className="bg-brand-dark text-white text-[10px] font-black px-2 py-1 rounded-neo-sm">Q{index + 1}</span>
+                <h4 className="font-bold text-lg text-brand-dark">{practice.question}</h4>
+              </div>
+              
+              {practice.options ? (
+                <div className="grid gap-3">
+                  {practice.options.map((option: string, i: number) => (
+                    <div key={i} className="p-3 border-2 border-brand-dark rounded-neo-sm text-sm font-medium bg-slate-50">
+                      {option}
+                    </div>
+                  ))}
+                  <div className="mt-2 text-xs font-black text-brand-dark/40 italic">
+                    Correct Answer Index: {practice.correctAnswer}
+                  </div>
+                </div>
+              ) : (
+                <div className="p-4 bg-slate-50 border-2 border-dashed border-brand-dark rounded-neo-sm">
+                  <p className="text-sm font-medium mb-2">{practice.answer}</p>
+                  {practice.hint && <p className="text-xs italic text-brand-dark/60">Hint: {practice.hint}</p>}
+                </div>
+              )}
+            </div>
+          ))
+        ) : (
+          <div className="p-12 text-center border-3 border-dashed border-brand-dark/20 rounded-neo">
+             <p className="text-brand-dark/40 font-black uppercase tracking-widest text-sm">No reinforcement data found in JSON</p>
+          </div>
+        )}
       </div>
-
-      <PitfallsSection pitfalls={displayData.pitfalls} />
 
       <div className="pt-12 border-t-3 border-brand-dark/10">
         <button

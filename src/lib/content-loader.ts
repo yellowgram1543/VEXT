@@ -45,10 +45,47 @@ export function getLocalChapterBySlug(chapterSlug: string): any | null {
       if (fullContent) {
         return {
           ...chapterConfig,
-          ...fullContent
+          _type: 'chapter',
+          understand: {
+            content: fullContent.stages?.understand?.content || [],
+            visualizer: fullContent.stages?.understand?.visualizer,
+            visualizerData: fullContent.stages?.understand?.visualizerData
+          },
+          reinforce: {
+            practices: (fullContent.stages?.practice?.tabs?.concept?.questions || []).map((q: any) => ({
+              id: q.id,
+              tab: 'concept',
+              type: 'Reflection',
+              label: 'Conceptual Check',
+              instruction: q.question,
+              hints: q.hint ? [q.hint] : [],
+              solution: q.explanation || 'See options for details.',
+              options: q.options,
+              correctAnswer: q.correctAnswer
+            }))
+          },
+          practice: {
+            exercises: (fullContent.stages?.practice?.tabs?.math?.questions || []).map((q: any) => ({
+              id: q.id,
+              tab: 'math',
+              type: 'Calculation',
+              label: 'Math Lab',
+              instruction: q.question,
+              hints: q.hint ? [q.hint] : [],
+              solution: q.answer || 'Check your derivation.',
+              expected: q.answer
+            }))
+          },
+          test: {
+            questions: fullContent.stages?.quiz?.questions || []
+          },
+          apply: {
+            instruction: fullContent.stages?.apply?.instruction,
+            milestones: fullContent.stages?.apply?.milestones || []
+          }
         };
       }
-      return chapterConfig;
+      return { ...chapterConfig, _type: 'chapter' };
     }
   }
   return null;

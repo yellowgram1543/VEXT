@@ -228,16 +228,22 @@ export default function PracticeCell({
   topicId, 
   onComplete,
   status,
-  loading: externalLoading
-}: PracticeCellProps) {
+  loading: externalLoading,
+  exercises: providedExercises
+}: PracticeCellProps & { exercises?: Exercise[] }) {
   const [activeTab, setActiveTab] = useState<TabType>('coding');
+  
+  // Use provided exercises if available, otherwise fallback to default list
+  const currentExercises = providedExercises || ALL_EXERCISES;
+  
   const [answers, setAnswers] = useState<Record<string, string>>(() => {
     const initial: Record<string, string> = {};
-    ALL_EXERCISES.forEach(ex => {
+    currentExercises.forEach(ex => {
       if (ex.initialCode) initial[ex.id] = ex.initialCode;
     });
     return initial;
   });
+
   const [outputs, setOutputs] = useState<Record<string, { stdout: string; stderr: string }>>({});
   const [executingId, setExecutingId] = useState<string | null>(null);
   const [isDone, setIsDone] = useState(false);
@@ -265,7 +271,7 @@ export default function PracticeCell({
   };
 
   const resetToStarter = (id: string) => {
-    const original = ALL_EXERCISES.find(ex => ex.id === id)?.initialCode;
+    const original = currentExercises.find(ex => ex.id === id)?.initialCode;
     if (original) {
       setAnswers(prev => ({ ...prev, [id]: original }));
       setOutputs(prev => {
@@ -276,7 +282,7 @@ export default function PracticeCell({
     }
   };
 
-  const activeExercises = ALL_EXERCISES.filter(ex => ex.tab === activeTab);
+  const activeExercises = currentExercises.filter(ex => ex.tab === activeTab);
 
   if (isDone) {
     return (

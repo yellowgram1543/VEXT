@@ -25,6 +25,7 @@ export interface ChapterContent {
 export interface UnderstandStage {
   content: any[]; // PortableText blocks
   visualizer?: 'loss' | 'probability' | 'gradient';
+  visualizerData?: any;
 }
 
 export interface PracticeStage {

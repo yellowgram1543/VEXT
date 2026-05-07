@@ -30,15 +30,21 @@ export interface Topic {
   };
   understand?: {
     content: any[];
+    visualizer?: string;
+    visualizerData?: any;
   };
   reinforce?: {
     practices: any[];
+  };
+  practice?: {
+    exercises: any[];
   };
   test?: {
     questions: QuizQuestion[];
   };
   apply?: {
     instruction: string;
+    milestones?: any[];
     spec: any[];
     sandbox: {
       runtime: string;

@@ -164,18 +164,20 @@ export default function TopicFlow({ topic, initialHighestStage }: TopicFlowProps
           <div className="p-8 md:p-12">
             {activeStage === StageType.UNDERSTAND && (
               <div className="space-y-12">
-                <MLVisualizer 
-                  type="loss" 
-                  title="Model Training Dynamics (Live Demo)"
-                  data={{
-                    labels: ['Epoch 1', 'Epoch 2', 'Epoch 3', 'Epoch 4', 'Epoch 5', 'Epoch 6', 'Epoch 7', 'Epoch 8', 'Epoch 9', 'Epoch 10'],
-                    trainLoss: [0.9, 0.7, 0.55, 0.45, 0.38, 0.32, 0.28, 0.25, 0.22, 0.2],
-                    valLoss: [0.95, 0.8, 0.65, 0.58, 0.55, 0.53, 0.52, 0.51, 0.5, 0.5],
-                    xAxisLabel: 'Training Progression',
-                    yAxisLabel: 'Error (Loss)'
-                  }}
-                />
-                <ProbabilityVisualizer />
+                {topic.understand?.visualizer === 'loss' && (
+                  <MLVisualizer 
+                    type="loss" 
+                    title={topic.title}
+                    data={topic.understand?.visualizerData || {
+                      labels: ['Epoch 1', 'Epoch 2', 'Epoch 3', 'Epoch 4', 'Epoch 5', 'Epoch 6', 'Epoch 7', 'Epoch 8', 'Epoch 9', 'Epoch 10'],
+                      trainLoss: [0.9, 0.7, 0.55, 0.45, 0.38, 0.32, 0.28, 0.25, 0.22, 0.2],
+                      valLoss: [0.95, 0.8, 0.65, 0.58, 0.55, 0.53, 0.52, 0.51, 0.5, 0.5],
+                      xAxisLabel: 'Training Progression',
+                      yAxisLabel: 'Error (Loss)'
+                    }}
+                  />
+                )}
+                {topic.understand?.visualizer === 'probability' && <ProbabilityVisualizer />}
                 <UnderstandCell 
                   content={topic.understand?.content || []} 
                   onComplete={() => handleUnlock(StageType.UNDERSTAND)}
@@ -197,6 +199,7 @@ export default function TopicFlow({ topic, initialHighestStage }: TopicFlowProps
             {activeStage === StageType.PRACTICE && (
               <PracticeCell 
                 topicId={topic._id} 
+                exercises={topic.practice?.exercises || []}
                 onComplete={() => handleUnlock(StageType.PRACTICE)}
                 status={status}
                 loading={isUnlocking}
@@ -215,6 +218,7 @@ export default function TopicFlow({ topic, initialHighestStage }: TopicFlowProps
               <ApplyCell 
                 topicId={topic._id} 
                 instruction={topic.apply?.instruction} 
+                milestones={topic.apply?.milestones}
                 onComplete={() => handleUnlock(StageType.APPLY)}
               />
             )}

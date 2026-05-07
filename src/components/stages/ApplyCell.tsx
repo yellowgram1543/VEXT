@@ -23,8 +23,9 @@ interface ApplyCellProps {
 
 export default function ApplyCell({ 
   instruction = "Build a robust Linear Regression pipeline to predict housing prices with outlier handling.",
-  onComplete
-}: ApplyCellProps) {
+  onComplete,
+  milestones: providedMilestones
+}: ApplyCellProps & { milestones?: any[] }) {
   const [step, setStep] = useState<0 | 1 | 2>(0); // 0: Design, 1: Implementation, 2: Gauntlet
   const [designDoc, setDesignDoc] = useState({
     strategy: '',
@@ -34,12 +35,20 @@ export default function ApplyCell({
   const [code, setCode] = useState(`import numpy as np\n\ndef preprocess(data):\n    # TODO: Handle missing values and outliers\n    return data\n\ndef train_model(X, y):\n    # TODO: Implement Linear Regression\n    return weights\n\ndef evaluate(model, X_test):\n    # TODO: Return predictions\n    return preds`);
   
   const [loading, setLoading] = useState(false);
-  const [milestones, setMilestones] = useState<Milestone[]>([
-    { id: '1', title: 'Data Ingestion', description: 'Loading 10,000 samples...', status: 'pending' },
-    { id: '2', title: 'Preprocessing', description: 'Removing 5% outlier noise.', status: 'pending' },
-    { id: '3', title: 'Model Training', description: 'Fitting coefficients.', status: 'pending' },
-    { id: '4', title: 'Metric Validation', description: 'Verifying MSE threshold < 0.05.', status: 'pending' }
-  ]);
+  const [milestones, setMilestones] = useState<Milestone[]>(() => {
+    if (providedMilestones && providedMilestones.length > 0) {
+      return providedMilestones.map(m => ({
+        ...m,
+        status: 'pending'
+      }));
+    }
+    return [
+      { id: '1', title: 'Data Ingestion', description: 'Loading 10,000 samples...', status: 'pending' },
+      { id: '2', title: 'Preprocessing', description: 'Removing 5% outlier noise.', status: 'pending' },
+      { id: '3', title: 'Model Training', description: 'Fitting coefficients.', status: 'pending' },
+      { id: '4', title: 'Metric Validation', description: 'Verifying MSE threshold < 0.05.', status: 'pending' }
+    ];
+  });
 
   const [gauntletStatus, setGauntletStatus] = useState<'idle' | 'running' | 'completed'>('idle');
   const [robustnessScore, setRobustnessScore] = useState<number | null>(null);
