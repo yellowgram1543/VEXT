@@ -9,6 +9,8 @@ import { isChapterLocked } from '@/lib/progress-utils'
 import { Progress } from '@prisma/client'
 import { cn } from '@/lib/utils'
 
+import { getAllModules } from '@/lib/content-loader'
+
 export default async function ModulePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
 
@@ -18,13 +20,14 @@ export default async function ModulePage({ params }: { params: Promise<{ id: str
   let error = false
 
   try {
+    const localModules = getAllModules()
     const [sanityModules, dbProgress] = await Promise.all([
       fetchSanity<Module[]>(sidebarHierarchyQuery),
       prisma.progress.findMany()
     ])
 
-    allModules = sanityModules;
-    currentModule = sanityModules.find(m => m._id === id) || null;
+    allModules = [...(sanityModules || []), ...(localModules as any[])];
+    currentModule = allModules.find(m => m._id === id) || null;
     progressData = dbProgress;
   } catch (e) {
     console.error('Error fetching module data:', e)

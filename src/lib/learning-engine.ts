@@ -40,17 +40,27 @@ export function getNextStage(current: StageType, quizScore?: number): StageType 
  * Note: Progress is now global (no userId) for the current prototype.
  */
 export async function getTopicProgress(topicId: string) {
-  const progress = await prisma.progress.upsert({
-    where: { chapterId: topicId },
-    update: { lastVisitedAt: new Date() },
-    create: {
+  try {
+    const progress = await prisma.progress.upsert({
+      where: { chapterId: topicId },
+      update: { lastVisitedAt: new Date() },
+      create: {
+        chapterId: topicId,
+        highestStage: StageType.UNDERSTAND,
+        lastVisitedAt: new Date(),
+      },
+    });
+
+    return progress;
+  } catch (e) {
+    console.warn(`Database unreachable for topic ${topicId}, using default progress:`, e);
+    return {
       chapterId: topicId,
       highestStage: StageType.UNDERSTAND,
       lastVisitedAt: new Date(),
-    },
-  });
-
-  return progress;
+      completedAt: null,
+    };
+  }
 }
 
 /**
@@ -76,10 +86,15 @@ export async function unlockNextStage(
 
   // If the logic says we can move forward and it's beyond current progress
   if (STAGE_ORDER.indexOf(nextStage) > STAGE_ORDER.indexOf(progress.highestStage)) {
-    return await prisma.progress.update({
-      where: { chapterId: topicId },
-      data: { highestStage: nextStage },
-    });
+    try {
+      return await prisma.progress.update({
+        where: { chapterId: topicId },
+        data: { highestStage: nextStage },
+      });
+    } catch (e) {
+      console.error('Failed to update stage in database:', e);
+      return { ...progress, highestStage: nextStage }; // Return optimistic update
+    }
   }
 
   return progress;
@@ -108,16 +123,20 @@ export async function evaluatePractice(
   }
 
   // Record submission
-  await prisma.submission.create({
-    data: {
-      topicId,
-      stage: StageType.PRACTICE,
-      userId,
-      content: submission,
-      result,
-      success,
-    },
-  });
+  try {
+    await prisma.submission.create({
+      data: {
+        topicId,
+        stage: StageType.PRACTICE,
+        userId,
+        content: submission,
+        result,
+        success,
+      },
+    });
+  } catch (e) {
+    console.error('Failed to record submission:', e);
+  }
 
   if (success) {
     await unlockNextStage(topicId, StageType.PRACTICE);
@@ -171,14 +190,20 @@ export async function submitQuiz(
 ) {
   const passed = score >= 0.8;
   
-  const attempt = await prisma.quizAttempt.create({
-    data: {
-      userId,
-      topicId,
-      score,
-      passed,
-    },
-  });
+  let attempt = null;
+  try {
+    attempt = await prisma.quizAttempt.create({
+      data: {
+        userId,
+        topicId,
+        score,
+        passed,
+      },
+    });
+  } catch (e) {
+    console.error('Failed to record quiz attempt:', e);
+    attempt = { userId, topicId, score, passed, createdAt: new Date() };
+  }
 
   if (passed) {
     await prisma.progress.upsert({

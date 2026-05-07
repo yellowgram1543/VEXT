@@ -35,17 +35,30 @@ export const metadata: Metadata = {
 };
 
 import { Module } from "@/types";
+import { getAllModules } from "@/lib/content-loader";
 
 export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // Parallel fetch for structure and progress
-  const [modules, progressData] = await Promise.all([
-    fetchSanity<Module[]>(sidebarHierarchyQuery),
-    prisma.progress.findMany()
-  ]);
+  let sanityModules: Module[] = [];
+  let progressData: any[] = [];
+
+  try {
+    sanityModules = await fetchSanity<Module[]>(sidebarHierarchyQuery);
+  } catch (e) {
+    console.error('Error fetching sanity structure:', e);
+  }
+
+  try {
+    progressData = await prisma.progress.findMany();
+  } catch (e) {
+    console.warn('Database unreachable in layout, progress hidden:', e);
+  }
+
+  const localModules = getAllModules();
+  const modules = [...(sanityModules || []), ...(localModules as any[])];
 
   return (
     <html

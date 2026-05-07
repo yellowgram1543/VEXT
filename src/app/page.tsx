@@ -18,9 +18,16 @@ export default async function Home() {
   let error = false
 
   try {
-    const localModules = getAllModules()
-    const [sanityModules, progressData, latestProgress] = await Promise.all([
-      fetchSanity<Module[]>(modulesQuery),
+    const localModules = getAllModules();
+    const sanityModules = await fetchSanity<Module[]>(modulesQuery);
+    modules = [...(sanityModules || []), ...(localModules as any[])];
+  } catch (e) {
+    console.error('Error fetching modules:', e);
+    error = true;
+  }
+
+  try {
+    const [progressData, latestProgress] = await Promise.all([
       prisma.progress.findMany({
         where: { NOT: { completedAt: null } },
         select: { chapterId: true }
@@ -28,15 +35,14 @@ export default async function Home() {
       prisma.progress.findFirst({
         orderBy: { lastVisitedAt: 'desc' }
       })
-    ])
-    
-    // Combine modules
-    modules = [...sanityModules, ...(localModules as any[])]
-    completedChapterIds = new Set(progressData.map(p => p.chapterId))
-    activeProgress = latestProgress
+    ]);
+    completedChapterIds = new Set(progressData.map(p => p.chapterId));
+    activeProgress = latestProgress;
   } catch (e) {
-    console.error('Error fetching modules or progress:', e)
-    error = true
+    console.warn('Database unreachable, progress data unavailable:', e);
+    // Fallback to empty progress
+    completedChapterIds = new Set();
+    activeProgress = null;
   }
 
   // Fetch mastery separately as it's non-critical and might fail if schema is out of sync
@@ -55,7 +61,7 @@ export default async function Home() {
 
   return (
     <main className="min-h-screen bg-background font-body py-12 px-4 sm:px-6 lg:px-8 animate-fade-in">
-      <div className="max-w-5xl mx-auto">
+      <div className="max-w-7xl mx-auto space-y-12">
         <header className="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 gap-6">
           <div>
             <p className="font-heading font-bold uppercase text-secondary tracking-widest text-xs mb-1">
@@ -94,46 +100,54 @@ export default async function Home() {
           </section>
         )}
 
-        <section className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-           <div className="lg:col-span-8">
-             <h2 className="text-2xl font-black text-brand-dark mb-6 uppercase tracking-tight">
-               Learning Modules
-             </h2>
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
+          {/* Main Content Column */}
+          <div className="lg:col-span-8 space-y-12">
+            <section>
+              <h2 className="text-3xl font-black text-brand-dark uppercase tracking-tight mb-8">
+                Learning Modules
+              </h2>
 
-             {error ? (
-               <div className="p-6 bg-error-container border-3 border-brand-dark rounded-neo neo-brutal-shadow">
-                 <p className="text-on-error-container font-bold">Failed to load modules. Please try again later.</p>
-               </div>
-             ) : modules && modules.length > 0 ? (
-               <div className="grid gap-6 md:grid-cols-2">
-                 {modules.map((module) => {
-                   const totalChapters = module.chapterCount || 0;
-                   const completedCount = module.chapterIds?.filter(id => completedChapterIds.has(id)).length || 0;
-                   const progressPercentage = totalChapters > 0 ? (completedCount / totalChapters) * 100 : 0;
+              {error ? (
+                <div className="p-6 bg-error-container border-3 border-brand-dark rounded-neo neo-brutal-shadow">
+                  <p className="text-on-error-container font-bold">Failed to load modules. Please try again later.</p>
+                </div>
+              ) : modules && modules.length > 0 ? (
+                <div className="flex flex-col gap-8">
+                  {modules.map((module) => {
+                    const totalChapters = module.chapterCount || module.chapters?.length || 0;
+                    const completedCount = module.chapterIds 
+                      ? module.chapterIds.filter(id => completedChapterIds.has(id)).length 
+                      : (module.chapters || []).filter(ch => completedChapterIds.has(ch._id)).length;
+                    
+                    const progressPercentage = totalChapters > 0 ? (completedCount / totalChapters) * 100 : 0;
 
-                   return (
-                     <ModuleCard 
-                       key={module._id}
-                       module={module}
-                       progressPercentage={progressPercentage}
-                       completedCount={completedCount}
-                       totalChapters={totalChapters}
-                     />
-                   );
-                 })}
-               </div>
-             ) : (
-               <p className="text-on-surface-variant italic">No modules found. Please check back later!</p>
-             )}
-           </div>
+                    return (
+                      <ModuleCard 
+                        key={module._id}
+                        module={module}
+                        progressPercentage={progressPercentage}
+                        completedCount={completedCount}
+                        totalChapters={totalChapters}
+                      />
+                    );
+                  })}
+                </div>
+              ) : (
+                <p className="text-on-surface-variant italic">No modules found. Please check back later!</p>
+              )}
+            </section>
+          </div>
 
-            <div className="lg:col-span-4 space-y-8">
-               <div className="bg-white border-3 border-brand-dark p-6 rounded-neo neo-brutal-shadow flex flex-col items-center">
-                  <h3 className="font-heading font-black text-xs uppercase tracking-widest text-brand-dark/40 mb-6">
+          {/* Sidebar Column */}
+          <div className="lg:col-span-4 space-y-8">
+            <div className="sticky top-24 space-y-8">
+               <div className="bg-white border-3 border-brand-dark p-8 rounded-neo neo-brutal-shadow flex flex-col items-center">
+                  <h3 className="font-heading font-black text-xs uppercase tracking-widest text-brand-dark/40 mb-8">
                     Global Cognitive Profile
                   </h3>
                   <CognitiveRadar 
-                    size={240}
+                    size={260}
                     data={[
                       { label: 'Theory', value: (mastery?.theoryScore || 0) / 100 },
                       { label: 'Numerical', value: (mastery?.numericalScore || 0) / 100 },
@@ -143,14 +157,14 @@ export default async function Home() {
                       { label: 'Arch', value: (mastery?.architectureScore || 0) / 100 },
                     ]}
                   />
-                  <div className="mt-6 pt-6 border-t-2 border-brand-dark/5 w-full">
+                  <div className="mt-10 pt-6 border-t-2 border-brand-dark/5 w-full">
                     <p className="text-[10px] font-bold text-brand-dark/60 uppercase leading-tight text-center">
                       Mastery increases by 5% for each passed quiz or completed practice cell.
                     </p>
                   </div>
                </div>
-              
-              <aside className="bg-secondary-container border-3 border-brand-dark p-6 rounded-neo neo-brutal-shadow">
+
+               <aside className="bg-secondary-container border-3 border-brand-dark p-6 rounded-neo neo-brutal-shadow">
                 <div className="flex items-center gap-2 mb-4 text-on-secondary-container">
                   <span className="text-2xl">💡</span>
                   <h3 className="text-xl font-black">Quick Tips</h3>
@@ -166,9 +180,10 @@ export default async function Home() {
                   </li>
                 </ul>
               </aside>
-           </div>
-        </section>
+            </div>
+          </div>
+        </div>
       </div>
     </main>
-  )
+  );
 }
