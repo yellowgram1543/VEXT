@@ -1,5 +1,6 @@
 import fs from 'fs';
 import path from 'path';
+import { Calculator, HelpCircle, FileCode } from 'lucide-react';
 import { ModuleContent, ChapterContent } from '@/content/types';
 
 const CONTENT_DIR = path.join(process.cwd(), 'src/content/modules');
@@ -45,6 +46,7 @@ export function getLocalChapterBySlug(chapterSlug: string): any | null {
       if (fullContent) {
         return {
           ...chapterConfig,
+          _id: chapterConfig.id,
           _type: 'chapter',
           understand: {
             content: fullContent.stages?.understand?.content || [],
@@ -55,11 +57,12 @@ export function getLocalChapterBySlug(chapterSlug: string): any | null {
             practices: (fullContent.stages?.practice?.tabs?.concept?.questions || []).map((q: any) => ({
               id: q.id,
               tab: 'concept',
-              type: 'Reflection',
-              label: 'Conceptual Check',
+              type: 'Insight',
+              label: 'Concept Reflection',
+              icon: HelpCircle,
               instruction: q.question,
               hints: q.hint ? [q.hint] : [],
-              solution: q.explanation || 'See options for details.',
+              solution: q.explanation || 'Think about the relationship between variables.',
               options: q.options,
               correctAnswer: q.correctAnswer
             }))
@@ -70,6 +73,7 @@ export function getLocalChapterBySlug(chapterSlug: string): any | null {
               tab: 'math',
               type: 'Calculation',
               label: 'Math Lab',
+              icon: Calculator,
               instruction: q.question,
               hints: q.hint ? [q.hint] : [],
               solution: q.answer || 'Check your derivation.',

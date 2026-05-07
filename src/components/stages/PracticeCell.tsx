@@ -371,6 +371,32 @@ export default function PracticeCell({
 
               <ProgressiveHint exercise={ex} />
               
+              {activeTab === 'math' && (
+                <div className="mt-8 p-6 bg-purple-50 border-3 border-purple-200 rounded-neo shadow-[4px_4px_0px_0px_#CDB4DB] animate-in slide-in-from-top-2 duration-200">
+                  <div className="flex flex-col gap-4">
+                    <label className="text-[10px] font-black uppercase text-purple-600 tracking-widest">Your Numerical Answer</label>
+                    <div className="flex gap-4">
+                      <input 
+                        type="text"
+                        placeholder="Type answer here..."
+                        value={answers[ex.id] || ''}
+                        onChange={(e) => handleInputChange(ex.id, e.target.value)}
+                        className="flex-1 bg-white border-3 border-brand-dark rounded-neo-sm px-4 py-3 font-heading font-black text-sm outline-none focus:ring-2 focus:ring-purple-400"
+                      />
+                      <button 
+                        onClick={() => {
+                          const isCorrect = answers[ex.id]?.trim() === ex.expected?.toString().trim();
+                          alert(isCorrect ? "✅ Correct! Great work." : "❌ Not quite. Check the hints!");
+                        }}
+                        className="px-6 py-3 bg-[#7B287D] text-white border-3 border-brand-dark rounded-neo-sm font-black uppercase text-xs shadow-[3px_3px_0px_0px_#330C2F] active:translate-y-0.5 active:shadow-none transition-all"
+                      >
+                        Check Answer
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
+              
               {activeTab === 'coding' && (
                 <div className="mt-8 flex flex-col gap-4">
                   <div className="w-full min-h-[200px] bg-[#1E1E2F] border-3 border-brand-dark rounded-neo overflow-hidden shadow-[6px_6px_0px_0px_#330C2F] font-code text-sm relative">

@@ -177,9 +177,11 @@ export default function ReinforceCell({ practices, onComplete, status, loading }
               
               {practice.options ? (
                 <div className="grid gap-3">
+                  <div className="text-[10px] font-black uppercase text-brand-dark/40 mb-1 tracking-widest">Key Considerations</div>
                   {practice.options.map((option: string, i: number) => (
-                    <div key={i} className="p-3 border-2 border-brand-dark rounded-neo-sm text-sm font-medium bg-slate-50">
-                      {option}
+                    <div key={i} className="group p-4 border-2 border-brand-dark/20 rounded-neo-sm text-sm font-bold text-brand-dark bg-slate-50/50 hover:bg-white hover:border-brand-dark transition-all flex items-start gap-3">
+                      <span className="w-5 h-5 flex-shrink-0 bg-brand-dark text-white text-[10px] flex items-center justify-center rounded-full mt-0.5">{i+1}</span>
+                      <MathRenderer math={option} />
                     </div>
                   ))}
                 </div>
