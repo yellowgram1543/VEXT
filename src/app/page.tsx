@@ -7,7 +7,7 @@ import CognitiveRadar from '@/components/CognitiveRadar'
 import { ChevronRight, Play } from 'lucide-react'
 import Link from 'next/link'
 
-import { STAGE_LABELS } from '@/lib/constants'
+import { getAllModules } from '@/lib/content-loader'
 
 export default async function Home() {
   let modules: Module[] = []
@@ -17,6 +17,7 @@ export default async function Home() {
   let error = false
 
   try {
+    const localModules = getAllModules()
     const [sanityModules, progressData, latestProgress] = await Promise.all([
       fetchSanity<Module[]>(modulesQuery),
       prisma.progress.findMany({
@@ -27,7 +28,9 @@ export default async function Home() {
         orderBy: { lastVisitedAt: 'desc' }
       })
     ])
-    modules = sanityModules
+    
+    // Combine modules
+    modules = [...sanityModules, ...(localModules as any[])]
     completedChapterIds = new Set(progressData.map(p => p.chapterId))
     activeProgress = latestProgress
   } catch (e) {

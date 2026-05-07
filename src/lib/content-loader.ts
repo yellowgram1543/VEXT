@@ -11,7 +11,17 @@ export function getAllModules(): ModuleContent[] {
   return moduleDirs.map(dir => {
     const configPath = path.join(CONTENT_DIR, dir, 'config.json');
     if (fs.existsSync(configPath)) {
-      return JSON.parse(fs.readFileSync(configPath, 'utf8'));
+      const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
+      // Map JSON to Module interface
+      return {
+        ...config,
+        _id: config.id,
+        chapters: (config.chapters || []).map((ch: any) => ({
+          ...ch,
+          _id: ch.id,
+          slug: { current: ch.slug }
+        }))
+      };
     }
     return null;
   }).filter(Boolean);

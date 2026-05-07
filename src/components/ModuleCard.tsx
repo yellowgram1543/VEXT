@@ -32,10 +32,10 @@ const ModuleCard: React.FC<ModuleCardProps> = ({
   return (
     <Link
       href={`/modules/${module._id}`}
-      className="group block w-full bg-white border-3 border-brand-dark rounded-neo neo-brutal-shadow neo-brutal-interactive overflow-hidden flex flex-col sm:flex-row h-full"
+      className="group block w-full bg-white border-3 border-brand-dark rounded-neo neo-brutal-shadow neo-brutal-interactive flex flex-col sm:flex-row h-full overflow-visible"
     >
       {/* Left Column: Info (Flexible) */}
-      <div className="p-6 flex-[3] flex flex-col justify-between border-b-3 sm:border-b-0 sm:border-r-3 border-brand-dark bg-primary-container/20">
+      <div className="p-6 flex-1 flex flex-col justify-between border-b-3 sm:border-b-0 sm:border-r-3 border-brand-dark bg-primary-container/20 rounded-l-neo">
         <div>
           <div className="flex justify-between items-center mb-4">
             <span className="font-heading font-bold text-[10px] uppercase tracking-widest text-brand-dark/60 bg-white px-2 py-1 border-2 border-brand-dark rounded-neo-sm">
@@ -64,14 +64,14 @@ const ModuleCard: React.FC<ModuleCardProps> = ({
       </div>
 
       {/* Right Column: Cognitive Profile (Fixed Width) */}
-      <div className="p-6 bg-slate-50 flex flex-col items-center justify-center w-full sm:w-[200px] overflow-visible border-t-3 sm:border-t-0 border-brand-dark">
-        <span className="font-heading font-black text-[8px] uppercase tracking-[0.2em] text-brand-dark/30 mb-2">
+      <div className="p-6 bg-white flex flex-col items-center justify-center w-full sm:w-[260px] overflow-visible rounded-r-neo">
+        <span className="font-heading font-black text-[9px] uppercase tracking-[0.2em] text-brand-dark/40 mb-4">
           Cognitive Profile
         </span>
-        <div className="relative overflow-visible w-full flex justify-center">
+        <div className="relative overflow-visible w-full flex justify-center items-center">
           <CognitiveRadar 
             data={cognitiveProfile || defaultProfile} 
-            size={140} 
+            size={180} 
           />
         </div>
       </div>
