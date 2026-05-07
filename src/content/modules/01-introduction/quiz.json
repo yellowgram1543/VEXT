@@ -1,0 +1,34 @@
+{
+  "questions": [
+    {
+      "id": "m1-q1",
+      "type": "mcq",
+      "question": "What is the primary goal of Linear Regression?",
+      "options": [
+        "To classify images",
+        "To predict a continuous numerical value",
+        "To group similar data points",
+        "To compress large datasets"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Linear Regression is a regression algorithm used to predict continuous values like prices, temperature, or height.",
+      "dimension": "Theory"
+    },
+    {
+      "id": "m1-q2",
+      "type": "numerical",
+      "question": "If $y = 2x + 5$, what is the predicted value of $y$ when $x=10$?",
+      "correctAnswer": "25",
+      "explanation": "$2(10) + 5 = 20 + 5 = 25$.",
+      "dimension": "Numerical"
+    },
+    {
+      "id": "m1-q3",
+      "type": "debugging",
+      "question": "Identify the error in this training loop: `for i in range(100): loss = model(x) - y; loss.backward()`",
+      "correctAnswer": "Missing zero_grad()",
+      "explanation": "In PyTorch, gradients accumulate by default, so you must call `optimizer.zero_grad()` before each backward pass.",
+      "dimension": "Coding"
+    }
+  ]
+}

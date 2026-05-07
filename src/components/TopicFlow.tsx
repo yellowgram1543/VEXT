@@ -207,7 +207,7 @@ export default function TopicFlow({ topic, initialHighestStage }: TopicFlowProps
               <QuizCell 
                 questions={topic.test?.questions || []} 
                 topicId={topic._id} 
-                onComplete={(score) => handleUnlock(StageType.TEST, score)}
+                onComplete={(score, breakdown) => handleUnlock(StageType.TEST, score, breakdown)}
               />
             )}
 

@@ -103,13 +103,16 @@ model QuizAttempt {
 }
 
 model UserMastery {
-  id            String   @id @default(cuid())
-  userId        String   @unique
-  mathScore     Float    @default(0)
-  codingScore   Float    @default(0)
-  conceptsScore Float    @default(0)
-  updatedAt     DateTime @updatedAt
-  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id                String   @id @default(cuid())
+  userId            String   @unique
+  theoryScore       Float    @default(0)
+  numericalScore    Float    @default(0)
+  codingScore       Float    @default(0)
+  practicalScore    Float    @default(0)
+  intuitionScore    Float    @default(0)
+  architectureScore Float    @default(0)
+  updatedAt         DateTime @updatedAt
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 enum StageType {

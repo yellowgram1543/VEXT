@@ -29,6 +29,7 @@ export interface QuizQuestion {
   code?: string;
   image?: string;
   hint?: string;
+  dimension?: 'Theory' | 'Numerical' | 'Coding' | 'Practical' | 'Intuition' | 'Arch';
 }
 
 interface QuizCellProps {
@@ -36,7 +37,7 @@ interface QuizCellProps {
   questions: QuizQuestion[];
   title?: string;
   description?: string;
-  onComplete?: (score: number) => void;
+  onComplete?: (score: number, breakdown?: Record<string, { total: number; correct: number }>) => void;
 }
 
 export default function QuizCell({ 
@@ -163,8 +164,22 @@ export default function QuizCell({
       
       setFinalScore(score);
       setQuizFinished(true);
+
+      // Pass the breakdown up to the parent
+      const breakdown: Record<string, { total: number; correct: number }> = {};
+      activeQuestions.forEach(q => {
+        const typeLabel = q.dimension || q.type.charAt(0).toUpperCase() + q.type.slice(1).replace('-', ' ');
+        if (!breakdown[typeLabel]) breakdown[typeLabel] = { total: 0, correct: 0 };
+        breakdown[typeLabel].total += 1;
+        
+        const answer = allAnswers[q.id];
+        if (answer && checkCorrect(q, answer.val)) {
+          breakdown[typeLabel].correct += 1;
+        }
+      });
+
       if (passed) {
-        onComplete?.(score);
+        onComplete?.(score, breakdown);
       }
       setLoading(false);
     }

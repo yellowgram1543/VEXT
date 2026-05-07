@@ -29,7 +29,7 @@ export default function CognitiveRadar({
   className 
 }: CognitiveRadarProps) {
   const center = size / 2;
-  const radius = (size / 2) * 0.7; // Leave room for labels
+  const radius = (size / 2) * 0.6; // Reduced from 0.7 to give more room for labels
   const angleStep = (Math.PI * 2) / data.length;
 
   // Generate points for the background grid (3 levels)
@@ -54,7 +54,12 @@ export default function CognitiveRadar({
 
   return (
     <div className={cn("relative flex items-center justify-center overflow-visible", className)} style={{ width: `${size}px`, height: `${size}px` }}>
-      <svg width={size} height={size} className="overflow-visible">
+      <svg 
+        width={size} 
+        height={size} 
+        viewBox={`0 0 ${size} ${size}`}
+        className="overflow-visible"
+      >
         {/* Grid lines (Axes) */}
         {data.map((_, i) => {
           const angle = i * angleStep - Math.PI / 2;
@@ -107,13 +112,13 @@ export default function CognitiveRadar({
         {/* Labels */}
         {data.map((axis, i) => {
           const angle = i * angleStep - Math.PI / 2;
-          const labelDist = radius + 20;
+          const labelDist = radius + 15; // Adjusted distance
           const x = center + labelDist * Math.cos(angle);
           const y = center + labelDist * Math.sin(angle);
           
           // Adjust text alignment based on position
           const textAnchor = Math.abs(x - center) < 10 ? 'middle' : x > center ? 'start' : 'end';
-          const dy = Math.abs(y - center) < 10 ? '0.35em' : y > center ? '0.75em' : '-0.25em';
+          const dy = Math.abs(y - center) < 10 ? (y > center ? '1em' : '-0.25em') : '0.35em';
 
           return (
             <text
@@ -122,7 +127,7 @@ export default function CognitiveRadar({
               y={y}
               textAnchor={textAnchor}
               dy={dy}
-              className="font-heading font-black text-[10px] uppercase tracking-tighter fill-brand-dark/60"
+              className="font-heading font-black text-[9px] uppercase tracking-tighter fill-brand-dark/40"
             >
               {axis.label}
             </text>

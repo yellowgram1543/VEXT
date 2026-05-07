@@ -3,7 +3,7 @@ import { modulesQuery } from '@/lib/sanity.queries'
 import { Module } from '@/types'
 import { prisma } from '@/lib/prisma'
 import ModuleCard from '@/components/ModuleCard'
-import SkillMasteryMap from '@/components/SkillMasteryMap'
+import CognitiveRadar from '@/components/CognitiveRadar'
 import { ChevronRight, Play } from 'lucide-react'
 import Link from 'next/link'
 
@@ -13,10 +13,11 @@ export default async function Home() {
   let modules: Module[] = []
   let completedChapterIds: Set<string> = new Set()
   let activeProgress: any = null
+  let mastery: any = null
   let error = false
 
   try {
-    const [sanityModules, progressData, latestProgress] = await Promise.all([
+    const [sanityModules, progressData, latestProgress, dbMastery] = await Promise.all([
       fetchSanity<Module[]>(modulesQuery),
       prisma.progress.findMany({
         where: { NOT: { completedAt: null } },
@@ -24,11 +25,15 @@ export default async function Home() {
       }),
       prisma.progress.findFirst({
         orderBy: { lastVisitedAt: 'desc' }
+      }),
+      prisma.userMastery.findUnique({
+        where: { userId: 'prototype-user-id' }
       })
     ])
     modules = sanityModules
     completedChapterIds = new Set(progressData.map(p => p.chapterId))
     activeProgress = latestProgress
+    mastery = dbMastery
   } catch (e) {
     console.error('Error fetching data:', e)
     error = true
@@ -112,8 +117,28 @@ export default async function Home() {
              )}
            </div>
 
-           <div className="lg:col-span-4 space-y-8">
-              <SkillMasteryMap />
+            <div className="lg:col-span-4 space-y-8">
+               <div className="bg-white border-3 border-brand-dark p-6 rounded-neo neo-brutal-shadow flex flex-col items-center">
+                  <h3 className="font-heading font-black text-xs uppercase tracking-widest text-brand-dark/40 mb-6">
+                    Global Cognitive Profile
+                  </h3>
+                  <CognitiveRadar 
+                    size={240}
+                    data={[
+                      { label: 'Theory', value: (mastery?.theoryScore || 0) / 100 },
+                      { label: 'Numerical', value: (mastery?.numericalScore || 0) / 100 },
+                      { label: 'Coding', value: (mastery?.codingScore || 0) / 100 },
+                      { label: 'Practical', value: (mastery?.practicalScore || 0) / 100 },
+                      { label: 'Intuition', value: (mastery?.intuitionScore || 0) / 100 },
+                      { label: 'Arch', value: (mastery?.architectureScore || 0) / 100 },
+                    ]}
+                  />
+                  <div className="mt-6 pt-6 border-t-2 border-brand-dark/5 w-full">
+                    <p className="text-[10px] font-bold text-brand-dark/60 uppercase leading-tight text-center">
+                      Mastery increases by 5% for each passed quiz or completed practice cell.
+                    </p>
+                  </div>
+               </div>
               
               <aside className="bg-secondary-container border-3 border-brand-dark p-6 rounded-neo neo-brutal-shadow">
                 <div className="flex items-center gap-2 mb-4 text-on-secondary-container">

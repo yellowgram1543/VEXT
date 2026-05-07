@@ -9,7 +9,7 @@ export async function POST(
   try {
     const { chapterId } = await params;
     const body = await request.json();
-    const { currentStage, score } = body;
+    const { currentStage, score, breakdown } = body;
 
     if (!chapterId || !currentStage) {
       return NextResponse.json({ error: 'Missing chapterId or currentStage' }, { status: 400 });
@@ -17,7 +17,7 @@ export async function POST(
 
     console.log(`[Unlock API] Unlocking for ${chapterId}, current stage: ${currentStage}${score !== undefined ? `, score: ${score}` : ''}`);
     const startTime = Date.now();
-    const progress = await unlockNextStage(chapterId, currentStage as StageType, score);
+    const progress = await unlockNextStage(chapterId, currentStage as StageType, score, breakdown);
     console.log(`[Unlock API] Successfully unlocked in ${Date.now() - startTime}ms`);
     
     return NextResponse.json(progress);

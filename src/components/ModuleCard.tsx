@@ -64,14 +64,16 @@ const ModuleCard: React.FC<ModuleCardProps> = ({
       </div>
 
       {/* Right Column: Cognitive Profile */}
-      <div className="p-6 bg-white flex flex-col items-center justify-center w-[240px]">
+      <div className="p-6 bg-white flex flex-col items-center justify-center w-[240px] overflow-visible">
         <span className="font-heading font-black text-[9px] uppercase tracking-[0.2em] text-brand-dark/40 mb-4">
           Cognitive Profile
         </span>
-        <CognitiveRadar 
-          data={cognitiveProfile || defaultProfile} 
-          size={160} 
-        />
+        <div className="relative overflow-visible">
+          <CognitiveRadar 
+            data={cognitiveProfile || defaultProfile} 
+            size={160} 
+          />
+        </div>
       </div>
     </Link>
   );

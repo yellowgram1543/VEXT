@@ -58,10 +58,21 @@ export async function getTopicProgress(topicId: string) {
  * This handles UNDERSTAND -> REINFORCE -> PRACTICE -> TEST.
  * TEST -> APPLY is handled by submitQuiz.
  */
-export async function unlockNextStage(topicId: string, currentStage: StageType, quizScore?: number) {
+export async function unlockNextStage(
+  topicId: string, 
+  currentStage: StageType, 
+  quizScore?: number,
+  breakdown?: Record<string, { total: number; correct: number }>
+) {
   const progress = await getTopicProgress(topicId);
   
   const nextStage = getNextStage(currentStage, quizScore);
+
+  // If it's a quiz, we should also record the attempt and update mastery
+  // We'll use a mock userId for now as per the existing pattern
+  if (currentStage === StageType.TEST && quizScore !== undefined) {
+    await submitQuiz("prototype-user-id", topicId, quizScore, breakdown);
+  }
 
   // If the logic says we can move forward and it's beyond current progress
   if (STAGE_ORDER.indexOf(nextStage) > STAGE_ORDER.indexOf(progress.highestStage)) {
@@ -152,7 +163,12 @@ export async function evaluateApply(topicId: string, submission: string, userId?
  * Note: QuizAttempt still references User for historical reasons, 
  * but Progress (the lock) is now global.
  */
-export async function submitQuiz(userId: string, topicId: string, score: number) {
+export async function submitQuiz(
+  userId: string, 
+  topicId: string, 
+  score: number, 
+  breakdown?: Record<string, { total: number; correct: number }>
+) {
   const passed = score >= 0.8;
   
   const attempt = await prisma.quizAttempt.create({
@@ -166,9 +182,7 @@ export async function submitQuiz(userId: string, topicId: string, score: number)
 
   if (passed) {
     await prisma.progress.upsert({
-      where: {
-        chapterId: topicId,
-      },
+      where: { chapterId: topicId },
       create: {
         chapterId: topicId,
         highestStage: StageType.APPLY,
@@ -178,19 +192,40 @@ export async function submitQuiz(userId: string, topicId: string, score: number)
       },
     });
     
-    // Update UserMastery
-    await prisma.userMastery.upsert({
-      where: { userId },
-      create: {
-        userId,
-        conceptsScore: score * 100,
-      },
-      update: {
-        conceptsScore: {
-          increment: 5,
+    // Update UserMastery with dimensional breakdown
+    if (breakdown) {
+      const masteryData: any = {};
+      const mapping: Record<string, string> = {
+        'Theory': 'theoryScore',
+        'Numerical': 'numericalScore',
+        'Coding': 'codingScore',
+        'Practical': 'practicalScore',
+        'Intuition': 'intuitionScore',
+        'Architecture': 'architectureScore'
+      };
+
+      Object.entries(breakdown).forEach(([dim, stats]) => {
+        const field = mapping[dim];
+        if (field) {
+          const dimScore = (stats.correct / stats.total) * 100;
+          masteryData[field] = { increment: dimScore / 5 }; // Weighted increment
+        }
+      });
+
+      await prisma.userMastery.upsert({
+        where: { userId },
+        create: {
+          userId,
+          theoryScore: masteryData.theoryScore?.increment || 0,
+          numericalScore: masteryData.numericalScore?.increment || 0,
+          codingScore: masteryData.codingScore?.increment || 0,
+          practicalScore: masteryData.practicalScore?.increment || 0,
+          intuitionScore: masteryData.intuitionScore?.increment || 0,
+          architectureScore: masteryData.architectureScore?.increment || 0,
         },
-      },
-    });
+        update: masteryData,
+      });
+    }
   }
 
   return attempt;
