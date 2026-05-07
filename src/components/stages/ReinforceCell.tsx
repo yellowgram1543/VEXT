@@ -1,13 +1,10 @@
 import React from 'react';
 import { 
   ArrowRight, 
-  CheckCircle2, 
   Lightbulb, 
-  Info, 
   MonitorPlay, 
   AlertTriangle,
   BrainCircuit,
-  Target,
   Layers,
   HelpCircle,
   Calculator,
@@ -117,9 +114,9 @@ export default function ReinforceCell({ practices, onComplete, status, loading }
                           <p className="text-[10px] font-black uppercase text-blue-600 tracking-widest flex items-center gap-2">
                             <MonitorPlay className="w-3 h-3" /> Scenario
                           </p>
-                          <p className="text-sm font-bold text-blue-900 leading-relaxed">{practice.scenario}</p>
+                          <p className="text-sm font-bold text-purple-900/80 leading-relaxed italic">&quot;{practice.scenario}&quot;</p>
                           {practice.observation && (
-                             <p className="text-xs font-bold text-blue-800/60 mt-1 pl-5 border-l-2 border-blue-200 italic">" {practice.observation} "</p>
+                             <p className="text-xs font-bold text-blue-800/60 mt-1 pl-5 border-l-2 border-blue-200 italic">&quot;{practice.observation}&quot;</p>
                           )}
                         </div>
                       )}
@@ -159,7 +156,7 @@ export default function ReinforceCell({ practices, onComplete, status, loading }
                              <BrainCircuit className="w-5 h-5 text-purple-200 shrink-0 mt-1" />
                              <div>
                                 <p className="text-[10px] font-black uppercase text-purple-200 tracking-widest mb-1">Mental Model</p>
-                                <p className="text-sm font-black italic">"{practice.mentalModel}"</p>
+                                <p className="text-sm font-black italic">&quot;{practice.mentalModel}&quot;</p>
                              </div>
                           </div>
                         )}
@@ -177,7 +174,7 @@ export default function ReinforceCell({ practices, onComplete, status, loading }
           })
         ) : (
           <div className="p-12 text-center border-3 border-dashed border-brand-dark/20 rounded-neo">
-             <p className="text-brand-dark/40 font-black uppercase tracking-widest text-sm">No reinforcement data found in JSON</p>
+             <p className="text-brand-dark/40 font-black uppercase tracking-widest text-sm">No reinforcement data found</p>
           </div>
         )}
       </div>
