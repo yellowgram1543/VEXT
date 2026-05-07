@@ -32,3 +32,6 @@ Feature: A "Theme Switcher" with custom curated palettes:
 "Deep Learning": (Dark mode with glowing purple accents).
 "Matrix Mode": (Black and neon green for the true hacker vibe).
 Design: Smooth transitions where all the border colors and shadows "morph" when you switch.
+
+
+Auto-Generation: You can eventually feed a textbook to a GPT-4 model and tell it: "Convert this into the JSON format for my Cognitive Coach." It will output a perfectly formatted chapter that plugs right in.

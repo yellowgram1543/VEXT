@@ -58,7 +58,8 @@ export default async function RootLayout({
   }
 
   const localModules = getAllModules();
-  const modules = [...(sanityModules || []), ...(localModules as any[])];
+  // Only use local modules for now to remove demo content
+  const modules = [...(localModules as any[])];
 
   return (
     <html

@@ -10,7 +10,16 @@
           "children": [
             {
               "_type": "span",
-              "text": "Linear Regression is the bedrock of Machine Learning. It's about finding the linear relationship between a dependent variable and one or more independent variables."
+              "text": "Linear Regression is the bedrock of Machine Learning. At its heart, it's about finding the "
+            },
+            {
+              "_type": "span",
+              "marks": ["strong"],
+              "text": "linear relationship"
+            },
+            {
+              "_type": "span",
+              "text": " between variables."
             }
           ]
         },
@@ -19,7 +28,30 @@
           "children": [
             {
               "_type": "span",
-              "text": "The goal is to find the line that minimizes the sum of squared residuals (the vertical distance between data points and the line)."
+              "text": "Imagine you're trying to predict house prices. You have the size of the house (X) and the price (Y). The goal of Linear Regression is to find the best possible line that describes this data: "
+            },
+            {
+              "_type": "span",
+              "marks": ["code"],
+              "text": "Y = mX + c"
+            }
+          ]
+        },
+        {
+          "_type": "block",
+          "children": [
+            {
+              "_type": "span",
+              "text": "The magic happens through "
+            },
+            {
+              "_type": "span",
+              "marks": ["strong"],
+              "text": "Ordinary Least Squares (OLS)"
+            },
+            {
+              "_type": "span",
+              "text": ". We calculate the 'Residuals' (the distance between our line and the actual data points) and minimize the sum of their squares."
             }
           ]
         }
@@ -32,12 +64,12 @@
           "questions": [
             {
               "id": "lr-p1",
-              "question": "What does the slope coefficient represent in simple linear regression?",
+              "question": "If the residuals are very large, what does that say about our model?",
               "options": [
-                "The value of Y when X is zero",
-                "The change in Y for every one-unit change in X",
-                "The total error of the model",
-                "The number of data points"
+                "The model is a perfect fit",
+                "The model is doing a poor job of capturing the relationship",
+                "The data is perfectly linear",
+                "The slope is too high"
               ],
               "correctAnswer": 1
             }
@@ -47,9 +79,9 @@
           "questions": [
             {
               "id": "lr-p2",
-              "question": "If $y = 3x + 10$, what is the predicted $y$ for $x=5$?",
-              "answer": "25",
-              "hint": "Plug $x=5$ into the equation: $3(5) + 10$"
+              "question": "Given the model $y = 5x + 2$, what is the predicted $y$ when $x = 4$?",
+              "answer": "22",
+              "hint": "Calculation: $5(4) + 2 = 20 + 2$"
             }
           ]
         }
@@ -60,26 +92,45 @@
         {
           "id": "lr-q1",
           "type": "mcq",
-          "question": "Which of these is NOT an assumption of Linear Regression?",
+          "question": "Which parameter in $y = mx + c$ represents the 'bias' or 'intercept'?",
           "options": [
-            "Linearity",
-            "Independence of errors",
-            "Homoscedasticity",
-            "Normally distributed target variable"
+            "m",
+            "x",
+            "c",
+            "y"
           ],
-          "correctAnswer": 3,
-          "explanation": "Linear Regression assumes the *residuals* are normally distributed, not necessarily the target variable itself.",
+          "correctAnswer": 2,
+          "explanation": "The 'c' (or beta-0) is the intercept, representing the value of y when x is zero.",
           "dimension": "Theory"
+        },
+        {
+          "id": "lr-q2",
+          "type": "mcq",
+          "question": "What is the primary objective of the OLS method?",
+          "options": [
+            "Maximize the residuals",
+            "Minimize the sum of squared residuals",
+            "Find the average of all data points",
+            "Eliminate all outliers"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Ordinary Least Squares (OLS) minimizes the sum of squared vertical distances between the observed data and the fitted line.",
+          "dimension": "Intuition"
         }
       ]
     },
     "apply": {
-      "instruction": "Build a simple house price predictor using the provided dataset features.",
+      "instruction": "Your challenge: Implement a simple linear regression calculation manually before moving to automated tools.",
       "milestones": [
         {
           "id": "m1",
-          "title": "Data Loading",
-          "description": "Load the housing dataset and identify the target variable."
+          "title": "Calculate Mean",
+          "description": "Calculate the mean of X and Y values from the provided sample dataset."
+        },
+        {
+          "id": "m2",
+          "title": "Solve for Slope",
+          "description": "Use the formula for 'm' using the calculated means."
         }
       ]
     }

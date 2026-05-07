@@ -19,8 +19,8 @@ export default async function Home() {
 
   try {
     const localModules = getAllModules();
-    const sanityModules = await fetchSanity<Module[]>(modulesQuery);
-    modules = [...(sanityModules || []), ...(localModules as any[])];
+    // Only use local modules for now to remove demo content
+    modules = [...(localModules as any[])];
   } catch (e) {
     console.error('Error fetching modules:', e);
     error = true;
