@@ -34,3 +34,22 @@ export function getChapterContent(moduleSlug: string, chapterSlug: string): Chap
   }
   return null;
 }
+
+export function getLocalChapterBySlug(chapterSlug: string): any | null {
+  const allModules = getAllModules();
+  for (const m of allModules) {
+    const chapterConfig = (m.chapters || []).find((c: any) => c.slug.current === chapterSlug);
+    if (chapterConfig) {
+      // Load full content from the JSON file
+      const fullContent = getChapterContent(m._id, chapterSlug);
+      if (fullContent) {
+        return {
+          ...chapterConfig,
+          ...fullContent
+        };
+      }
+      return chapterConfig;
+    }
+  }
+  return null;
+}

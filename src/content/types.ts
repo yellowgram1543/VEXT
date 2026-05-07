@@ -1,6 +1,7 @@
 import { QuestionType } from '@/components/stages/QuizCell';
 
 export interface ModuleContent {
+  _id: string;
   id: string;
   order: number;
   title: string;
@@ -9,6 +10,7 @@ export interface ModuleContent {
 }
 
 export interface ChapterContent {
+  _id: string;
   id: string;
   slug: string;
   title: string;

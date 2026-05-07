@@ -11,10 +11,16 @@ interface ChapterPageProps {
   params: Promise<{ slug: string }>
 }
 
+import { getLocalChapterBySlug } from '@/lib/content-loader'
+
 export default async function ChapterPage({ params }: ChapterPageProps) {
   const { slug } = await params
   
-  const topic = await fetchSanity<Topic>(chapterBySlugQuery, { slug })
+  let topic = await fetchSanity<Topic>(chapterBySlugQuery, { slug })
+
+  if (!topic) {
+    topic = getLocalChapterBySlug(slug)
+  }
 
   if (!topic) {
     notFound()
