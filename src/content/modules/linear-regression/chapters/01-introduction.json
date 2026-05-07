@@ -1,0 +1,87 @@
+{
+  "id": "lr-intro",
+  "slug": "01-introduction",
+  "title": "The Line of Best Fit",
+  "stages": {
+    "understand": {
+      "content": [
+        {
+          "_type": "block",
+          "children": [
+            {
+              "_type": "span",
+              "text": "Linear Regression is the bedrock of Machine Learning. It's about finding the linear relationship between a dependent variable and one or more independent variables."
+            }
+          ]
+        },
+        {
+          "_type": "block",
+          "children": [
+            {
+              "_type": "span",
+              "text": "The goal is to find the line that minimizes the sum of squared residuals (the vertical distance between data points and the line)."
+            }
+          ]
+        }
+      ],
+      "visualizer": "loss"
+    },
+    "practice": {
+      "tabs": {
+        "concept": {
+          "questions": [
+            {
+              "id": "lr-p1",
+              "question": "What does the slope coefficient represent in simple linear regression?",
+              "options": [
+                "The value of Y when X is zero",
+                "The change in Y for every one-unit change in X",
+                "The total error of the model",
+                "The number of data points"
+              ],
+              "correctAnswer": 1
+            }
+          ]
+        },
+        "math": {
+          "questions": [
+            {
+              "id": "lr-p2",
+              "question": "If $y = 3x + 10$, what is the predicted $y$ for $x=5$?",
+              "answer": "25",
+              "hint": "Plug $x=5$ into the equation: $3(5) + 10$"
+            }
+          ]
+        }
+      }
+    },
+    "quiz": {
+      "questions": [
+        {
+          "id": "lr-q1",
+          "type": "mcq",
+          "question": "Which of these is NOT an assumption of Linear Regression?",
+          "options": [
+            "Linearity",
+            "Independence of errors",
+            "Homoscedasticity",
+            "Normally distributed target variable"
+          ],
+          "correctAnswer": 3,
+          "explanation": "Linear Regression assumes the *residuals* are normally distributed, not necessarily the target variable itself.",
+          "dimension": "Theory"
+        }
+      ]
+    },
+    "apply": {
+      "instruction": "Build a simple house price predictor using the provided dataset features.",
+      "milestones": [
+        {
+          "id": "m1",
+          "title": "Data Loading",
+          "description": "Load the housing dataset and identify the target variable."
+        }
+      ]
+    }
+  }
+}

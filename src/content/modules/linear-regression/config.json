@@ -1,0 +1,13 @@
+{
+  "id": "linear-regression",
+  "order": 2,
+  "title": "Linear Regression Masterclass",
+  "description": "Master the foundations of predictive modeling, from Ordinary Least Squares to Gradient Descent.",
+  "chapters": [
+    {
+      "id": "lr-intro",
+      "slug": "01-introduction",
+      "title": "The Line of Best Fit"
+    }
+  ]
+}

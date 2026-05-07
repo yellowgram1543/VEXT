@@ -112,13 +112,18 @@ export default function CognitiveRadar({
         {/* Labels */}
         {data.map((axis, i) => {
           const angle = i * angleStep - Math.PI / 2;
-          const labelDist = radius + 15; // Adjusted distance
+          const labelDist = radius + 22; // Increased distance
           const x = center + labelDist * Math.cos(angle);
           const y = center + labelDist * Math.sin(angle);
           
-          // Adjust text alignment based on position
-          const textAnchor = Math.abs(x - center) < 10 ? 'middle' : x > center ? 'start' : 'end';
-          const dy = Math.abs(y - center) < 10 ? (y > center ? '1em' : '-0.25em') : '0.35em';
+          // Precise text alignment
+          let textAnchor: "start" | "middle" | "end" = 'middle';
+          if (Math.cos(angle) > 0.1) textAnchor = 'start';
+          else if (Math.cos(angle) < -0.1) textAnchor = 'end';
+
+          let dy = '0.35em';
+          if (Math.sin(angle) > 0.5) dy = '1em';
+          else if (Math.sin(angle) < -0.5) dy = '-0.2em';
 
           return (
             <text
@@ -127,7 +132,7 @@ export default function CognitiveRadar({
               y={y}
               textAnchor={textAnchor}
               dy={dy}
-              className="font-heading font-black text-[9px] uppercase tracking-tighter fill-brand-dark/40"
+              className="font-heading font-black text-[8px] uppercase tracking-tighter fill-brand-dark/60"
             >
               {axis.label}
             </text>
