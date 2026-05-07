@@ -8,6 +8,7 @@ import { ChevronRight, Play } from 'lucide-react'
 import Link from 'next/link'
 
 import { getAllModules } from '@/lib/content-loader'
+import { STAGE_LABELS } from '@/lib/constants'
 
 export default async function Home() {
   let modules: Module[] = []
