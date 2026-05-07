@@ -2,10 +2,10 @@
 
 import React, { useState } from 'react';
 import { 
-  CheckCircle, Loader2, AlertCircle, 
+  CheckCircle, Loader2, 
   RefreshCw, ArrowRight, Calculator, Search, 
-  Layers, MessageSquare, Lightbulb, TrendingUp, FileCode, Zap, Play, Terminal,
-  ChevronRight, Eye, HelpCircle, RotateCcw
+  Layers, MessageSquare, Lightbulb, TrendingUp, FileCode, Play, Terminal,
+  Eye, HelpCircle, RotateCcw, MonitorPlay, AlertTriangle, BrainCircuit, Target
 } from 'lucide-react';
 import dynamic from 'next/dynamic';
 const Editor = dynamic(() => import('@monaco-editor/react'), { 
@@ -38,6 +38,13 @@ interface Exercise {
   checklist?: string[];
   expected: string;
   initialCode?: string;
+  // 7-Point Rubric Fields
+  scenario?: string;
+  observation?: string;
+  why?: string;
+  commonMistake?: string;
+  realWorldImplication?: string;
+  mentalModel?: string;
 }
 
 const ALL_EXERCISES: Exercise[] = [
@@ -202,7 +209,7 @@ const ProgressiveHint = ({ exercise }: { exercise: Exercise }) => {
                 <p className="text-[10px] font-black uppercase text-purple-600 tracking-widest flex items-center gap-2">
                   <MonitorPlay className="w-3 h-3" /> Contextual Scenario
                 </p>
-                <p className="text-sm font-bold text-purple-900/80 leading-relaxed italic">"{exercise.scenario}"</p>
+                <p className="text-sm font-bold text-purple-900/80 leading-relaxed italic">&quot;{exercise.scenario}&quot;</p>
                 {exercise.observation && (
                    <p className="text-xs font-bold text-purple-800/60 mt-1 pl-4 border-l-2 border-purple-200">Observed: {exercise.observation}</p>
                 )}
@@ -252,7 +259,7 @@ const ProgressiveHint = ({ exercise }: { exercise: Exercise }) => {
                    <BrainCircuit className="w-5 h-5 text-purple-300 shrink-0 mt-1" />
                    <div>
                       <p className="text-[10px] font-black uppercase text-purple-300 tracking-widest mb-1">Mental Anchor</p>
-                      <p className="text-sm font-black italic">"{exercise.mentalModel}"</p>
+                      <p className="text-sm font-black italic">&quot;{exercise.mentalModel}&quot;</p>
                    </div>
                 </div>
               )}
