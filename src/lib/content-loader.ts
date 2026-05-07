@@ -59,26 +59,45 @@ export function getLocalChapterBySlug(chapterSlug: string): any | null {
               tab: 'concept',
               type: 'Insight',
               label: 'Concept Reflection',
-              icon: HelpCircle,
+              iconName: 'help',
               instruction: q.question,
               hints: q.hint ? [q.hint] : [],
               solution: q.explanation || 'Think about the relationship between variables.',
               options: q.options,
-              correctAnswer: q.correctAnswer
+              correctAnswer: q.correctAnswer,
+              checklist: q.checklist, // Rubric support
+              scenario: q.scenario,
+              observation: q.observation,
+              commonMistake: q.commonMistake,
+              realWorldImplication: q.realWorldImplication,
+              mentalModel: q.mentalModel
             }))
           },
           practice: {
-            exercises: (fullContent.stages?.practice?.tabs?.math?.questions || []).map((q: any) => ({
-              id: q.id,
-              tab: 'math',
-              type: 'Calculation',
-              label: 'Math Lab',
-              icon: Calculator,
-              instruction: q.question,
-              hints: q.hint ? [q.hint] : [],
-              solution: q.answer || 'Check your derivation.',
-              expected: q.answer
-            }))
+            exercises: [
+              ...(fullContent.stages?.practice?.tabs?.math?.questions || []).map((q: any) => ({
+                id: q.id,
+                tab: 'math',
+                type: 'Calculation',
+                label: 'Math Lab',
+                iconName: 'calculator',
+                instruction: q.question,
+                hints: q.hint ? [q.hint] : [],
+                solution: q.answer || 'Check your derivation.',
+                expected: q.answer
+              })),
+              ...(fullContent.stages?.practice?.tabs?.coding?.questions || []).map((q: any) => ({
+                id: q.id,
+                tab: 'coding',
+                type: 'Implementation',
+                label: 'Coding Lab',
+                iconName: 'code',
+                instruction: q.instruction,
+                hints: q.hints || [],
+                solution: q.solution,
+                initialCode: q.initialCode
+              }))
+            ]
           },
           test: {
             questions: fullContent.stages?.quiz?.questions || []

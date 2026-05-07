@@ -31,10 +31,13 @@ export interface UnderstandStage {
 export interface PracticeStage {
   tabs: {
     coding?: {
-      title: string;
-      initialCode: string;
-      solution: string;
-      hints: string[];
+      questions: {
+        id: string;
+        instruction: string;
+        initialCode: string;
+        solution: string;
+        hints: string[];
+      }[];
     };
     math?: {
       questions: {
@@ -50,6 +53,15 @@ export interface PracticeStage {
         question: string;
         options: string[];
         correctAnswer: number;
+        explanation?: string;
+        checklist?: string[];
+        // 7-Point Rubric Fields
+        scenario?: string;
+        observation?: string;
+        why?: string;
+        commonMistake?: string;
+        realWorldImplication?: string;
+        mentalModel?: string;
       }[];
     };
   };

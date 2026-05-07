@@ -31,6 +31,7 @@ interface Exercise {
   type: string;
   label: string;
   instruction: string;
+  iconName?: string;
   icon: any;
   hints: string[];
   solution: string;
@@ -180,7 +181,7 @@ const ProgressiveHint = ({ exercise }: { exercise: Exercise }) => {
           )}
         >
           <Eye className="w-3 h-3" />
-          {showSolution ? 'Hide Solution' : 'Check Solution'}
+          {showSolution ? 'Hide Solution' : 'Reveal Solution'}
         </button>
       </div>
 
@@ -194,20 +195,37 @@ const ProgressiveHint = ({ exercise }: { exercise: Exercise }) => {
           </div>
         ))}
         {showSolution && (
-          <div className="p-5 bg-purple-50 border-3 border-purple-200 rounded-neo shadow-[4px_4px_0px_0px_#CDB4DB] animate-in zoom-in-95 duration-200 space-y-4">
+          <div className="p-6 bg-purple-50 border-3 border-purple-200 rounded-neo shadow-[4px_4px_0px_0px_#CDB4DB] animate-in zoom-in-95 duration-200 space-y-6">
+            {/* Scenario & Observation */}
+            {exercise.scenario && (
+              <div className="flex flex-col gap-1 border-b border-purple-200/50 pb-4">
+                <p className="text-[10px] font-black uppercase text-purple-600 tracking-widest flex items-center gap-2">
+                  <MonitorPlay className="w-3 h-3" /> Contextual Scenario
+                </p>
+                <p className="text-sm font-bold text-purple-900/80 leading-relaxed italic">"{exercise.scenario}"</p>
+                {exercise.observation && (
+                   <p className="text-xs font-bold text-purple-800/60 mt-1 pl-4 border-l-2 border-purple-200">Observed: {exercise.observation}</p>
+                )}
+              </div>
+            )}
+
+            {/* Reference Solution */}
             <div>
                <div className="text-[10px] font-black uppercase text-purple-600 mb-2 flex items-center gap-2">
-                 <CheckCircle className="w-3 h-3" /> Reference Solution
+                 <Target className="w-3 h-3" /> Reference Solution
                </div>
-               <div className="font-body text-xs text-purple-900 bg-white/60 p-3 rounded-lg border border-purple-100 leading-relaxed">
+               <div className="font-body text-xs text-purple-900 bg-white/60 p-4 rounded-xl border border-purple-100 leading-relaxed shadow-inner">
                  <MathRenderer math={exercise.solution} />
                </div>
             </div>
 
+            {/* Rubric */}
             {exercise.checklist && (
-              <div>
-                <div className="text-[10px] font-black uppercase text-purple-600 mb-2">Key points for your answer</div>
-                <ul className="space-y-2">
+              <div className="p-4 bg-white/40 rounded-xl border border-purple-100">
+                <div className="text-[10px] font-black uppercase text-purple-600 mb-3 flex items-center gap-2">
+                  <CheckCircle className="w-3 h-3" /> Self-Evaluation Rubric
+                </div>
+                <ul className="space-y-2.5">
                   {exercise.checklist.map((point, i) => (
                     <li key={i} className="flex items-start gap-2 text-xs font-bold text-purple-800/70">
                       <div className="w-1.5 h-1.5 rounded-full bg-purple-400 mt-1.5 shrink-0" />
@@ -215,6 +233,37 @@ const ProgressiveHint = ({ exercise }: { exercise: Exercise }) => {
                     </li>
                   ))}
                 </ul>
+              </div>
+            )}
+
+            {/* Pitfalls & Mental Models */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {exercise.commonMistake && (
+                <div className="p-4 bg-orange-50 border-2 border-orange-100 rounded-xl flex items-start gap-3">
+                  <AlertTriangle className="w-4 h-4 text-orange-500 shrink-0 mt-0.5" />
+                  <div>
+                    <p className="text-[10px] font-black uppercase text-orange-600 tracking-widest mb-0.5">Pitfall to Avoid</p>
+                    <p className="text-[11px] font-bold text-orange-800/80 leading-snug">{exercise.commonMistake}</p>
+                  </div>
+                </div>
+              )}
+              {exercise.mentalModel && (
+                <div className="p-4 bg-[#330C2F] text-white rounded-xl shadow-lg transform rotate-[1deg] flex items-start gap-3 border-t-4 border-purple-400">
+                   <BrainCircuit className="w-5 h-5 text-purple-300 shrink-0 mt-1" />
+                   <div>
+                      <p className="text-[10px] font-black uppercase text-purple-300 tracking-widest mb-1">Mental Anchor</p>
+                      <p className="text-sm font-black italic">"{exercise.mentalModel}"</p>
+                   </div>
+                </div>
+              )}
+            </div>
+
+            {exercise.realWorldImplication && (
+              <div className="pt-4 border-t border-purple-200/50 flex items-center gap-3 text-purple-900/40">
+                <Target className="w-4 h-4" />
+                <p className="text-[10px] font-black uppercase tracking-widest leading-relaxed">
+                  Job-Ready Insight: <span className="text-purple-700/60 font-bold normal-case">{exercise.realWorldImplication}</span>
+                </p>
               </div>
             )}
           </div>
@@ -326,6 +375,19 @@ export default function PracticeCell({
     );
   }
 
+  const getIcon = (iconName?: string | any) => {
+    if (!iconName) return HelpCircle;
+    if (typeof iconName !== 'string') return iconName;
+    switch (iconName.toLowerCase()) {
+      case 'calculator': return Calculator;
+      case 'help': return HelpCircle;
+      case 'code': return FileCode;
+      default: return HelpCircle;
+    }
+  };
+
+  // ... previous logic ...
+
   return (
     <div className="w-full flex flex-col gap-8">
       
@@ -352,12 +414,13 @@ export default function PracticeCell({
         {activeExercises.map((ex) => {
           const output = outputs[ex.id];
           const isExecuting = executingId === ex.id;
+          const Icon = getIcon(ex.iconName || ex.icon);
 
           return (
             <div key={ex.id} className="border-3 border-brand-dark rounded-neo p-8 bg-white shadow-[8px_8px_0px_0px_#330C2F] animate-in fade-in slide-in-from-bottom-2 duration-300">
               <div className="flex items-center gap-3 mb-6">
                 <div className="p-2.5 bg-brand-dark/5 rounded-xl border-2 border-brand-dark/10">
-                  <ex.icon className="w-6 h-6 text-[#7B287D]" />
+                  <Icon className="w-6 h-6 text-[#7B287D]" />
                 </div>
                 <div className="flex flex-col">
                   <span className="text-[10px] font-black uppercase tracking-widest text-brand-dark/40">{ex.type}</span>
@@ -370,32 +433,6 @@ export default function PracticeCell({
               </div>
 
               <ProgressiveHint exercise={ex} />
-              
-              {activeTab === 'math' && (
-                <div className="mt-8 p-6 bg-purple-50 border-3 border-purple-200 rounded-neo shadow-[4px_4px_0px_0px_#CDB4DB] animate-in slide-in-from-top-2 duration-200">
-                  <div className="flex flex-col gap-4">
-                    <label className="text-[10px] font-black uppercase text-purple-600 tracking-widest">Your Numerical Answer</label>
-                    <div className="flex gap-4">
-                      <input 
-                        type="text"
-                        placeholder="Type answer here..."
-                        value={answers[ex.id] || ''}
-                        onChange={(e) => handleInputChange(ex.id, e.target.value)}
-                        className="flex-1 bg-white border-3 border-brand-dark rounded-neo-sm px-4 py-3 font-heading font-black text-sm outline-none focus:ring-2 focus:ring-purple-400"
-                      />
-                      <button 
-                        onClick={() => {
-                          const isCorrect = answers[ex.id]?.trim() === ex.expected?.toString().trim();
-                          alert(isCorrect ? "✅ Correct! Great work." : "❌ Not quite. Check the hints!");
-                        }}
-                        className="px-6 py-3 bg-[#7B287D] text-white border-3 border-brand-dark rounded-neo-sm font-black uppercase text-xs shadow-[3px_3px_0px_0px_#330C2F] active:translate-y-0.5 active:shadow-none transition-all"
-                      >
-                        Check Answer
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              )}
               
               {activeTab === 'coding' && (
                 <div className="mt-8 flex flex-col gap-4">
