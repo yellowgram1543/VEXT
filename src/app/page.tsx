@@ -17,7 +17,7 @@ export default async function Home() {
   let error = false
 
   try {
-    const [sanityModules, progressData, latestProgress, dbMastery] = await Promise.all([
+    const [sanityModules, progressData, latestProgress] = await Promise.all([
       fetchSanity<Module[]>(modulesQuery),
       prisma.progress.findMany({
         where: { NOT: { completedAt: null } },
@@ -25,18 +25,24 @@ export default async function Home() {
       }),
       prisma.progress.findFirst({
         orderBy: { lastVisitedAt: 'desc' }
-      }),
-      prisma.userMastery.findUnique({
-        where: { userId: 'prototype-user-id' }
       })
     ])
     modules = sanityModules
     completedChapterIds = new Set(progressData.map(p => p.chapterId))
     activeProgress = latestProgress
-    mastery = dbMastery
   } catch (e) {
-    console.error('Error fetching data:', e)
+    console.error('Error fetching modules or progress:', e)
     error = true
+  }
+
+  // Fetch mastery separately as it's non-critical and might fail if schema is out of sync
+  try {
+    mastery = await prisma.userMastery.findUnique({
+      where: { userId: 'prototype-user-id' }
+    })
+  } catch (e) {
+    console.warn('Mastery data unavailable (likely database schema mismatch):', e)
+    // mastery remains null, UI will show default profile
   }
 
   // Find the topic title for the active progress
