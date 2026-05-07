@@ -170,7 +170,9 @@ export default function ReinforceCell({ practices, onComplete, status, loading }
             <div key={practice.id || index} className="border-3 border-brand-dark rounded-neo p-6 bg-white shadow-[4px_4px_0px_0px_#330C2F]">
               <div className="flex items-center gap-2 mb-4">
                 <span className="bg-brand-dark text-white text-[10px] font-black px-2 py-1 rounded-neo-sm">Q{index + 1}</span>
-                <h4 className="font-bold text-lg text-brand-dark">{practice.question}</h4>
+                <div className="font-bold text-lg text-brand-dark leading-snug">
+                  <MathRenderer math={practice.instruction} />
+                </div>
               </div>
               
               {practice.options ? (
@@ -180,9 +182,6 @@ export default function ReinforceCell({ practices, onComplete, status, loading }
                       {option}
                     </div>
                   ))}
-                  <div className="mt-2 text-xs font-black text-brand-dark/40 italic">
-                    Correct Answer Index: {practice.correctAnswer}
-                  </div>
                 </div>
               ) : (
                 <div className="p-4 bg-slate-50 border-2 border-dashed border-brand-dark rounded-neo-sm">

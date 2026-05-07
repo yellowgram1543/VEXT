@@ -231,10 +231,16 @@ export default function PracticeCell({
   loading: externalLoading,
   exercises: providedExercises
 }: PracticeCellProps & { exercises?: Exercise[] }) {
-  const [activeTab, setActiveTab] = useState<TabType>('coding');
-  
   // Use provided exercises if available, otherwise fallback to default list
   const currentExercises = providedExercises || ALL_EXERCISES;
+
+  // Initialize active tab to the first one that actually has content
+  const [activeTab, setActiveTab] = useState<TabType>(() => {
+    if (currentExercises.some(ex => ex.tab === 'coding')) return 'coding';
+    if (currentExercises.some(ex => ex.tab === 'math')) return 'math';
+    if (currentExercises.some(ex => ex.tab === 'concept')) return 'concept';
+    return 'coding';
+  });
   
   const [answers, setAnswers] = useState<Record<string, string>>(() => {
     const initial: Record<string, string> = {};
