@@ -4,7 +4,6 @@ import React, { useState, useId } from 'react';
 import { PortableText, PortableTextComponents } from '@portabletext/react';
 import { HelpCircle, ChevronDown, ChevronUp, CheckCircle2, Loader2 } from 'lucide-react';
 import MathRenderer from '@/components/MathRenderer';
-import MasteryBreadcrumbs, { StageType } from '@/components/MasteryBreadcrumbs';
 import { cn } from '@/lib/utils';
 import MLVisualizer from '@/components/MLVisualizer';
 
@@ -143,8 +142,7 @@ export default function UnderstandCell({ content, onComplete, status, loading }:
 
   return (
     <div className="flex flex-col gap-8">
-      <MasteryBreadcrumbs currentStage={StageType.CONCEPT} />
-      <div className="bg-white space-y-8">
+      <div className="bg-white flex flex-col gap-8">
       <article aria-label="Understand Stage Content">
         <PortableText value={content} components={components} />
       </article>

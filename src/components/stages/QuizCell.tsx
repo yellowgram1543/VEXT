@@ -8,7 +8,6 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import MathRenderer from '@/components/MathRenderer';
-import MasteryBreadcrumbs, { StageType } from '@/components/MasteryBreadcrumbs';
 
 export type QuestionType = 
   | 'mcq' 
@@ -160,10 +159,13 @@ export default function QuizCell({
       const allAnswers = { ...answers, [currentQuestion.id]: { val: getCurrentVal(), confidence } };
       const correctCount = activeQuestions.filter(q => checkCorrect(q, allAnswers[q.id].val)).length;
       const score = correctCount / activeQuestions.length;
+      const passed = score >= 0.8;
       
       setFinalScore(score);
       setQuizFinished(true);
-      onComplete?.(score);
+      if (passed) {
+        onComplete?.(score);
+      }
       setLoading(false);
     }
   };
@@ -172,8 +174,6 @@ export default function QuizCell({
     const passed = finalScore !== null && finalScore >= 0.8;
     return (
       <div className="flex flex-col gap-8">
-        <MasteryBreadcrumbs currentStage={StageType.QUIZ} />
-        
         <div className="bg-white flex flex-col items-center gap-8 p-12 text-center border-3 border-brand-dark rounded-neo shadow-[12px_12px_0px_0px_#330C2F] animate-in zoom-in-95 duration-500">
           <div className={cn(
             "w-24 h-24 rounded-full border-4 border-brand-dark flex items-center justify-center shadow-[4px_4px_0px_0px_#330C2F]",
@@ -242,8 +242,6 @@ export default function QuizCell({
 
   return (
     <div className="flex flex-col gap-8">
-      <MasteryBreadcrumbs currentStage={StageType.QUIZ} />
-      
       <div className="bg-white flex flex-col gap-8">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 border-b-3 border-brand-dark pb-6">
           <div className="space-y-1">

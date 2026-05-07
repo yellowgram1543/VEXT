@@ -13,7 +13,6 @@ const Editor = dynamic(() => import('@monaco-editor/react'), {
   loading: () => <div className="h-[200px] bg-[#1e1e1e] flex items-center justify-center text-gray-500 font-code text-xs">Loading Editor...</div>
 });
 import MathRenderer from '@/components/MathRenderer';
-import MasteryBreadcrumbs, { StageType } from '@/components/MasteryBreadcrumbs';
 import { usePyodide } from '@/hooks/usePyodide';
 import { cn } from '@/lib/utils';
 
@@ -281,8 +280,7 @@ export default function PracticeCell({
 
   if (isDone) {
     return (
-      <div className="flex flex-col gap-8">
-        <MasteryBreadcrumbs currentStage={StageType.PRACTICE} />
+      <div className="space-y-8 bg-white">
         <div className="bg-white border-4 border-brand-dark rounded-neo p-8 shadow-[12px_12px_0px_0px_#330C2F] animate-in zoom-in-95 duration-200">
           <div className="flex flex-col items-center text-center gap-6">
             <div className="w-20 h-20 bg-green-400 rounded-full border-4 border-brand-dark flex items-center justify-center shadow-[4px_4px_0px_0px_#14532d]">
@@ -318,7 +316,6 @@ export default function PracticeCell({
 
   return (
     <div className="w-full flex flex-col gap-8">
-      <MasteryBreadcrumbs currentStage={StageType.PRACTICE} />
       
       {/* Tab Selection */}
       <div className="flex flex-wrap gap-2 p-1.5 bg-slate-50 border-3 border-brand-dark rounded-neo shadow-[4px_4px_0px_0px_#330C2F]">

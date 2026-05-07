@@ -7,7 +7,6 @@ import {
   Terminal, ArrowRight, Zap, Target, Bug
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import MasteryBreadcrumbs, { StageType } from '@/components/MasteryBreadcrumbs';
 
 interface Milestone {
   id: string;
@@ -76,8 +75,6 @@ export default function ApplyCell({
 
   return (
     <div className="flex flex-col gap-8">
-      <MasteryBreadcrumbs currentStage={StageType.APPLY} />
-      
       <div className="w-full bg-white flex flex-col gap-10 p-2">
         {/* Header & Specs */}
         <div className="flex flex-col gap-4">
