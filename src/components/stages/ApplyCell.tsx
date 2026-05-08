@@ -22,17 +22,17 @@ interface ApplyCellProps {
 }
 
 export default function ApplyCell({ 
-  instruction = "Build a robust Linear Regression pipeline to predict housing prices with outlier handling.",
+  instruction = "Apply your knowledge to solve a real-world problem.",
   onComplete,
   milestones: providedMilestones
 }: ApplyCellProps & { milestones?: any[] }) {
   const [step, setStep] = useState<0 | 1 | 2>(0); // 0: Design, 1: Implementation, 2: Gauntlet
   const [designDoc, setDesignDoc] = useState({
     strategy: '',
-    metric: 'MSE',
+    metric: 'Accuracy',
     cleaning: ''
   });
-  const [code, setCode] = useState(`import numpy as np\n\ndef preprocess(data):\n    # TODO: Handle missing values and outliers\n    return data\n\ndef train_model(X, y):\n    # TODO: Implement Linear Regression\n    return weights\n\ndef evaluate(model, X_test):\n    # TODO: Return predictions\n    return preds`);
+  const [code, setCode] = useState(`# Implement your solution here\nimport numpy as np\n\ndef solve():\n    pass`);
   
   const [loading, setLoading] = useState(false);
   const [milestones, setMilestones] = useState<Milestone[]>(() => {
@@ -42,29 +42,28 @@ export default function ApplyCell({
         status: 'pending'
       }));
     }
-    return [
-      { id: '1', title: 'Data Ingestion', description: 'Loading 10,000 samples...', status: 'pending' },
-      { id: '2', title: 'Preprocessing', description: 'Removing 5% outlier noise.', status: 'pending' },
-      { id: '3', title: 'Model Training', description: 'Fitting coefficients.', status: 'pending' },
-      { id: '4', title: 'Metric Validation', description: 'Verifying MSE threshold < 0.05.', status: 'pending' }
-    ];
+    return [];
   });
 
   const [gauntletStatus, setGauntletStatus] = useState<'idle' | 'running' | 'completed'>('idle');
   const [robustnessScore, setRobustnessScore] = useState<number | null>(null);
 
   const startImplementation = () => {
-    if (designDoc.strategy.length < 10) return;
+    if (designDoc.strategy.length < 5) return;
     setStep(1);
   };
 
   const runPipeline = async () => {
     setLoading(true);
     // Simulate pipeline steps
-    for (let i = 0; i < milestones.length; i++) {
-      setMilestones(prev => prev.map((m, idx) => idx === i ? { ...m, status: 'loading' } : m));
-      await new Promise(r => setTimeout(r, 800));
-      setMilestones(prev => prev.map((m, idx) => idx === i ? { ...m, status: 'completed' } : m));
+    if (milestones.length > 0) {
+      for (let i = 0; i < milestones.length; i++) {
+        setMilestones(prev => prev.map((m, idx) => idx === i ? { ...m, status: 'loading' } : m));
+        await new Promise(r => setTimeout(r, 800));
+        setMilestones(prev => prev.map((m, idx) => idx === i ? { ...m, status: 'completed' } : m));
+      }
+    } else {
+      await new Promise(r => setTimeout(r, 1500));
     }
     setLoading(false);
     setStep(2);

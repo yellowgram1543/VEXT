@@ -31,7 +31,15 @@ export function getAllModules(): ModuleContent[] {
 export function getChapterContent(moduleSlug: string, chapterSlug: string): ChapterContent | null {
   const chapterPath = path.join(CONTENT_DIR, moduleSlug, 'chapters', `${chapterSlug}.json`);
   if (fs.existsSync(chapterPath)) {
-    return JSON.parse(fs.readFileSync(chapterPath, 'utf8'));
+    const rawContent = JSON.parse(fs.readFileSync(chapterPath, 'utf8'));
+    
+    // Validate content against schema
+    const result = ChapterSchema.safeParse(rawContent);
+    if (!result.success) {
+      console.warn(`[Content Validation Error] Chapter "${chapterSlug}" has schema errors:`, result.error.format());
+    }
+
+    return rawContent;
   }
   return null;
 }

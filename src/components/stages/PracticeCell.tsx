@@ -287,8 +287,8 @@ export default function PracticeCell({
   loading: externalLoading,
   exercises: providedExercises
 }: PracticeCellProps & { exercises?: Exercise[] }) {
-  // Use provided exercises if available, otherwise fallback to default list
-  const currentExercises = providedExercises || ALL_EXERCISES;
+  // Use provided exercises if available, otherwise default to empty array
+  const currentExercises = providedExercises || [];
 
   // Initialize active tab to the first one that actually has content
   const [activeTab, setActiveTab] = useState<TabType>(() => {
@@ -345,6 +345,27 @@ export default function PracticeCell({
   };
 
   const activeExercises = currentExercises.filter(ex => ex.tab === activeTab);
+
+  if (currentExercises.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center py-12 text-center gap-6 bg-slate-50 border-3 border-dashed border-brand-dark/10 rounded-neo">
+        <div className="p-4 bg-white rounded-full border-2 border-brand-dark/10">
+          <Sparkles className="w-8 h-8 text-[#7B287D]" />
+        </div>
+        <div className="space-y-2">
+          <h3 className="font-heading font-black uppercase text-xl">Practice Complete</h3>
+          <p className="text-brand-dark/60 font-medium max-w-xs">You've mastered the concepts. Ready to test your knowledge?</p>
+        </div>
+        <button 
+          onClick={onComplete}
+          disabled={externalLoading || isCompleted}
+          className="px-8 py-3 bg-[#7B287D] text-white border-3 border-brand-dark rounded-neo font-heading font-black uppercase text-sm tracking-widest shadow-[6px_6px_0px_0px_#330C2F] hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all flex items-center gap-2"
+        >
+          Proceed to Quiz <ArrowRight className="w-4 h-4" />
+        </button>
+      </div>
+    );
+  }
 
   if (isDone) {
     return (

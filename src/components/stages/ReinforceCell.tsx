@@ -64,6 +64,15 @@ export default function ReinforceCell({ practices, onComplete, status, loading }
       </div>
 
       <div className="space-y-6">
+        {/* Block Registry Support */}
+        {blocks && blocks.length > 0 && (
+          <div className="flex flex-col gap-8">
+            {blocks.map((block: any, idx: number) => (
+              <TeachingBlock key={block.id || idx} block={block} />
+            ))}
+          </div>
+        )}
+
         {practices && practices.length > 0 ? (
           practices.map((practice: any, index: number) => {
             const Icon = getIcon(practice.iconName || practice.icon);

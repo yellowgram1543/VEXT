@@ -128,14 +128,17 @@ const components: PortableTextComponents = {
   },
 };
 
+import TeachingBlock from '../blocks';
+
 interface UnderstandCellProps {
   content: any;
+  blocks?: any[];
   onComplete?: () => void;
   status?: 'COMPLETED' | 'ACTIVE' | 'LOCKED';
   loading?: boolean;
 }
 
-export default function UnderstandCell({ content, onComplete, status, loading }: UnderstandCellProps) {
+export default function UnderstandCell({ content, blocks, onComplete, status, loading }: UnderstandCellProps) {
   const [isGated, setIsGated] = useState(false);
   const isCompleted = status === 'COMPLETED';
   const gateId = useId();
@@ -144,7 +147,17 @@ export default function UnderstandCell({ content, onComplete, status, loading }:
     <div className="flex flex-col gap-8">
       <div className="bg-white flex flex-col gap-8">
       <article aria-label="Understand Stage Content">
-        <PortableText value={content} components={components} />
+        {/* Block Registry Support */}
+        {blocks && blocks.length > 0 ? (
+          <div className="flex flex-col">
+            {blocks.map((block, idx) => (
+              <TeachingBlock key={block.id || idx} block={block} />
+            ))}
+          </div>
+        ) : (
+          /* Legacy PortableText Support */
+          <PortableText value={content} components={components} />
+        )}
       </article>
       
       <div className="pt-8 border-t-3 border-brand-dark/10">

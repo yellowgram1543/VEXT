@@ -13,8 +13,7 @@ import { STAGE_ORDER, STAGE_LABELS } from '@/lib/constants';
 import { cn } from '@/lib/utils';
 import { CheckCircle2, Lock, Play, ArrowRight, ArrowLeft, Sparkles } from 'lucide-react';
 import { useProgress } from './ProgressContext';
-import MLVisualizer from './MLVisualizer';
-import ProbabilityVisualizer from './ProbabilityVisualizer';
+import Visualizer from './visualizers';
 
 interface TopicFlowProps {
   topic: Topic;
@@ -164,22 +163,14 @@ export default function TopicFlow({ topic, initialHighestStage }: TopicFlowProps
           <div className="p-8 md:p-12">
             {activeStage === StageType.UNDERSTAND && (
               <div className="space-y-12">
-                {topic.understand?.visualizer === 'loss' && (
-                  <MLVisualizer 
-                    type="loss" 
-                    title={topic.title}
-                    data={topic.understand?.visualizerData || {
-                      labels: ['Epoch 1', 'Epoch 2', 'Epoch 3', 'Epoch 4', 'Epoch 5', 'Epoch 6', 'Epoch 7', 'Epoch 8', 'Epoch 9', 'Epoch 10'],
-                      trainLoss: [0.9, 0.7, 0.55, 0.45, 0.38, 0.32, 0.28, 0.25, 0.22, 0.2],
-                      valLoss: [0.95, 0.8, 0.65, 0.58, 0.55, 0.53, 0.52, 0.51, 0.5, 0.5],
-                      xAxisLabel: 'Training Progression',
-                      yAxisLabel: 'Error (Loss)'
-                    }}
-                  />
-                )}
-                {topic.understand?.visualizer === 'probability' && <ProbabilityVisualizer />}
+                <Visualizer 
+                  name={topic.understand?.visualizer}
+                  data={topic.understand?.visualizerData}
+                  title={topic.title}
+                />
                 <UnderstandCell 
                   content={topic.understand?.content || []} 
+                  blocks={topic.understand?.blocks}
                   onComplete={() => handleUnlock(StageType.UNDERSTAND)}
                   status={status}
                   loading={isUnlocking}
@@ -190,6 +181,7 @@ export default function TopicFlow({ topic, initialHighestStage }: TopicFlowProps
             {activeStage === StageType.REINFORCE && (
               <ReinforceCell 
                 practices={topic.reinforce?.practices || []} 
+                blocks={topic.reinforce?.blocks}
                 onComplete={() => handleUnlock(StageType.REINFORCE)}
                 status={status}
                 loading={isUnlocking}
